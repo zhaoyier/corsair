@@ -1,0 +1,14 @@
+.title {
+	font-weight: bold;
+	font-size: 15px;
+	text-align: center;
+	padding: 0 50px;
+}
+.content {
+	// max-height: 70vh;
+	overflow: hidden;
+	overflow-y: auto;
+	&::-webkit-scrollbar {
+		display: none;
+	}
+}

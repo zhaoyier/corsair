@@ -1,0 +1,25 @@
+syntax = "proto3";
+package digger;
+
+service Prober {
+    rpc GetName(GetNameReq) returns(GetNameResp);
+}
+
+message ShareholderResp {
+    string name = 1;
+}
+
+message GetNameReq {
+
+}
+
+message GetNameResp {
+    
+}
+
+enum EastMoneyType {
+    EastMoneyTypeUnknown = 0;
+    EastMoneyTypeHolder = 1;
+    EastMoneyTypeNews = 2;
+    EastMoneyTypeOperations = 3;
+}

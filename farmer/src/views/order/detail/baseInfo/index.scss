@@ -1,0 +1,29 @@
+.baseinfo {
+	h3 {
+		padding: 25px 0 10px 0;
+	}
+}
+:global {
+	.ant-tabs-bar {
+		margin-bottom: -1px;
+	}
+	.addServerModal {
+		.antd-table-thead > tr > th {
+			background: #f4f8fa;
+		}
+	}
+}
+
+span {
+	font-weight: bold;
+}
+
+.header {
+	margin: 15px 0;
+	font-size: 15px;
+	font-weight: bold;
+	color: #333;
+	&.first {
+		margin-top: 10px;
+	}
+}

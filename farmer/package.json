@@ -1,0 +1,95 @@
+{
+	"name": "ezship",
+	"version": "1.0.0",
+	"description": "凌霄 ezship 后台系统",
+	"author": "ezbuy",
+	"license": "MIT",
+	"private": true,
+	"scripts": {
+		"start": "ezpack start",
+		"start@kflow": "ezpack start --kflow",
+		"build": "ezpack build",
+		"analyse": "ezpack analyse",
+		"publish": "ezpack publish",
+		"format": "prettier --write",
+		"precommit": "lint-staged"
+	},
+	"lint-staged": {
+		"*.{json,css,md}": [
+			"npm run format",
+			"git add"
+		],
+		"*.scss": [
+			"npm run format",
+			"stylelint --fix --syntax scss",
+			"git add"
+		],
+		"*.{js,jsx}": [
+			"npm run format",
+			"eslint --fix",
+			"git add"
+		],
+		"*.{ts,tsx}": [
+			"npm run format",
+			"tslint --fix",
+			"git add"
+		]
+	},
+	"devDependencies": {
+		"@ezbuy/eslint-config-ezbuy": "^1.1.1",
+		"@ezbuy/ezpack": "^2.3.7",
+		"@ezbuy/stylelint-config-ezbuy": "^1.1.0",
+		"@ezbuy/tslint-config-ezbuy": "^1.2.2",
+		"@types/core-js": "^2.5.3",
+		"@types/lodash": "^4.14.149",
+		"@types/moment": "^2.13.0",
+		"@types/node": "^13.7.6",
+		"@types/prop-types": "^15.7.2",
+		"@types/react": "^16.9.23",
+		"@types/react-dom": "^16.9.5",
+		"@types/react-router-dom": "^5.1.3",
+		"@types/webpack-env": "^1.15.1",
+		"babel-plugin-import": "^1.13.0",
+		"chalk": "^3.0.0",
+		"eslint-plugin-react-hooks": "^2.5.0",
+		"find-antd-modules": "^1.0.5",
+		"fs-extra": "^8.1.0",
+		"husky": "^4.2.3",
+		"lint-staged": "^10.0.8",
+		"prettier": "^1.19.1",
+		"protoc-gen-json-ts": "^1.0.5",
+		"typescript": "^3.8.2"
+	},
+	"dependencies": {
+		"@umijs/hooks": "1.7.0",
+		"@ant-design/icons": "^4.6.2",
+		"antd": "^4.15.4",
+		"babel-polyfill": "^6.26.0",
+		"classnames": "^2.2.6",
+		"ez-lodop": "ssh://git@git.ezbuy.me:10022/ezbuyfe/ez-lodop.git",
+		"html2canvas": "^1.0.0-alpha.12",
+		"lodash": "^4.17.10",
+		"mobx": "^5.15.4",
+		"mobx-react": "^5.4.4",
+		"mobx-react-devtools": "^6.1.1",
+		"mobx-react-lite": "^1.5.2",
+		"moment": "^2.29.1",
+		"omit-empty": "^1.0.0",
+		"prop-types": "^15.6.2",
+		"qrcode.react": "^1.0.0",
+		"react": "^16.13.0",
+		"react-barcode": "^1.4.0",
+		"react-copy-to-clipboard": "^5.0.2",
+		"react-dom": "^16.13.0",
+		"react-loadable": "^5.5.0",
+		"react-router-dom": "^5.1.2",
+		"url-polyfill": "^1.1.8",
+		"web-storage-cache": "^1.1.1",
+		"whatwg-fetch": "^3.0.0"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "npm run precommit"
+		}
+	}
+}

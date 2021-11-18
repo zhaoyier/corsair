@@ -1,0 +1,41 @@
+.tip {
+	color: #f00;
+	font-size: 13px;
+}
+.remarkLog {
+	margin-bottom: 15px;
+	.title {
+		color: #7d7d7d;
+		margin-bottom: 15px;
+	}
+	.content {
+		border: 1px solid #d9d9d9;
+		border-radius: 8px;
+		color: #525252;
+		padding: 15px 10px;
+		max-height: 300px;
+		overflow: hidden;
+		overflow-y: auto;
+		.module {
+			margin-bottom: 15px;
+			p {
+				margin-bottom: 5px;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				span {
+					font-weight: normal;
+				}
+			}
+		}
+		.textArea {
+			width: 100%;
+			border: none;
+		}
+	}
+}
+.pkgNo {
+	margin-bottom: 10px;
+	display: flex;
+	flex-wrap: wrap;
+}

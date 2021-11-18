@@ -1,0 +1,40 @@
+$primary-color: #3e82f7;
+$green-color: #45ba6d;
+$border-color: #d0d0d0;
+
+// 模板
+@mixin flexBox($item: flex-start) {
+	display: flex;
+	align-content: flex-start;
+	align-items: $item;
+}
+
+// 单行溢出省略
+@mixin sln() {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.greenButton {
+	color: #fff;
+	background: $green-color;
+	border-color: $green-color;
+
+	&:focus,
+	&:hover {
+		color: #fff;
+		background: darken($color: $green-color, $amount: 5);
+	}
+}
+.greenBlankButton {
+	color: $green-color;
+	border-color: $green-color;
+
+	&:focus,
+	&:hover {
+		color: $green-color;
+		border-color: $green-color;
+		background: lighten($color: $green-color, $amount: 45);
+	}
+}

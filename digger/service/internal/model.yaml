@@ -1,0 +1,10 @@
+Counter:
+  db: mongo
+  dbname: digger
+  fields:
+    - Key: string
+      flags: [unique]
+    - Val: int32
+
+
+    

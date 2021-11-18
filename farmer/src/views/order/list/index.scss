@@ -1,0 +1,68 @@
+.index {
+	// background-color: rgba(240, 242, 245, 1);
+	padding: 20px 30px;
+}
+.addServerImg {
+	width: 48px;
+	margin-right: 10px;
+}
+.moreOrderImg {
+	width: 20px;
+	height: 20px;
+	margin-right: 8px;
+}
+.itemList {
+	width: 100%;
+	line-height: 2;
+	border-radius: 5px;
+	justify-content: center;
+	color: #fff;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
+	box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+	cursor: pointer;
+	-webkit-box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+	text-align: center;
+	background-color: #1890ff;
+	border-color: #1890ff;
+}
+
+.declaredAmount {
+	height: 40px;
+	margin-bottom: 20px;
+
+	:global {
+		.ant-form-item-label > label:after {
+			margin: 0 8px 22px 2px;
+		}
+	}
+}
+
+.btnRadio {
+	:global {
+		.ant-radio-button-wrapper {
+			border: transparent;
+			min-width: 100px;
+			text-align: center;
+			height: 40px;
+			line-height: 40px;
+		}
+		.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+			border: none !important;
+			font-size: 20px;
+			color: #d9051e;
+			background: #fdff03;
+			&:hover {
+				font-size: 20px;
+				color: #d9051e;
+				background: #fdff03;
+			}
+			&::before {
+				content: none;
+			}
+		}
+	}
+}
+
+.red {
+	color: #d9051e;
+}

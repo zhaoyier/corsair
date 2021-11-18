@@ -1,0 +1,37 @@
+.ant-advanced-search-form {
+	.ant-form-item {
+		display: flex;
+	}
+	.ant-form-item-control-wrapper {
+		flex: 1;
+	}
+	.formBtn {
+		margin-left: 30px;
+	}
+	.labelWidth {
+		width: 70px;
+	}
+}
+.formRow {
+	display: flex;
+	flex-wrap: wrap;
+}
+.formItEmDiv {
+	min-width: 370px;
+	overflow: hidden;
+}
+
+.outer {
+	position: relative;
+	// padding-bottom: 20px;
+}
+.formItEmDivBtnSmall {
+	position: absolute;
+	bottom: -10px;
+	right: 140px;
+}
+.formItEmDivBtnBig {
+	position: absolute;
+	bottom: -10px;
+	right: 10px;
+}

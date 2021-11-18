@@ -1,0 +1,16 @@
+{
+	"extends": "@ezbuy/tslint-config-ezbuy",
+	"linterOptions": {
+		"exclude": [
+			"src/entries/*.tsx",
+			"src/genServices/**/*.ts",
+			"src/genAdminServices/**/*.ts",
+			"src/genBlazerServices/**/*.ts"
+		]
+	},
+	"rules": {
+		"max-file-line-count": [true, 500],
+		"ordered-imports": false,
+		"no-bitwise": false
+	}
+}

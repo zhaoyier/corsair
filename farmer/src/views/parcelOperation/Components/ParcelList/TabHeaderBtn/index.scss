@@ -1,0 +1,17 @@
+.tabHeaderBtns {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 10px;
+
+	.leftBtns {
+		display: flex;
+		.btn {
+			margin-right: 20px;
+			border-radius: 10px;
+		}
+	}
+	.paginate {
+		margin-right: 10px;
+	}
+}

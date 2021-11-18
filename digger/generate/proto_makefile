@@ -1,0 +1,8 @@
+gen_proto: rpc/digger/*.pb.go
+clean_proto:
+	rm -f rpc/digger/*.pb.go
+rpc/digger/*.pb.go: ../apidoc/proto/digger/*.proto $(shell which protoc) $(shell which protoc-gen-go)
+	@mkdir -p rpc
+	@echo "gen proto"
+	@rm -f rpc/digger/*.pb.go
+	@protoc -I ../apidoc/proto ../apidoc/proto/digger/*.proto --go_out=dep_path=git.ezbuy.me/ezbuy/%[1]v/rpc/%[1]v,plugins=grpc:rpc
