@@ -47,6 +47,15 @@ type OperationsRequired struct {
 	Ybzy     []Ybzy        `json:"ybzy"`
 }
 
+// 股市列表
+type StockList struct {
+	Rc   int       `json:"rc"`
+	Rt   int       `json:"rt"`
+	Svr  int64     `json:"svr"`
+	Lt   int       `json:"lt"`
+	Full int       `json:"full"`
+	Data *CodeData `json:"data"`
+}
 type Holder struct {
 	SECUCODE           string  `json:"SECUCODE"`
 	SECURITYCODE       string  `json:"SECURITY_CODE"`
@@ -377,4 +386,13 @@ type Ybzy struct {
 	Source              string `json:"source"`
 	Title               string `json:"title"`
 	Content             string `json:"content"`
+}
+
+type CodeBase struct {
+	Code string `json:"f12"`
+	Name string `json:"f14"`
+}
+type CodeData struct {
+	Total int         `json:"total"`
+	Diff  []*CodeBase `json:"diff"`
 }

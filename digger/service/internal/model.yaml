@@ -1,30 +1,24 @@
-# 订单备注
 CNSecucode:
-  dbs: mongo
-  dbname: cn_secucode
+  db: mongo
+  dbname: digger
   fields:
-    - Id: int64
     - Secucode: string
     - SecurityCode: int32
-    - Main: string
-    - Remark: string
-    - CreateDate: timeint
-      comment: 创建时间
-    - UpdateDate: timeint
-      comment: 更新时间
-  primary: [Id]
-  indexes: [[Secucode],[SecurityCode]]
+    - Focus: bool       #关注   
+    - Remark: string      #备足
+    - CreateDate: datetime
+    - UpdateDate: datetime
+  uniques: [[Secucode]]
+  indexes: [[SecurityCode]]
 
 GDRenshu:
-  dbs: mongo
-  dbname: gd_renshu
+  db: mongo
+  dbname: digger
   fields:
-    - Id: int64
     - Secucode: string
     - SecurityCode: int32
     - EndDate: string
-    - HolderTotalNum: float64
-      comment: 总人数
+    - HolderTotalNum: float64   #总人数
     - TotalNumRatio: float64
     - AvgFreeShares: float64
     - AvgFreesharesRatio: float64
@@ -33,25 +27,18 @@ GDRenshu:
     - AvgHoldAmt: float64
     - HoldRatioTotal: float64
     - FreeholdRatioTotal: float64
-    - CreateDate: timeint
-      comment: 创建时间
-    - UpdateDate: timeint
-      comment: 更新时间
-  primary: [Id]
+    - CreateDate: datetime
+    - UpdateDate: datetime
   indexes: [[Secucode],[SecurityCode], [EndDate], [HolderTotalNum]]
 
 GDNiusan:
-  dbs: [mongo]
-  dbname: gd_niusan
+  db: mongo
+  dbname: digger
   fields:
-    - Id: int64
-      flags: [primary, autoinc]
     - SecurityCode: int32
     - Niusan: string
     - Disabled: bool
-    - CreateDate: timeint
-      comment: 创建时间
-    - UpdateDate: timeint
-      comment: 更新时间
-  primary: [Id]
+    - CreateDate: datetime
+    - UpdateDate: datetime
   indexes: [[SecurityCode],[Niusan]]
+
