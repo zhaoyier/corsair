@@ -1,10 +1,57 @@
-Counter:
-  db: mongo
-  dbname: digger
+# 订单备注
+CNSecucode:
+  dbs: mongo
+  dbname: cn_secucode
   fields:
-    - Key: string
-      flags: [unique]
-    - Val: int32
+    - Id: int64
+    - Secucode: string
+    - SecurityCode: int32
+    - Main: string
+    - Remark: string
+    - CreateDate: timeint
+      comment: 创建时间
+    - UpdateDate: timeint
+      comment: 更新时间
+  primary: [Id]
+  indexes: [[Secucode],[SecurityCode]]
 
+GDRenshu:
+  dbs: mongo
+  dbname: gd_renshu
+  fields:
+    - Id: int64
+    - Secucode: string
+    - SecurityCode: int32
+    - EndDate: string
+    - HolderTotalNum: float64
+      comment: 总人数
+    - TotalNumRatio: float64
+    - AvgFreeShares: float64
+    - AvgFreesharesRatio: float64
+    - HoldFocus: string
+    - Price: float64
+    - AvgHoldAmt: float64
+    - HoldRatioTotal: float64
+    - FreeholdRatioTotal: float64
+    - CreateDate: timeint
+      comment: 创建时间
+    - UpdateDate: timeint
+      comment: 更新时间
+  primary: [Id]
+  indexes: [[Secucode],[SecurityCode], [EndDate], [HolderTotalNum]]
 
-    
+GDNiusan:
+  dbs: [mongo]
+  dbname: gd_niusan
+  fields:
+    - Id: int64
+      flags: [primary, autoinc]
+    - SecurityCode: int32
+    - Niusan: string
+    - Disabled: bool
+    - CreateDate: timeint
+      comment: 创建时间
+    - UpdateDate: timeint
+      comment: 更新时间
+  primary: [Id]
+  indexes: [[SecurityCode],[Niusan]]
