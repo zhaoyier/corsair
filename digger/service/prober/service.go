@@ -3,6 +3,7 @@ package prober
 import (
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/prober/internal/eastmoney"
+	"git.ezbuy.me/ezbuy/corsair/digger/service/prober/internal/sina"
 	"github.com/ezbuy/ezorm/db"
 )
 
@@ -12,5 +13,10 @@ func Start() {
 		DBName:  "digger",
 	})
 
-	eastmoney.GetCodeList()
+	//
+	go eastmoney.GetCodeListTicker()
+	// //
+	go eastmoney.GetShareholderTicker()
+	//
+	sina.GetDailyData()
 }

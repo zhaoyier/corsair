@@ -9,7 +9,7 @@ var _ time.Time
 type GDRenshu struct {
 	ID                 bson.ObjectId `json:"id" bson:"_id,omitempty"`
 	Secucode           string        `bson:"Secucode" json:"Secucode"`
-	SecurityCode       int32         `bson:"SecurityCode" json:"SecurityCode"`
+	SecurityCode       string        `bson:"SecurityCode" json:"SecurityCode"`
 	EndDate            string        `bson:"EndDate" json:"EndDate"`
 	HolderTotalNum     float64       `bson:"HolderTotalNum" json:"HolderTotalNum"`
 	TotalNumRatio      float64       `bson:"TotalNumRatio" json:"TotalNumRatio"`

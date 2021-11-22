@@ -7,24 +7,24 @@ import "time"
 var _ time.Time
 
 type CNSecucode struct {
-	ID           bson.ObjectId `json:"id" bson:"_id,omitempty"`
-	Secucode     string        `bson:"Secucode" json:"Secucode"`
-	SecurityCode int32         `bson:"SecurityCode" json:"SecurityCode"`
-	Focus        bool          `bson:"Focus" json:"Focus"`
-	Remark       string        `bson:"Remark" json:"Remark"`
-	CreateDate   int64         `bson:"CreateDate" json:"CreateDate"`
-	UpdateDate   int64         `bson:"UpdateDate" json:"UpdateDate"`
-	isNew        bool
+	ID         bson.ObjectId `json:"id" bson:"_id,omitempty"`
+	Name       string        `bson:"Name" json:"Name"`
+	Secucode   string        `bson:"Secucode" json:"Secucode"`
+	Focus      bool          `bson:"Focus" json:"Focus"`
+	Remark     string        `bson:"Remark" json:"Remark"`
+	CreateDate int64         `bson:"CreateDate" json:"CreateDate"`
+	UpdateDate int64         `bson:"UpdateDate" json:"UpdateDate"`
+	isNew      bool
 }
 
 const (
-	CNSecucodeMgoFieldID           = "_id"
-	CNSecucodeMgoFieldSecucode     = "Secucode"
-	CNSecucodeMgoFieldSecurityCode = "SecurityCode"
-	CNSecucodeMgoFieldFocus        = "Focus"
-	CNSecucodeMgoFieldRemark       = "Remark"
-	CNSecucodeMgoFieldCreateDate   = "CreateDate"
-	CNSecucodeMgoFieldUpdateDate   = "UpdateDate"
+	CNSecucodeMgoFieldID         = "_id"
+	CNSecucodeMgoFieldName       = "Name"
+	CNSecucodeMgoFieldSecucode   = "Secucode"
+	CNSecucodeMgoFieldFocus      = "Focus"
+	CNSecucodeMgoFieldRemark     = "Remark"
+	CNSecucodeMgoFieldCreateDate = "CreateDate"
+	CNSecucodeMgoFieldUpdateDate = "UpdateDate"
 )
 const (
 	CNSecucodeMgoSortFieldIDAsc  = "_id"

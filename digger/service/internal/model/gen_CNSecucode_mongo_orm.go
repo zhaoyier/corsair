@@ -37,11 +37,11 @@ func initCNSecucodeIndex() {
 	}
 
 	if err := collection.EnsureIndex(mgo.Index{
-		Key:        []string{"SecurityCode"},
+		Key:        []string{"Name"},
 		Background: true,
 		Sparse:     true,
 	}); err != nil {
-		panic("ensureIndex digger.CNSecucode SecurityCode error:" + err.Error())
+		panic("ensureIndex digger.CNSecucode Name error:" + err.Error())
 	}
 
 }
@@ -201,9 +201,9 @@ func (o *_CNSecucodeMgr) RemoveBySecucode(Secucode string) (err error) {
 	}
 	return col.Remove(query)
 }
-func (o *_CNSecucodeMgr) FindBySecurityCode(SecurityCode int32, limit int, offset int, sortFields ...string) (result []*CNSecucode, err error) {
+func (o *_CNSecucodeMgr) FindByName(Name string, limit int, offset int, sortFields ...string) (result []*CNSecucode, err error) {
 	query := db.M{
-		"SecurityCode": SecurityCode,
+		"Name": Name,
 	}
 	session, q := CNSecucodeMgr.Query(query, limit, offset, sortFields)
 	defer session.Close()

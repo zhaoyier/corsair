@@ -28,6 +28,15 @@ func initGDRenshuIndex() {
 	defer session.Close()
 
 	if err := collection.EnsureIndex(mgo.Index{
+		Key:        []string{"Secucode", "EndDate"},
+		Unique:     true,
+		Background: true,
+		Sparse:     true,
+	}); err != nil {
+		panic("ensureIndex digger.GDRenshu SecucodeEndDate error:" + err.Error())
+	}
+
+	if err := collection.EnsureIndex(mgo.Index{
 		Key:        []string{"Secucode"},
 		Background: true,
 		Sparse:     true,
@@ -187,6 +196,38 @@ func (o *_GDRenshuMgr) NQuery(query interface{}, limit, offset int, sortFields [
 
 	return session, q
 }
+func (o *_GDRenshuMgr) FindOneBySecucodeEndDate(Secucode string, EndDate string) (result *GDRenshu, err error) {
+	query := db.M{
+		"Secucode": Secucode,
+		"EndDate":  EndDate,
+	}
+	session, q := GDRenshuMgr.NQuery(query, 1, 0, nil)
+	defer session.Close()
+	err = q.One(&result)
+	return
+}
+
+func (o *_GDRenshuMgr) MustFindOneBySecucodeEndDate(Secucode string, EndDate string) (result *GDRenshu) {
+	result, _ = o.FindOneBySecucodeEndDate(Secucode, EndDate)
+	if result == nil {
+		result = GDRenshuMgr.NewGDRenshu()
+		result.Secucode = Secucode
+		result.EndDate = EndDate
+		result.Save()
+	}
+	return
+}
+
+func (o *_GDRenshuMgr) RemoveBySecucodeEndDate(Secucode string, EndDate string) (err error) {
+	session, col := GDRenshuMgr.GetCol()
+	defer session.Close()
+
+	query := db.M{
+		"Secucode": Secucode,
+		"EndDate":  EndDate,
+	}
+	return col.Remove(query)
+}
 func (o *_GDRenshuMgr) FindBySecucode(Secucode string, limit int, offset int, sortFields ...string) (result []*GDRenshu, err error) {
 	query := db.M{
 		"Secucode": Secucode,
@@ -196,7 +237,7 @@ func (o *_GDRenshuMgr) FindBySecucode(Secucode string, limit int, offset int, so
 	err = q.All(&result)
 	return
 }
-func (o *_GDRenshuMgr) FindBySecurityCode(SecurityCode int32, limit int, offset int, sortFields ...string) (result []*GDRenshu, err error) {
+func (o *_GDRenshuMgr) FindBySecurityCode(SecurityCode string, limit int, offset int, sortFields ...string) (result []*GDRenshu, err error) {
 	query := db.M{
 		"SecurityCode": SecurityCode,
 	}

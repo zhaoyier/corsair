@@ -2,43 +2,54 @@ CNSecucode:
   db: mongo
   dbname: digger
   fields:
+    - Name: string        #名称
     - Secucode: string
-    - SecurityCode: int32
-    - Focus: bool       #关注   
+    - Focus: bool         #关注   
     - Remark: string      #备足
     - CreateDate: datetime
     - UpdateDate: datetime
   uniques: [[Secucode]]
-  indexes: [[SecurityCode]]
+  indexes: [[Name]]
 
 GDRenshu:
   db: mongo
   dbname: digger
   fields:
     - Secucode: string
-    - SecurityCode: int32
-    - EndDate: string
-    - HolderTotalNum: float64   #总人数
-    - TotalNumRatio: float64
-    - AvgFreeShares: float64
-    - AvgFreesharesRatio: float64
-    - HoldFocus: string
-    - Price: float64
-    - AvgHoldAmt: float64
-    - HoldRatioTotal: float64
-    - FreeholdRatioTotal: float64
-    - CreateDate: datetime
+    - SecurityCode: string
+    - EndDate: string             #截止时间
+    - HolderTotalNum: float64     #总人数
+    - TotalNumRatio: float64      #变化率
+    - AvgFreeShares: float64      #人均持有
+    - AvgFreesharesRatio: float64 #人均变化率
+    - HoldFocus: string           #集中度
+    - Price: float64              #价格
+    - AvgHoldAmt: float64         #金额
+    - HoldRatioTotal: float64     #top10合计
+    - FreeholdRatioTotal: float64 #top10流通合计
+    - CreateDate: datetime        
     - UpdateDate: datetime
+  uniques: [[Secucode, EndDate]]
   indexes: [[Secucode],[SecurityCode], [EndDate], [HolderTotalNum]]
 
 GDNiusan:
   db: mongo
   dbname: digger
   fields:
-    - SecurityCode: int32
+    - SecurityCode: string
     - Niusan: string
     - Disabled: bool
     - CreateDate: datetime
     - UpdateDate: datetime
   indexes: [[SecurityCode],[Niusan]]
 
+Daily:
+  db: mongo
+  dbname: digger
+  fields:
+    - Secucode: string
+    - Price: string
+    - Market: string
+    - Disabled: bool
+    - CreateDate: datetime
+  indexes: [[Secucode],[Disabled]]

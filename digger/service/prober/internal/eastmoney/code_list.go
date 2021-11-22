@@ -6,29 +6,39 @@ import (
 
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/common/webapi"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
+	log "github.com/Sirupsen/logrus"
 	ezdb "github.com/ezbuy/ezorm/db"
 	mgo "gopkg.in/mgo.v2"
 )
+
+// 每周更新一次
+func GetCodeListTicker() {
+
+	tk := time.NewTicker(time.Hour * 2)
+	for range tk.C {
+		if time.Now().Weekday() != time.Saturday { //周
+			continue
+		}
+
+		GetCodeList()
+	}
+
+}
 
 func GetCodeList() {
 	sess, col := orm.CNSecucodeMgr.GetCol()
 	defer sess.Close()
 
-	// tk := time.NewTicker(time.Hour * 2)
-	// for range tk.C {
-
-	// }
-
 	resp, inc := new(StockList), int32(1)
 	for {
 		if err := webapi.GetEastmoneyCode(inc, 80, resp); err != nil || resp.Data == nil {
-			fmt.Printf("eastmoney get failed: %+v\n", err)
+			log.Errorf("eastmoney get failed: %+v\n", err)
 			return
 		}
 		inc++
 
 		if err := updateCodeList(resp, col); err != nil {
-			fmt.Printf("update code list failed: %+v\n", err)
+			log.Errorf("update code list failed: %+v\n", err)
 		}
 	}
 }
@@ -56,7 +66,7 @@ func updateCodeList(req *StockList, col *mgo.Collection) error {
 		}
 
 		if err := applyCode(val.Code, exchange, val.Name, col); err != nil {
-			fmt.Printf("apply failed: %+v|%+v\n", val, err)
+			log.Errorf("apply failed: %+v|%+v\n", val, err)
 		}
 	}
 
@@ -76,9 +86,9 @@ func applyCode(secu, exchange, name string, col *mgo.Collection) error {
 	change := mgo.Change{
 		Update: ezdb.M{
 			"$set": ezdb.M{
-				"SecurityCode": secu,
-				"CreateDate":   time.Now().Unix(),
-				"UpdateDate":   time.Now().Unix(),
+				"Name":       name,
+				"CreateDate": time.Now().Unix(),
+				"UpdateDate": time.Now().Unix(),
 			},
 		},
 		Upsert:    true,
