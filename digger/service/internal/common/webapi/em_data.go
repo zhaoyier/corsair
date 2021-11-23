@@ -19,7 +19,7 @@ func GetEastmoneyData(typ digger.EastMoneyType, code string, resp interface{}) e
 	case digger.EastMoneyType_EastMoneyTypeOperations:
 		url = fmt.Sprintf("http://emweb.securities.eastmoney.com/PC_HSF10/OperationsRequired/OperationsRequiredAjax?times=1&code=%s", code)
 	default:
-		return fmt.Errorf("invalid type: %+v", typ.Short())
+		return fmt.Errorf("invalid type: %+v", typ.String())
 	}
 
 retry:
