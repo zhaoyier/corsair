@@ -12,11 +12,11 @@ import (
 func GetEastmoneyData(typ digger.EastMoneyType, code string, resp interface{}) error {
 	url, retryTime := "", 0
 	switch typ {
-	case digger.EastMoneyTypeEnum.Holder:
+	case digger.EastMoneyType_EastMoneyTypeHolder:
 		url = fmt.Sprintf("http://emweb.securities.eastmoney.com/PC_HSF10/ShareholderResearch/PageAjax?code=%s", code)
-	case digger.EastMoneyTypeEnum.News:
+	case digger.EastMoneyType_EastMoneyTypeNews:
 		url = fmt.Sprintf("http://emweb.securities.eastmoney.com/PC_HSF10/NewsBulletin/PageAjax?code=%s", code)
-	case digger.EastMoneyTypeEnum.Operations:
+	case digger.EastMoneyType_EastMoneyTypeOperations:
 		url = fmt.Sprintf("http://emweb.securities.eastmoney.com/PC_HSF10/OperationsRequired/OperationsRequiredAjax?times=1&code=%s", code)
 	default:
 		return fmt.Errorf("invalid type: %+v", typ.Short())
