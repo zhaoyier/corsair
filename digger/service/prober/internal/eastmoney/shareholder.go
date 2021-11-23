@@ -56,7 +56,7 @@ func GetShareholder() {
 		shareholder := new(ShareholderResearch)
 		code := strings.Replace(secucode.Secucode, ".", "", -1)
 		log.Infof("==>>TODO 300:%+v|%+v", code, secucode)
-		if err := webapi.GetEastmoneyData(digger.EastMoneyTypeEnum.Holder, code, shareholder); err != nil {
+		if err := webapi.GetEastmoneyData(digger.EastMoneyType_EastMoneyTypeHolder, code, shareholder); err != nil {
 			fmt.Printf("eastmoney get failed: %+v\n", err)
 			continue
 		}
