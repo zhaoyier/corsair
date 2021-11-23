@@ -17,16 +17,16 @@ GDRenshu:
   fields:
     - Secucode: string
     - SecurityCode: string
-    - EndDate: string             #截止时间
-    - HolderTotalNum: float64     #总人数
-    - TotalNumRatio: float64      #变化率
-    - AvgFreeShares: float64      #人均持有
-    - AvgFreesharesRatio: float64 #人均变化率
-    - HoldFocus: string           #集中度
-    - Price: float64              #价格
-    - AvgHoldAmt: float64         #金额
-    - HoldRatioTotal: float64     #top10合计
-    - FreeholdRatioTotal: float64 #top10流通合计
+    - EndDate: int64             #截止时间
+    - HolderTotalNum: int32     #股东人数
+    - TotalNumRatio: int32      #较上期变化
+    - AvgFreeShares: int32      #人均流通股
+    - AvgFreesharesRatio: int32 #人均较上期变化
+    - HoldFocus: string           #筹码集中度
+    - Price: int32              #价格
+    - AvgHoldAmt: int32         #金额
+    - HoldRatioTotal: int32     #top10合计
+    - FreeholdRatioTotal: int32 #top10流通合计
     - CreateDate: datetime        
     - UpdateDate: datetime
   uniques: [[Secucode, EndDate]]
@@ -53,3 +53,20 @@ Daily:
     - Disabled: bool
     - CreateDate: datetime
   indexes: [[Secucode],[Disabled]]
+
+#十大流通股东
+GDsdlt:
+  db: mongo
+  dbname: digger
+  fields:
+    - Secucode: string      
+    - EndDate: int64        #截止日期
+    - HolderRank: int32     #名次
+    - HolderName: string    #股东名称
+    - HolderType: string    #股东性质
+    - HoldNum: int32        #持股数
+    - FreeHoldnumRation: float64  #占总流通股本持股比例
+    - HoldNumChange: string   #增减
+    - CreateDate: datetime
+  uniques: [[Secucode,EndDate,HolderName]]
+  indexes: [[Secucode,EndDate],[CreateDate]]

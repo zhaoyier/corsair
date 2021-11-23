@@ -8,7 +8,7 @@ var _ time.Time
 
 type GDNiusan struct {
 	ID           bson.ObjectId `json:"id" bson:"_id,omitempty"`
-	SecurityCode int32         `bson:"SecurityCode" json:"SecurityCode"`
+	SecurityCode string        `bson:"SecurityCode" json:"SecurityCode"`
 	Niusan       string        `bson:"Niusan" json:"Niusan"`
 	Disabled     bool          `bson:"Disabled" json:"Disabled"`
 	CreateDate   int64         `bson:"CreateDate" json:"CreateDate"`

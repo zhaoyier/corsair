@@ -171,7 +171,7 @@ func (o *_GDNiusanMgr) NQuery(query interface{}, limit, offset int, sortFields [
 
 	return session, q
 }
-func (o *_GDNiusanMgr) FindBySecurityCode(SecurityCode int32, limit int, offset int, sortFields ...string) (result []*GDNiusan, err error) {
+func (o *_GDNiusanMgr) FindBySecurityCode(SecurityCode string, limit int, offset int, sortFields ...string) (result []*GDNiusan, err error) {
 	query := db.M{
 		"SecurityCode": SecurityCode,
 	}

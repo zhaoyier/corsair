@@ -13,7 +13,7 @@ import (
 
 // 每周更新一次
 func GetCodeListTicker() {
-
+	// GetCodeList()
 	tk := time.NewTicker(time.Hour * 2)
 	for range tk.C {
 		if time.Now().Weekday() != time.Saturday { //周
@@ -81,7 +81,7 @@ func applyCode(secu, exchange, name string, col *mgo.Collection) error {
 	}
 
 	secucode := exchange + "." + secu
-	query := ezdb.M{"secu": secucode}
+	query := ezdb.M{"Secucode": secucode}
 
 	change := mgo.Change{
 		Update: ezdb.M{

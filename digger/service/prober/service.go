@@ -17,6 +17,9 @@ func Start() {
 	go eastmoney.GetCodeListTicker()
 	// //
 	go eastmoney.GetShareholderTicker()
-	//
-	sina.GetDailyData()
+	// //
+	go sina.GetDailyData()
+
+	for {
+	}
 }

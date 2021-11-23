@@ -196,7 +196,7 @@ func (o *_GDRenshuMgr) NQuery(query interface{}, limit, offset int, sortFields [
 
 	return session, q
 }
-func (o *_GDRenshuMgr) FindOneBySecucodeEndDate(Secucode string, EndDate string) (result *GDRenshu, err error) {
+func (o *_GDRenshuMgr) FindOneBySecucodeEndDate(Secucode string, EndDate int64) (result *GDRenshu, err error) {
 	query := db.M{
 		"Secucode": Secucode,
 		"EndDate":  EndDate,
@@ -207,7 +207,7 @@ func (o *_GDRenshuMgr) FindOneBySecucodeEndDate(Secucode string, EndDate string)
 	return
 }
 
-func (o *_GDRenshuMgr) MustFindOneBySecucodeEndDate(Secucode string, EndDate string) (result *GDRenshu) {
+func (o *_GDRenshuMgr) MustFindOneBySecucodeEndDate(Secucode string, EndDate int64) (result *GDRenshu) {
 	result, _ = o.FindOneBySecucodeEndDate(Secucode, EndDate)
 	if result == nil {
 		result = GDRenshuMgr.NewGDRenshu()
@@ -218,7 +218,7 @@ func (o *_GDRenshuMgr) MustFindOneBySecucodeEndDate(Secucode string, EndDate str
 	return
 }
 
-func (o *_GDRenshuMgr) RemoveBySecucodeEndDate(Secucode string, EndDate string) (err error) {
+func (o *_GDRenshuMgr) RemoveBySecucodeEndDate(Secucode string, EndDate int64) (err error) {
 	session, col := GDRenshuMgr.GetCol()
 	defer session.Close()
 
@@ -246,7 +246,7 @@ func (o *_GDRenshuMgr) FindBySecurityCode(SecurityCode string, limit int, offset
 	err = q.All(&result)
 	return
 }
-func (o *_GDRenshuMgr) FindByEndDate(EndDate string, limit int, offset int, sortFields ...string) (result []*GDRenshu, err error) {
+func (o *_GDRenshuMgr) FindByEndDate(EndDate int64, limit int, offset int, sortFields ...string) (result []*GDRenshu, err error) {
 	query := db.M{
 		"EndDate": EndDate,
 	}
@@ -255,7 +255,7 @@ func (o *_GDRenshuMgr) FindByEndDate(EndDate string, limit int, offset int, sort
 	err = q.All(&result)
 	return
 }
-func (o *_GDRenshuMgr) FindByHolderTotalNum(HolderTotalNum float64, limit int, offset int, sortFields ...string) (result []*GDRenshu, err error) {
+func (o *_GDRenshuMgr) FindByHolderTotalNum(HolderTotalNum int32, limit int, offset int, sortFields ...string) (result []*GDRenshu, err error) {
 	query := db.M{
 		"HolderTotalNum": HolderTotalNum,
 	}
