@@ -9,6 +9,7 @@ var _ time.Time
 type Daily struct {
 	ID         bson.ObjectId `json:"id" bson:"_id,omitempty"`
 	Secucode   string        `bson:"Secucode" json:"Secucode"`
+	EndDate    string        `bson:"EndDate" json:"EndDate"`
 	Price      string        `bson:"Price" json:"Price"`
 	Market     string        `bson:"Market" json:"Market"`
 	Disabled   bool          `bson:"Disabled" json:"Disabled"`
@@ -19,6 +20,7 @@ type Daily struct {
 const (
 	DailyMgoFieldID         = "_id"
 	DailyMgoFieldSecucode   = "Secucode"
+	DailyMgoFieldEndDate    = "EndDate"
 	DailyMgoFieldPrice      = "Price"
 	DailyMgoFieldMarket     = "Market"
 	DailyMgoFieldDisabled   = "Disabled"

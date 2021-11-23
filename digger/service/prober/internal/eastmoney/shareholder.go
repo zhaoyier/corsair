@@ -3,7 +3,6 @@ package eastmoney
 import (
 	// "timevm
 
-	"fmt"
 	"strings"
 	"time"
 
@@ -20,48 +19,35 @@ var (
 )
 
 func GetShareholderTicker() {
-	// tk := time.NewTicker(time.Hour * 2)
-	// for range tk.C {
-	// 	if time.Now().Local().Hour() != 18 { //周
-	// 		continue
-	// 	}
+	tk := time.NewTicker(time.Hour * 2)
+	for range tk.C {
+		weekday := time.Now().Weekday()
+		nowHour := time.Now().Local().Hour()
+		if weekday != time.Thursday || weekday != time.Friday { //周
+			continue
+		}
 
-	// 	GetShareholder()
-	// }
+		if nowHour >= 18 && nowHour <= 24 {
+			GetShareholder()
+		}
 
-	GetShareholder()
-	// TODO 测试
-	// resp := new(ShareholderResearch)
-	// if err := webapi.GetEastmoneyData(digger.EastMoneyTypeEnum.Holder, "SZ301022", resp); err != nil {
-	// 	fmt.Printf("eastmoney get failed: %+v\n", err)
-	// 	return
-	// }
-	// log.Infof("==>>TODO 214: %+v", nil)
-	// applyShareholder(resp.Gdrs)
-
-	// applyGDsdlt(resp.Sdltgd)
+	}
 }
 
 func GetShareholder() {
 	sess, col := orm.CNSecucodeMgr.GetCol()
 	defer sess.Close()
-	var inc int32
-	var secucode *orm.CNSecucode
-	// var shareholder ShareholderResearch
 
+	var secucode *orm.CNSecucode
 	iter := col.Find(ezdb.M{}).Batch(100).Prefetch(0.25).Iter()
 	for iter.Next(&secucode) {
-		inc++
 
 		shareholder := new(ShareholderResearch)
 		code := strings.Replace(secucode.Secucode, ".", "", -1)
-		log.Infof("==>>TODO 300:%+v|%+v", code, secucode)
 		if err := webapi.GetEastmoneyData(digger.EastMoneyType_EastMoneyTypeHolder, code, shareholder); err != nil {
-			fmt.Printf("eastmoney get failed: %+v\n", err)
+			log.Infof("eastmoney get failed: %+v\n", err)
 			continue
 		}
-
-		log.Infof("==>>TODO 301:%+v|%+v", inc, shareholder)
 
 		if err := applyShareholder(shareholder.Gdrs); err != nil {
 			log.Errorf("apply share holder failed: %s|%q", secucode.Secucode, err)
@@ -70,6 +56,8 @@ func GetShareholder() {
 		if err := applyGDsdlt(shareholder.Sdltgd); err != nil {
 			log.Errorf("apply share holder failed: %s|%q", secucode.Secucode, err)
 		}
+
+		log.Infof("%s succeed", secucode.Secucode)
 	}
 }
 
@@ -92,7 +80,9 @@ func applyShareholder(data []Holder) error {
 
 		result.EndDate = tmp.Unix()
 		result.HolderTotalNum = int32(holder.HOLDERTOTALNUM)
-		result.TotalNumRatio = int32(holder.TOTALNUMRATIO)
+		if int32(holder.TOTALNUMRATIO) < 100 && int32(holder.TOTALNUMRATIO) > -100 {
+			result.TotalNumRatio = int32(holder.TOTALNUMRATIO)
+		}
 		result.AvgFreeShares = int32(holder.AVGFREESHARES)
 		result.AvgFreesharesRatio = int32(holder.AVGFREESHARESRATIO)
 		result.HoldFocus = holder.HOLDFOCUS

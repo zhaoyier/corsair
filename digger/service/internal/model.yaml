@@ -48,10 +48,12 @@ Daily:
   dbname: digger
   fields:
     - Secucode: string
+    - EndDate: string
     - Price: string
     - Market: string
     - Disabled: bool
     - CreateDate: datetime
+  uniques: [[Secucode,EndDate]]
   indexes: [[Secucode],[Disabled]]
 
 #十大流通股东

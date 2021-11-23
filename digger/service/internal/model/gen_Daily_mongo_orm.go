@@ -28,6 +28,15 @@ func initDailyIndex() {
 	defer session.Close()
 
 	if err := collection.EnsureIndex(mgo.Index{
+		Key:        []string{"Secucode", "EndDate"},
+		Unique:     true,
+		Background: true,
+		Sparse:     true,
+	}); err != nil {
+		panic("ensureIndex digger.Daily SecucodeEndDate error:" + err.Error())
+	}
+
+	if err := collection.EnsureIndex(mgo.Index{
 		Key:        []string{"Secucode"},
 		Background: true,
 		Sparse:     true,
@@ -170,6 +179,38 @@ func (o *_DailyMgr) NQuery(query interface{}, limit, offset int, sortFields []st
 	}
 
 	return session, q
+}
+func (o *_DailyMgr) FindOneBySecucodeEndDate(Secucode string, EndDate string) (result *Daily, err error) {
+	query := db.M{
+		"Secucode": Secucode,
+		"EndDate":  EndDate,
+	}
+	session, q := DailyMgr.NQuery(query, 1, 0, nil)
+	defer session.Close()
+	err = q.One(&result)
+	return
+}
+
+func (o *_DailyMgr) MustFindOneBySecucodeEndDate(Secucode string, EndDate string) (result *Daily) {
+	result, _ = o.FindOneBySecucodeEndDate(Secucode, EndDate)
+	if result == nil {
+		result = DailyMgr.NewDaily()
+		result.Secucode = Secucode
+		result.EndDate = EndDate
+		result.Save()
+	}
+	return
+}
+
+func (o *_DailyMgr) RemoveBySecucodeEndDate(Secucode string, EndDate string) (err error) {
+	session, col := DailyMgr.GetCol()
+	defer session.Close()
+
+	query := db.M{
+		"Secucode": Secucode,
+		"EndDate":  EndDate,
+	}
+	return col.Remove(query)
 }
 func (o *_DailyMgr) FindBySecucode(Secucode string, limit int, offset int, sortFields ...string) (result []*Daily, err error) {
 	query := db.M{
