@@ -18,15 +18,15 @@ GDRenshu:
     - Secucode: string
     - SecurityCode: string
     - EndDate: int64             #截止时间
-    - HolderTotalNum: int32     #股东人数
-    - TotalNumRatio: int32      #较上期变化
-    - AvgFreeShares: int32      #人均流通股
-    - AvgFreesharesRatio: int32 #人均较上期变化
+    - HolderTotalNum: float64     #股东人数
+    - TotalNumRatio: float64      #较上期变化
+    - AvgFreeShares: float64      #人均流通股
+    - AvgFreesharesRatio: float64 #人均较上期变化
     - HoldFocus: string           #筹码集中度
-    - Price: int32              #价格
-    - AvgHoldAmt: int32         #金额
-    - HoldRatioTotal: int32     #top10合计
-    - FreeholdRatioTotal: int32 #top10流通合计
+    - Price: float64              #价格
+    - AvgHoldAmt: float64         #金额
+    - HoldRatioTotal: float64     #top10合计
+    - FreeholdRatioTotal: float64 #top10流通合计
     - CreateDate: datetime        
     - UpdateDate: datetime
   uniques: [[Secucode, EndDate]]
@@ -49,7 +49,7 @@ Daily:
   fields:
     - Secucode: string
     - EndDate: string
-    - Price: string
+    - Price: float64
     - Market: string
     - Disabled: bool
     - CreateDate: datetime

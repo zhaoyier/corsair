@@ -10,7 +10,7 @@ type Daily struct {
 	ID         bson.ObjectId `json:"id" bson:"_id,omitempty"`
 	Secucode   string        `bson:"Secucode" json:"Secucode"`
 	EndDate    string        `bson:"EndDate" json:"EndDate"`
-	Price      string        `bson:"Price" json:"Price"`
+	Price      float64       `bson:"Price" json:"Price"`
 	Market     string        `bson:"Market" json:"Market"`
 	Disabled   bool          `bson:"Disabled" json:"Disabled"`
 	CreateDate int64         `bson:"CreateDate" json:"CreateDate"`

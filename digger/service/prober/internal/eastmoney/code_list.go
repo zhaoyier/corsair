@@ -13,16 +13,18 @@ import (
 
 // 每周更新一次
 func GetCodeListTicker() {
-	// GetCodeList()
-	tk := time.NewTicker(time.Hour * 2)
+	tk := time.NewTicker(time.Minute * 90)
 	for range tk.C {
+		nowHour := time.Now().Local().Hour()
+
 		if time.Now().Weekday() != time.Saturday { //周
 			continue
 		}
 
-		GetCodeList()
+		if nowHour >= 18 && nowHour < 20 {
+			GetCodeList()
+		}
 	}
-
 }
 
 func GetCodeList() {

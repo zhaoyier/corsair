@@ -19,18 +19,17 @@ var (
 )
 
 func GetShareholderTicker() {
-	tk := time.NewTicker(time.Hour * 2)
+	tk := time.NewTicker(time.Minute * 90)
 	for range tk.C {
 		weekday := time.Now().Weekday()
 		nowHour := time.Now().Local().Hour()
-		if weekday != time.Thursday || weekday != time.Friday { //周
+		if weekday != time.Thursday && weekday != time.Friday { //周
 			continue
 		}
 
-		if nowHour >= 18 && nowHour <= 24 {
+		if nowHour >= 18 && nowHour < 20 {
 			GetShareholder()
 		}
-
 	}
 }
 
@@ -79,17 +78,17 @@ func applyShareholder(data []Holder) error {
 		result.SecurityCode = holder.SECURITYCODE
 
 		result.EndDate = tmp.Unix()
-		result.HolderTotalNum = int32(holder.HOLDERTOTALNUM)
+		result.HolderTotalNum = holder.HOLDERTOTALNUM
 		if int32(holder.TOTALNUMRATIO) < 100 && int32(holder.TOTALNUMRATIO) > -100 {
-			result.TotalNumRatio = int32(holder.TOTALNUMRATIO)
+			result.TotalNumRatio = holder.TOTALNUMRATIO
 		}
-		result.AvgFreeShares = int32(holder.AVGFREESHARES)
-		result.AvgFreesharesRatio = int32(holder.AVGFREESHARESRATIO)
+		result.AvgFreeShares = holder.AVGFREESHARES
+		result.AvgFreesharesRatio = holder.AVGFREESHARESRATIO
 		result.HoldFocus = holder.HOLDFOCUS
-		result.Price = int32(holder.PRICE)
-		result.AvgHoldAmt = int32(holder.AVGHOLDAMT)
-		result.HoldRatioTotal = int32(holder.HOLDRATIOTOTAL)
-		result.FreeholdRatioTotal = int32(holder.FREEHOLDRATIOTOTAL)
+		result.Price = holder.PRICE
+		result.AvgHoldAmt = holder.AVGHOLDAMT
+		result.HoldRatioTotal = holder.HOLDRATIOTOTAL
+		result.FreeholdRatioTotal = holder.FREEHOLDRATIOTOTAL
 		result.UpdateDate = time.Now().Unix()
 		result.CreateDate = time.Now().Unix()
 

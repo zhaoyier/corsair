@@ -11,15 +11,15 @@ type GDRenshu struct {
 	Secucode           string        `bson:"Secucode" json:"Secucode"`
 	SecurityCode       string        `bson:"SecurityCode" json:"SecurityCode"`
 	EndDate            int64         `bson:"EndDate" json:"EndDate"`
-	HolderTotalNum     int32         `bson:"HolderTotalNum" json:"HolderTotalNum"`
-	TotalNumRatio      int32         `bson:"TotalNumRatio" json:"TotalNumRatio"`
-	AvgFreeShares      int32         `bson:"AvgFreeShares" json:"AvgFreeShares"`
-	AvgFreesharesRatio int32         `bson:"AvgFreesharesRatio" json:"AvgFreesharesRatio"`
+	HolderTotalNum     float64       `bson:"HolderTotalNum" json:"HolderTotalNum"`
+	TotalNumRatio      float64       `bson:"TotalNumRatio" json:"TotalNumRatio"`
+	AvgFreeShares      float64       `bson:"AvgFreeShares" json:"AvgFreeShares"`
+	AvgFreesharesRatio float64       `bson:"AvgFreesharesRatio" json:"AvgFreesharesRatio"`
 	HoldFocus          string        `bson:"HoldFocus" json:"HoldFocus"`
-	Price              int32         `bson:"Price" json:"Price"`
-	AvgHoldAmt         int32         `bson:"AvgHoldAmt" json:"AvgHoldAmt"`
-	HoldRatioTotal     int32         `bson:"HoldRatioTotal" json:"HoldRatioTotal"`
-	FreeholdRatioTotal int32         `bson:"FreeholdRatioTotal" json:"FreeholdRatioTotal"`
+	Price              float64       `bson:"Price" json:"Price"`
+	AvgHoldAmt         float64       `bson:"AvgHoldAmt" json:"AvgHoldAmt"`
+	HoldRatioTotal     float64       `bson:"HoldRatioTotal" json:"HoldRatioTotal"`
+	FreeholdRatioTotal float64       `bson:"FreeholdRatioTotal" json:"FreeholdRatioTotal"`
 	CreateDate         int64         `bson:"CreateDate" json:"CreateDate"`
 	UpdateDate         int64         `bson:"UpdateDate" json:"UpdateDate"`
 	isNew              bool

@@ -28,15 +28,6 @@ func initGDRenshuIndex() {
 	defer session.Close()
 
 	if err := collection.EnsureIndex(mgo.Index{
-		Key:        []string{"Secucode", "EndDate"},
-		Unique:     true,
-		Background: true,
-		Sparse:     true,
-	}); err != nil {
-		panic("ensureIndex digger.GDRenshu SecucodeEndDate error:" + err.Error())
-	}
-
-	if err := collection.EnsureIndex(mgo.Index{
 		Key:        []string{"Secucode"},
 		Background: true,
 		Sparse:     true,
@@ -66,6 +57,15 @@ func initGDRenshuIndex() {
 		Sparse:     true,
 	}); err != nil {
 		panic("ensureIndex digger.GDRenshu HolderTotalNum error:" + err.Error())
+	}
+
+	if err := collection.EnsureIndex(mgo.Index{
+		Key:        []string{"Secucode", "EndDate"},
+		Unique:     true,
+		Background: true,
+		Sparse:     true,
+	}); err != nil {
+		panic("ensureIndex digger.GDRenshu SecucodeEndDate error:" + err.Error())
 	}
 
 }
@@ -196,6 +196,42 @@ func (o *_GDRenshuMgr) NQuery(query interface{}, limit, offset int, sortFields [
 
 	return session, q
 }
+func (o *_GDRenshuMgr) FindBySecucode(Secucode string, limit int, offset int, sortFields ...string) (result []*GDRenshu, err error) {
+	query := db.M{
+		"Secucode": Secucode,
+	}
+	session, q := GDRenshuMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
+}
+func (o *_GDRenshuMgr) FindBySecurityCode(SecurityCode string, limit int, offset int, sortFields ...string) (result []*GDRenshu, err error) {
+	query := db.M{
+		"SecurityCode": SecurityCode,
+	}
+	session, q := GDRenshuMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
+}
+func (o *_GDRenshuMgr) FindByEndDate(EndDate int64, limit int, offset int, sortFields ...string) (result []*GDRenshu, err error) {
+	query := db.M{
+		"EndDate": EndDate,
+	}
+	session, q := GDRenshuMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
+}
+func (o *_GDRenshuMgr) FindByHolderTotalNum(HolderTotalNum float64, limit int, offset int, sortFields ...string) (result []*GDRenshu, err error) {
+	query := db.M{
+		"HolderTotalNum": HolderTotalNum,
+	}
+	session, q := GDRenshuMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
+}
 func (o *_GDRenshuMgr) FindOneBySecucodeEndDate(Secucode string, EndDate int64) (result *GDRenshu, err error) {
 	query := db.M{
 		"Secucode": Secucode,
@@ -227,42 +263,6 @@ func (o *_GDRenshuMgr) RemoveBySecucodeEndDate(Secucode string, EndDate int64) (
 		"EndDate":  EndDate,
 	}
 	return col.Remove(query)
-}
-func (o *_GDRenshuMgr) FindBySecucode(Secucode string, limit int, offset int, sortFields ...string) (result []*GDRenshu, err error) {
-	query := db.M{
-		"Secucode": Secucode,
-	}
-	session, q := GDRenshuMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
-}
-func (o *_GDRenshuMgr) FindBySecurityCode(SecurityCode string, limit int, offset int, sortFields ...string) (result []*GDRenshu, err error) {
-	query := db.M{
-		"SecurityCode": SecurityCode,
-	}
-	session, q := GDRenshuMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
-}
-func (o *_GDRenshuMgr) FindByEndDate(EndDate int64, limit int, offset int, sortFields ...string) (result []*GDRenshu, err error) {
-	query := db.M{
-		"EndDate": EndDate,
-	}
-	session, q := GDRenshuMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
-}
-func (o *_GDRenshuMgr) FindByHolderTotalNum(HolderTotalNum int32, limit int, offset int, sortFields ...string) (result []*GDRenshu, err error) {
-	query := db.M{
-		"HolderTotalNum": HolderTotalNum,
-	}
-	session, q := GDRenshuMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
 }
 
 func (o *_GDRenshuMgr) Find(query interface{}, limit int, offset int, sortFields ...string) (result []*GDRenshu, err error) {

@@ -2,6 +2,7 @@ package sina
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -13,13 +14,29 @@ import (
 )
 
 func GetDailyDataTicker() {
-	tk := time.NewTicker(time.Hour * 2)
+	tk := time.NewTicker(time.Minute * 90)
+
 	for range tk.C {
 		nowHour := time.Now().Local().Hour()
-		if nowHour >= 18 && nowHour <= 24 { //周
+
+		if nowHour >= 18 && nowHour <= 20 { //周
 			GetDailyData()
 		}
+	}
+}
 
+func GetDailyDataTmp() {
+	secucode := "SZ300943"
+	now := time.Now()
+	date := fmt.Sprintf("%d-%d-%d", now.Year(), now.Month(), now.Day())
+	result, err := webapi.GetSinaDayDetail(secucode)
+	if err != nil {
+		log.Errorf("get sina daily failed: %s|%q", secucode, err)
+		return
+	}
+
+	if err := applyDaily(secucode, date, result); err != nil {
+		log.Errorf("get sina daily failed: %s|%q", secucode, err)
 	}
 }
 
@@ -57,10 +74,12 @@ func applyDaily(secucode, date string, data []string) error {
 	}
 
 	result = orm.DailyMgr.NewDaily()
-	result.Secucode = secucode
 	result.EndDate = date
-	result.Price = data[3]
+	result.Secucode = secucode
 	result.CreateDate = time.Now().Unix()
+	if s, err := strconv.ParseFloat(data[3], 64); err == nil {
+		result.Price = s
+	}
 
 	if _, err := result.Save(); err != nil {
 		log.Errorf("save gd renshu failed: %s|%q", secucode, err)
