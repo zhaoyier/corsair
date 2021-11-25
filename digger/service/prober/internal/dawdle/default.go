@@ -46,6 +46,7 @@ type WeightValue struct {
 	FreeholdRatioTotal []float64
 	Date               []string
 	RecentPrice        float64
+	Weight             string
 	wr                 *WeightRule
 }
 
@@ -190,6 +191,7 @@ func (wv *WeightValue) GetWeight() float64 {
 	weight = wr.Price + wr.Focus + wr.TotalNumRatio + wr.AvgFreesharesRatio + wr.HoldRatioTotal + wr.FreeholdRatioTotal
 
 	value, _ := strconv.ParseFloat(fmt.Sprintf("%.1f", weight), 64)
+	wv.Weight = fmt.Sprintf("%f", value)
 
 	return value
 }

@@ -4,6 +4,7 @@ import (
 	// "timevm
 
 	"strings"
+	"sync"
 	"time"
 
 	"git.ezbuy.me/ezbuy/corsair/digger/rpc/digger"
@@ -15,7 +16,9 @@ import (
 )
 
 var (
-	timeLayout = "2006-01-02 15:04:05"
+	getCodeListOnce    sync.Once
+	getShareholderOnce sync.Once
+	timeLayout         = "2006-01-02 15:04:05"
 )
 
 func GetShareholderTicker() {
@@ -31,6 +34,12 @@ func GetShareholderTicker() {
 			GetShareholder()
 		}
 	}
+}
+
+func GetShareholderOnce() {
+	getShareholderOnce.Do(func() {
+		GetShareholder()
+	})
 }
 
 func GetShareholder() {

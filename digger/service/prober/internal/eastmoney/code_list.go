@@ -27,6 +27,12 @@ func GetCodeListTicker() {
 	}
 }
 
+func GetCodeListOnce() {
+	getCodeListOnce.Do(func() {
+		GetCodeList()
+	})
+}
+
 func GetCodeList() {
 	sess, col := orm.CNSecucodeMgr.GetCol()
 	defer sess.Close()
@@ -73,7 +79,6 @@ func updateCodeList(req *StockList, col *mgo.Collection) error {
 	}
 
 	return nil
-
 }
 
 func applyCode(secu, exchange, name string, col *mgo.Collection) error {

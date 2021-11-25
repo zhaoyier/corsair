@@ -16,13 +16,13 @@ func Start() {
 
 	//
 	go eastmoney.GetCodeListTicker()
-	//
+	//go eastmoney.GetCodeListOnce()
 	go eastmoney.GetShareholderTicker()
-	//
-	// go sina.GetDailyDataTicker()
-	go sina.GetDailyData()
-	//
+	//go eastmoney.GetShareholderOnce()
+	go sina.GetDailyDataTicker()
+	// go sina.GetDailyDataOnce()
 	go dawdle.GenShareholderTicker()
+	// go dawdle.GenShareholderOnce()
 
 	for {
 

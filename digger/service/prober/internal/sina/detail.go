@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/common/webapi"
@@ -11,6 +12,10 @@ import (
 	log "github.com/Sirupsen/logrus"
 	ezdb "github.com/ezbuy/ezorm/db"
 	mgo "gopkg.in/mgo.v2"
+)
+
+var (
+	getDailyDataOnce sync.Once
 )
 
 func GetDailyDataTicker() {
@@ -23,6 +28,12 @@ func GetDailyDataTicker() {
 			GetDailyData()
 		}
 	}
+}
+
+func GetDailyDataOnce() {
+	getDailyDataOnce.Do(func() {
+		GetDailyData()
+	})
 }
 
 func GetDailyDataTmp() {
@@ -55,7 +66,6 @@ func GetDailyData() {
 			log.Errorf("get sina daily failed: %s|%q", secucode.Secucode, err)
 			continue
 		}
-
 		if err := applyDaily(secucode.Secucode, date, result); err != nil {
 			log.Errorf("get sina daily failed: %s|%q", secucode.Secucode, err)
 			continue
@@ -77,6 +87,10 @@ func applyDaily(secucode, date string, data []string) error {
 	result.EndDate = date
 	result.Secucode = secucode
 	result.CreateDate = time.Now().Unix()
+	if len(data) < 4 {
+		log.Errorf("get daily data failed: %s|%s", secucode, data)
+		return nil
+	}
 	if s, err := strconv.ParseFloat(data[3], 64); err == nil {
 		result.Price = s
 	}

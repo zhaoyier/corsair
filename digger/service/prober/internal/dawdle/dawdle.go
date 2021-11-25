@@ -2,13 +2,19 @@ package dawdle
 
 import (
 	"fmt"
+	"os"
 	"strings"
+	"sync"
 	"time"
 
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
 	log "github.com/Sirupsen/logrus"
 	ezdb "github.com/ezbuy/ezorm/db"
 	"github.com/tealeg/xlsx"
+)
+
+var (
+	genShareholderOnce sync.Once
 )
 
 func GenShareholderTicker() {
@@ -23,6 +29,12 @@ func GenShareholderTicker() {
 			GenShareholder()
 		}
 	}
+}
+
+func GenShareholderOnce() {
+	genShareholderOnce.Do(func() {
+		GenShareholder()
+	})
 }
 
 func GenShareholderTmp() error {
@@ -117,6 +129,7 @@ func genDawdleTitle() (*xlsx.File, error) {
 	}
 	titleRow := sheet.AddRow()
 	titleRow.AddCell().SetString("码")
+	titleRow.AddCell().SetString("指数")
 	titleRow.AddCell().SetString("价格")
 	titleRow.AddCell().SetString("集中度")
 	titleRow.AddCell().SetString("日期")
@@ -128,20 +141,36 @@ func fillDawdleData(file *xlsx.File, wv *WeightValue) error {
 		return fmt.Errorf("sheet is nil")
 	}
 
-	if weight := wv.Cal().GetWeight(); weight < 80 {
+	if weight := wv.Cal().GetWeight(); weight < 70 {
 		return fmt.Errorf("%s underweighting of stocks", wv.Secucode)
 	}
 
 	sheet := file.Sheets[0]
 	row := sheet.AddRow()
 	row.AddCell().SetString(wv.Secucode)
+	row.AddCell().SetString(wv.Weight)
 	row.AddCell().SetString(intSlice2Str(wv.Price, "<-"))
 	row.AddCell().SetString(strings.Join(wv.Focus, "<-"))
 	row.AddCell().SetString(strings.Join(wv.Date, "<-"))
 
 	filename := fmt.Sprintf("%s.xlsx", time.Now().Format("2006-01-02"))
-	if err := file.Save(filename); err != nil {
-		panic(err.Error())
+	if err := saveToFile(file, filename); err != nil {
+		log.Errorf("save file failed: %s|%q", filename, err)
+		return err
+	}
+
+	return nil
+}
+
+func saveToFile(file *xlsx.File, filename string) error {
+	_, err := os.Stat("export")
+	if err != nil {
+		os.Mkdir("export", os.ModePerm)
+	}
+
+	if err := file.Save("export/" + filename); err != nil {
+		log.Errorf("save file failed: %s|%q", filename, err)
+		return err
 	}
 
 	return nil
