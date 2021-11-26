@@ -6,7 +6,7 @@ import "time"
 
 var _ time.Time
 
-type GpRecommend struct {
+type GPRecommend struct {
 	ID            bson.ObjectId `json:"id" bson:"_id,omitempty"`
 	Secucode      string        `bson:"Secucode" json:"Secucode"`
 	Level         float64       `bson:"Level" json:"Level"`
@@ -21,40 +21,40 @@ type GpRecommend struct {
 }
 
 const (
-	GpRecommendMgoFieldID            = "_id"
-	GpRecommendMgoFieldSecucode      = "Secucode"
-	GpRecommendMgoFieldLevel         = "Level"
-	GpRecommendMgoFieldCumulantPrice = "CumulantPrice"
-	GpRecommendMgoFieldCumulantFocus = "CumulantFocus"
-	GpRecommendMgoFieldCumulantDate  = "CumulantDate"
-	GpRecommendMgoFieldDisabled      = "Disabled"
-	GpRecommendMgoFieldRemark        = "Remark"
-	GpRecommendMgoFieldEndDate       = "EndDate"
-	GpRecommendMgoFieldCreateDate    = "CreateDate"
+	GPRecommendMgoFieldID            = "_id"
+	GPRecommendMgoFieldSecucode      = "Secucode"
+	GPRecommendMgoFieldLevel         = "Level"
+	GPRecommendMgoFieldCumulantPrice = "CumulantPrice"
+	GPRecommendMgoFieldCumulantFocus = "CumulantFocus"
+	GPRecommendMgoFieldCumulantDate  = "CumulantDate"
+	GPRecommendMgoFieldDisabled      = "Disabled"
+	GPRecommendMgoFieldRemark        = "Remark"
+	GPRecommendMgoFieldEndDate       = "EndDate"
+	GPRecommendMgoFieldCreateDate    = "CreateDate"
 )
 const (
-	GpRecommendMgoSortFieldIDAsc  = "_id"
-	GpRecommendMgoSortFieldIDDesc = "-_id"
+	GPRecommendMgoSortFieldIDAsc  = "_id"
+	GPRecommendMgoSortFieldIDDesc = "-_id"
 )
 
-func (p *GpRecommend) GetNameSpace() string {
+func (p *GPRecommend) GetNameSpace() string {
 	return "digger"
 }
 
-func (p *GpRecommend) GetClassName() string {
-	return "GpRecommend"
+func (p *GPRecommend) GetClassName() string {
+	return "GPRecommend"
 }
 
-type _GpRecommendMgr struct {
+type _GPRecommendMgr struct {
 }
 
-var GpRecommendMgr *_GpRecommendMgr
+var GPRecommendMgr *_GPRecommendMgr
 
-// Get_GpRecommendMgr returns the orm manager in case of its name starts with lower letter
-func Get_GpRecommendMgr() *_GpRecommendMgr { return GpRecommendMgr }
+// Get_GPRecommendMgr returns the orm manager in case of its name starts with lower letter
+func Get_GPRecommendMgr() *_GPRecommendMgr { return GPRecommendMgr }
 
-func (m *_GpRecommendMgr) NewGpRecommend() *GpRecommend {
-	rval := new(GpRecommend)
+func (m *_GPRecommendMgr) NewGPRecommend() *GPRecommend {
+	rval := new(GPRecommend)
 	rval.isNew = true
 	rval.ID = bson.NewObjectId()
 

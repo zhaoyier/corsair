@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://www.itxst.com/package/bootstrap-table-1.14.1/jquery-3.3.1/jquery.js"></script>
+    <link href="https://www.itxst.com/package/bootstrap-table-1.14.1/bootstrap-4.3.1/css/bootstrap.css" rel="stylesheet" />
+    <link href="https://www.itxst.com/package/bootstrap-table-1.14.1/bootstrap-table-1.14.1/bootstrap-table.css" rel="stylesheet" />
+    <script src="https://www.itxst.com/package/bootstrap-table-1.14.1/bootstrap-table-1.14.1/bootstrap-table.js"></script>
+    <title>bootstrap table 服务器端分页在线例子</title>
+    <style>
+        .table-demo {
+            width: 80%;
+            margin: 30px auto 0px auto;
+        }
+        .fixed-table-header {
+            border-right: solid 1px #ddd;
+            border-top: solid 1px #ddd;
+        }
+        .fixed-table-header table  {
+            border-top: solid 0px #ddd !important;
+            margin-top:-1px;
+        }
+    </style>
+</head>
+<body >
+    <div class="table-demo">
+        <table id="table"></table>
+    </div>
+    <script>
+        //设置需要显示的列
+        var columns = [{
+            field: 'id',
+            title: '编号',
+            width: 20,
+        }, {
+            field: 'secucode',
+            title: '代码'
+        }, {
+            field: 'level',
+            title: '指数'
+        },{
+            field: 'cumulantPrice',
+            title: '价格阶'
+        },{
+            field: 'cumulantFocus',
+            title: '集中阶'
+        },{
+            field: 'cumulantDate',
+            title: '日期阶'
+        },{
+            field: 'endDate',
+            title: '更新日期'
+        }];
+ 
+        //bootstrap table初始化数据
+        $('#table').bootstrapTable({
+          columns: columns,
+          classes: "table table-bordered table-striped table-sm table-dark", //设置表格样式
+           height:400,
+          //******服务器端分页设置****
+           url: "http://localhost:12303/api/digger.Fountain/GetRecommendList", //服务器返回数据的网址
+           method: 'GET',   //数据请求方式
+           sidePagination:'server',
+           search:true, //******开启搜索框****//
+           searchOnEnterKey:false, //******回车后执行搜索****//
+           pagination:true,
+           pageNumber:1,
+           pageSize:5,
+           pageList:"[10, 20, 50, 200]",
+           paginationHAlign:"left",
+           paginationDetailHAlign:"right",
+           queryParams:function(params) {
+                /******获取分页数据时，这里你可以带上你自定义的参数******/
+                params.action="getlist";
+                params.catalogId=0;
+                return params; 
+            }
+           //******服务器端分页设置****
+        });
+    </script>
+</body>
+</html>

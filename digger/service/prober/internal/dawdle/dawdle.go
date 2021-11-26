@@ -170,8 +170,8 @@ func fillDawdleData(file *xlsx.File, wv *WeightValue) error {
 func applyGpRecommend(wv *WeightValue) error {
 	// log.Infof("==>>TODO 311:%+v", wv.Secucode)
 	enddate := time.Unix(wv.Date[0], 0).Format("2006-01-02")
-	result, err := orm.GpRecommendMgr.FindOneBySecucodeEndDate(wv.Secucode, enddate)
-	// result, err := orm.GpRecommendMgr.FindOneBySecucodeEndDate(wv.Secucode, "2021-11-12")
+	result, err := orm.GPRecommendMgr.FindOneBySecucodeEndDate(wv.Secucode, enddate)
+	// result, err := orm.GPRecommendMgr.FindOneBySecucodeEndDate(wv.Secucode, "2021-11-12")
 	// log.Infof("==>>TODO 312:%+v|%+v", result, err)
 	// log.Infof("==>>TODO 313:%+v|%+v", err != nil, result != nil)
 	if err != nil && err != mgo.ErrNotFound {
@@ -183,7 +183,7 @@ func applyGpRecommend(wv *WeightValue) error {
 	}
 
 	// log.Infof("==>>TODO 315:%+v|%+v", result, err)
-	result = orm.GpRecommendMgr.NewGpRecommend()
+	result = orm.GPRecommendMgr.NewGPRecommend()
 	result.Level = wv.Weight
 	result.EndDate = enddate
 	result.Secucode = wv.Secucode

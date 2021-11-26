@@ -6,15 +6,17 @@ import (
 	"os"
 	"os/signal"
 
+	"git.ezbuy.me/ezbuy/corsair/digger/common"
 	"github.com/gin-gonic/gin"
 )
 
 func Start() {
 	router := gin.Default()
+	router.Use(common.Cors())
 	startRoute(router)
 
 	server := &http.Server{
-		Addr:    ":8080",
+		Addr:    ":12303",
 		Handler: router,
 	}
 

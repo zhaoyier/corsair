@@ -1,0 +1,30 @@
+syntax = "proto3";
+ 
+option go_package="./;digger";
+package digger;
+
+service Fountain {
+    rpc GetRecommendList(GetRecommendListReq) returns(GetRecommendListResp);
+}
+
+message GetRecommendListReq {
+    int32 offset = 1;
+    int32 limit = 2;
+}
+
+message RecommendData {
+    int32 id = 1;
+    string secucode = 2;
+    float level = 3;
+    string cumulantPrice = 4;
+    string cumulantFocus = 5;
+    string cumulantDate = 6;
+    string endDate = 7;
+    int64 createDate=8;
+}
+
+
+message GetRecommendListResp {
+    repeated RecommendData rows = 1;
+    int32 total = 2;
+}

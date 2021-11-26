@@ -73,7 +73,7 @@ GDsdlt:
   uniques: [[Secucode,EndDate,HolderName]]
   indexes: [[Secucode,EndDate],[CreateDate]]
 
-GpRecommend:
+GPRecommend:
     db: mongo
     dbname: digger
     fields:
