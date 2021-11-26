@@ -26,12 +26,14 @@ func GetShareholderTicker() {
 	for range tk.C {
 		weekday := time.Now().Weekday()
 		nowHour := time.Now().Local().Hour()
-		if weekday != time.Thursday && weekday != time.Friday { //周
+		if weekday == time.Saturday || weekday != time.Sunday { //周
 			continue
 		}
-
+		log.Infof("get share holder charging up: %d", nowHour)
 		if nowHour >= 18 && nowHour < 20 {
+			log.Infof("get share holder in progress: %d", nowHour)
 			GetShareholder()
+			log.Infof("get share holder completed: %d", nowHour)
 		}
 	}
 }
@@ -63,6 +65,7 @@ func GetShareholder() {
 
 		if err := applyGDsdlt(shareholder.Sdltgd); err != nil {
 			log.Errorf("apply share holder failed: %s|%q", secucode.Secucode, err)
+			continue
 		}
 
 		log.Infof("%s succeed", secucode.Secucode)

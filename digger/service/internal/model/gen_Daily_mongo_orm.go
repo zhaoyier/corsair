@@ -45,11 +45,11 @@ func initDailyIndex() {
 	}
 
 	if err := collection.EnsureIndex(mgo.Index{
-		Key:        []string{"Disabled"},
+		Key:        []string{"EndDate"},
 		Background: true,
 		Sparse:     true,
 	}); err != nil {
-		panic("ensureIndex digger.Daily Disabled error:" + err.Error())
+		panic("ensureIndex digger.Daily EndDate error:" + err.Error())
 	}
 
 }
@@ -221,9 +221,9 @@ func (o *_DailyMgr) FindBySecucode(Secucode string, limit int, offset int, sortF
 	err = q.All(&result)
 	return
 }
-func (o *_DailyMgr) FindByDisabled(Disabled bool, limit int, offset int, sortFields ...string) (result []*Daily, err error) {
+func (o *_DailyMgr) FindByEndDate(EndDate string, limit int, offset int, sortFields ...string) (result []*Daily, err error) {
 	query := db.M{
-		"Disabled": Disabled,
+		"EndDate": EndDate,
 	}
 	session, q := DailyMgr.Query(query, limit, offset, sortFields)
 	defer session.Close()

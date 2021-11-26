@@ -50,11 +50,11 @@ Daily:
     - Secucode: string
     - EndDate: string
     - Price: float64
-    - Market: string
-    - Disabled: bool
+    - Highest: float64
+    - Minimum: float64
     - CreateDate: datetime
   uniques: [[Secucode,EndDate]]
-  indexes: [[Secucode],[Disabled]]
+  indexes: [[Secucode],[EndDate]]
 
 #十大流通股东
 GDsdlt:
@@ -72,3 +72,20 @@ GDsdlt:
     - CreateDate: datetime
   uniques: [[Secucode,EndDate,HolderName]]
   indexes: [[Secucode,EndDate],[CreateDate]]
+
+GpRecommend:
+    db: mongo
+    dbname: digger
+    fields:
+      - Secucode: string
+      - Level: float64
+      - CumulantPrice: string #价格梯度
+      - CumulantFocus: string #集中度梯度
+      - CumulantDate: string  #日期梯度
+      - Disabled: bool
+      - Remark: string
+      - EndDate: string        #截止日期
+      - CreateDate: datetime
+    uniques: [[Secucode,EndDate]]
+    indexes: [[Level],[EndDate],[Disabled],[CreateDate]]
+    

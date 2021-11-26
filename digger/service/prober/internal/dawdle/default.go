@@ -5,8 +5,9 @@ import (
 	"math"
 	"strconv"
 	"strings"
+	"time"
 
-	"qiniupkg.com/x/log.v7"
+	log "github.com/Sirupsen/logrus"
 )
 
 const (
@@ -25,6 +26,7 @@ const (
 	cumulantRatio int     = 3
 	cumulantPrice int     = 5
 	priceDiff     float64 = 1.25
+	dateDiff      int64   = 10 * 86400
 )
 
 type WeightRule struct {
@@ -44,9 +46,9 @@ type WeightValue struct {
 	AvgFreesharesRatio []float64
 	HoldRatioTotal     []float64
 	FreeholdRatioTotal []float64
-	Date               []string
+	Date               []int64
 	RecentPrice        float64
-	Weight             string
+	Weight             float64
 	wr                 *WeightRule
 }
 
@@ -59,17 +61,17 @@ func NewWeightValue(secucode string) *WeightValue {
 		AvgFreesharesRatio: make([]float64, 0, 8),
 		HoldRatioTotal:     make([]float64, 0, 8),
 		FreeholdRatioTotal: make([]float64, 0, 8),
-		Date:               make([]string, 0, 8),
+		Date:               make([]int64, 0, 8),
 		wr:                 defaultWeightRule(),
 	}
 }
 
 func defaultWeightRule() *WeightRule {
 	return &WeightRule{
-		TotalNumRatio:      20,
+		TotalNumRatio:      15,
 		AvgFreesharesRatio: 10,
 		Focus:              30,
-		Price:              20,
+		Price:              25,
 		HoldRatioTotal:     10,
 		FreeholdRatioTotal: 10,
 	}
@@ -86,39 +88,49 @@ func (wv *WeightValue) Cal() *WeightValue {
 }
 
 func (wv *WeightValue) CalPrice() {
-	var max float64
-
-	if len(wv.Price) <= 0 {
-		return
+	max, prev := wv.Price[0], wv.Price[0]
+	if len(wv.Price) > cumulantPrice {
+		wv.Price = wv.Price[0:cumulantPrice]
 	}
 
 	for idx, val := range wv.Price {
-		if idx > cumulantPrice {
-			continue
+		// log.Infof("==>>TODO Price 401:%s|%+v|%f|%+v", wv.Secucode, idx, val, val <= 0)
+		if idx > cumulantPrice || val <= 0 {
+			wv.wr.Price = 0
+			return
 		}
 
-		if max < float64(val) {
-			max = float64(val)
+		// 价格跳动太大就舍弃了
+		// log.Infof("==>>TODO Price 402:%s|%+v|%f|%f", wv.Secucode, idx, math.Pow(1.1, float64(idx)), priceDiff*math.Pow(1.1, float64(idx)))
+		if (math.Abs(prev-val) / val) > priceDiff*math.Pow(1.1, float64(idx)) {
+			wv.wr.Price = 0
+			return
+		}
+
+		if max < val {
+			max = val
 		}
 	}
 
-	rate := (max - wv.Price[0]) / max
-	if rate < one_fifth && rate > one_ten {
+	rate := Decimal((max - wv.Price[0]) / max)
+	// log.Infof("==>>TODO Price 405:%+v|%+v|%+v", max, wv.Price[0], rate)
+	if rate < two_fifth && rate > one_ten {
 		wv.wr.Price = wv.wr.Price * 0.5
-	} else if rate < one_ten {
+	} else if rate <= one_ten {
 		wv.wr.Price = 0
 	}
 }
 
-func (wv *WeightValue) CalFocus() float64 {
+func (wv *WeightValue) CalFocus() {
 	var weight float64
 	for idx, val := range wv.Focus {
+		// log.Infof("==>>401: %+v|%+v|%+v", idx, val, val == "非常集中")
 		if idx <= cumulantRatio && (val == "非常集中" || val == "较集中") {
 			weight += 0.25
 		}
 	}
-
-	return float64(wv.wr.Focus) * weight
+	wv.wr.Focus = wv.wr.Focus * weight
+	// log.Infof("==>>405: %+v|%+v", wv.wr.Focus, weight)
 }
 
 func (wv *WeightValue) CalTotalNumRatio() { //+-,越小越好
@@ -133,7 +145,7 @@ func (wv *WeightValue) CalTotalNumRatio() { //+-,越小越好
 	}
 
 	if rate := math.Abs(min / TotalNumRatio); rate < 1 {
-		wv.wr.TotalNumRatio = wv.wr.TotalNumRatio * rate
+		wv.wr.TotalNumRatio = Decimal(wv.wr.TotalNumRatio * rate)
 	}
 }
 
@@ -149,7 +161,7 @@ func (wv *WeightValue) CalAvgFreesharesRatio() { //+-,越大越好
 	}
 
 	if rate := math.Abs(max / TotalNumRatio); rate < 1 {
-		wv.wr.AvgFreesharesRatio = wv.wr.AvgFreesharesRatio * rate
+		wv.wr.AvgFreesharesRatio = Decimal(wv.wr.AvgFreesharesRatio * rate)
 	}
 }
 
@@ -183,17 +195,25 @@ func (wv *WeightValue) CalPriceDiff() {
 
 func (wv *WeightValue) GetWeight() float64 {
 	wr, weight := wv.wr, float64(0)
+	// log.Infof("==>>TODO 451: %+v|%+v|%+v|%+v|%+v|%+v", wr.Price, wr.Focus, wr.TotalNumRatio, wr.AvgFreesharesRatio, wr.HoldRatioTotal, wr.FreeholdRatioTotal)
+	// 判断与当前的差价率
 	if wv.RecentPrice/wv.Price[0] > priceDiff {
+		log.Infof("invalid price: %s|%f|%f", wv.Secucode, wv.RecentPrice, wv.Price[0])
+		return 0
+	}
+	// 判断时间差值
+	// log.Infof("==>>TODO 452: %+v|%+v|%+v", wv.Secucode, time.Unix(wv.Date[0], 0).Format("2006-01-02"), wv.Date[0])
+	if time.Now().Unix()-wv.Date[0] > dateDiff {
+		log.Infof("invalid date: %s|%s", wv.Secucode, time.Unix(wv.Date[0], 0).Format("2006-01-02"))
 		return 0
 	}
 
-	log.Infof("==>>TODO 1002: %+v|%+v|%+v|%+v|%+v|%+v", wr.Price, wr.Focus, wr.TotalNumRatio, wr.AvgFreesharesRatio, wr.HoldRatioTotal, wr.FreeholdRatioTotal)
+	// log.Infof("==>>TODO 458: %+v|%+v|%+v|%+v|%+v|%+v", wr.Price, wr.Focus, wr.TotalNumRatio, wr.AvgFreesharesRatio, wr.HoldRatioTotal, wr.FreeholdRatioTotal)
 	weight = wr.Price + wr.Focus + wr.TotalNumRatio + wr.AvgFreesharesRatio + wr.HoldRatioTotal + wr.FreeholdRatioTotal
 
-	value, _ := strconv.ParseFloat(fmt.Sprintf("%.1f", weight), 64)
-	wv.Weight = fmt.Sprintf("%f", value)
-
-	return value
+	wv.Weight, _ = strconv.ParseFloat(fmt.Sprintf("%.1f", weight), 64)
+	// log.Infof("==>>TODO 459: %+v|%+v", wv.Secucode, wv.Weight)
+	return wv.Weight
 }
 
 func intSlice2Str(values []float64, sep string) string {
@@ -202,4 +222,18 @@ func intSlice2Str(values []float64, sep string) string {
 		results = append(results, fmt.Sprintf("%v", val))
 	}
 	return strings.Join(results, sep)
+}
+
+func tmSlice2Str(dates []int64, sep string) string {
+	var results []string
+	for _, val := range dates {
+		tm := time.Unix(val, 0)
+		results = append(results, fmt.Sprintf("%d-%d", tm.Month(), tm.Day()))
+	}
+	return strings.Join(results, sep)
+}
+
+func Decimal(value float64) float64 {
+	value, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", value), 64)
+	return value
 }

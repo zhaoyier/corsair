@@ -20,9 +20,11 @@ func GetCodeListTicker() {
 		if time.Now().Weekday() != time.Saturday { //周
 			continue
 		}
-
+		log.Infof("get code list charging up: %d", nowHour)
 		if nowHour >= 18 && nowHour < 20 {
+			log.Infof("get code list in progress: %d", nowHour)
 			GetCodeList()
+			log.Infof("get code list completed: %d", nowHour)
 		}
 	}
 }

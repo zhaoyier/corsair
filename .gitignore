@@ -1,4 +1,5 @@
 .vscode/*
 gf-demos/*
 farmer/node_modules/*
-digger/.DS_Store/*
+*/.DS_Store
+*/export

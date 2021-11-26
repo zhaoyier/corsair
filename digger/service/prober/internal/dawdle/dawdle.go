@@ -3,6 +3,7 @@ package dawdle
 import (
 	"fmt"
 	"os"
+	"sort"
 	"strings"
 	"sync"
 	"time"
@@ -11,22 +12,24 @@ import (
 	log "github.com/Sirupsen/logrus"
 	ezdb "github.com/ezbuy/ezorm/db"
 	"github.com/tealeg/xlsx"
+	mgo "gopkg.in/mgo.v2"
 )
 
 var (
 	genShareholderOnce sync.Once
+	shareholderData    []*WeightValue
 )
 
 func GenShareholderTicker() {
 	tk := time.NewTicker(time.Minute * 90)
 	for range tk.C {
 		nowHour := time.Now().Local().Hour()
-		if time.Now().Weekday() != time.Saturday { //周
-			continue
-		}
 
+		log.Infof("gen share holder charging up: %d", nowHour)
 		if nowHour >= 22 && nowHour < 24 {
+			log.Infof("gen share holder in progress: %d", nowHour)
 			GenShareholder()
+			log.Infof("gen share holder completed: %d", nowHour)
 		}
 	}
 }
@@ -37,7 +40,7 @@ func GenShareholderOnce() {
 	})
 }
 
-func GenShareholderTmp() error {
+func GenShareholderTmp(code string) error {
 	file, err := genDawdleTitle()
 	if err != nil {
 		log.Errorf("generate file failed: %s|%q", "", err)
@@ -46,7 +49,9 @@ func GenShareholderTmp() error {
 
 	start := time.Now().AddDate(0, -9, 0).Unix()
 	log.Infof("==>>TODO 201: %+v", start)
-	getDawdleData("SZ.300943", start, file)
+	// getDawdleData("SZ.003039", start, file)
+	getDawdleData(code, start, file)
+	saveToFile(file)
 	return nil
 }
 
@@ -66,6 +71,8 @@ func GenShareholder() error {
 	for iter.Next(&secucode) {
 		getDawdleData(secucode.Secucode, start, file)
 	}
+
+	saveToFile(file)
 
 	return nil
 }
@@ -94,7 +101,7 @@ func getDawdleData(secucode string, since int64, file *xlsx.File) error {
 		return err
 	}
 
-	if len(gdResults) <= 6 {
+	if len(gdResults) <= cumulantPrice {
 		log.Warningf("maybe is new filter: %s|%d", secucode, len(gdResults))
 		return nil
 	}
@@ -108,7 +115,7 @@ func getDawdleData(secucode string, since int64, file *xlsx.File) error {
 		wv.Focus = append(wv.Focus, r.HoldFocus)
 		wv.TotalNumRatio = append(wv.TotalNumRatio, r.TotalNumRatio)
 		wv.AvgFreesharesRatio = append(wv.AvgFreesharesRatio, r.AvgFreesharesRatio)
-		wv.Date = append(wv.Date, time.Unix(r.EndDate, 0).Format("2006-01-02"))
+		wv.Date = append(wv.Date, r.EndDate)
 	}
 
 	wv.RecentPrice = dailyResult.Price
@@ -130,7 +137,8 @@ func genDawdleTitle() (*xlsx.File, error) {
 	titleRow := sheet.AddRow()
 	titleRow.AddCell().SetString("码")
 	titleRow.AddCell().SetString("指数")
-	titleRow.AddCell().SetString("价格")
+	titleRow.AddCell().SetString("最新价")
+	titleRow.AddCell().SetString("参考价")
 	titleRow.AddCell().SetString("集中度")
 	titleRow.AddCell().SetString("日期")
 	return file, nil
@@ -145,30 +153,76 @@ func fillDawdleData(file *xlsx.File, wv *WeightValue) error {
 		return fmt.Errorf("%s underweighting of stocks", wv.Secucode)
 	}
 
-	sheet := file.Sheets[0]
-	row := sheet.AddRow()
-	row.AddCell().SetString(wv.Secucode)
-	row.AddCell().SetString(wv.Weight)
-	row.AddCell().SetString(intSlice2Str(wv.Price, "<-"))
-	row.AddCell().SetString(strings.Join(wv.Focus, "<-"))
-	row.AddCell().SetString(strings.Join(wv.Date, "<-"))
+	if cap(shareholderData) <= 0 {
+		shareholderData = make([]*WeightValue, 0, 8)
+	}
 
-	filename := fmt.Sprintf("%s.xlsx", time.Now().Format("2006-01-02"))
-	if err := saveToFile(file, filename); err != nil {
-		log.Errorf("save file failed: %s|%q", filename, err)
-		return err
+	shareholderData = append(shareholderData, wv)
+
+	if err := applyGpRecommend(wv); err != nil {
+		log.Infof("apply recommend failed: %s|%+v", wv.Secucode, err)
 	}
 
 	return nil
 }
 
-func saveToFile(file *xlsx.File, filename string) error {
+// 记录数据库
+func applyGpRecommend(wv *WeightValue) error {
+	// log.Infof("==>>TODO 311:%+v", wv.Secucode)
+	enddate := time.Unix(wv.Date[0], 0).Format("2006-01-02")
+	result, err := orm.GpRecommendMgr.FindOneBySecucodeEndDate(wv.Secucode, enddate)
+	// result, err := orm.GpRecommendMgr.FindOneBySecucodeEndDate(wv.Secucode, "2021-11-12")
+	// log.Infof("==>>TODO 312:%+v|%+v", result, err)
+	// log.Infof("==>>TODO 313:%+v|%+v", err != nil, result != nil)
+	if err != nil && err != mgo.ErrNotFound {
+		log.Errorf("apply recommend failed: %s|%s", wv.Secucode, err)
+		return err
+	}
+	if result != nil {
+		return nil
+	}
+
+	// log.Infof("==>>TODO 315:%+v|%+v", result, err)
+	result = orm.GpRecommendMgr.NewGpRecommend()
+	result.Level = wv.Weight
+	result.EndDate = enddate
+	result.Secucode = wv.Secucode
+	result.CumulantPrice = intSlice2Str(wv.Price, "<-")
+	result.CumulantFocus = strings.Join(wv.Focus, "<-")
+	result.CumulantDate = tmSlice2Str(wv.Date, "<-")
+	result.CreateDate = time.Now().Unix()
+
+	// log.Infof("==>>TODO 318:%+v", result)
+	if _, err := result.Save(); err != nil {
+		log.Errorf("save recommend failed: %s|%q", wv.Secucode, err)
+		return err
+	}
+	return nil
+}
+
+func saveToFile(file *xlsx.File) error {
+	filename := fmt.Sprintf("export/%s.xlsx", time.Now().Format("2006-01-02"))
 	_, err := os.Stat("export")
 	if err != nil {
 		os.Mkdir("export", os.ModePerm)
 	}
 
-	if err := file.Save("export/" + filename); err != nil {
+	sheet := file.Sheets[0]
+	sort.Slice(shareholderData, func(i, j int) bool {
+		return shareholderData[i].Weight > shareholderData[j].Weight
+	})
+
+	for _, val := range shareholderData {
+		row := sheet.AddRow()
+		row.AddCell().SetString(val.Secucode)
+		row.AddCell().SetString(fmt.Sprintf("%.1f", val.Weight))
+		row.AddCell().SetString(fmt.Sprintf("%.1f", val.RecentPrice))
+		row.AddCell().SetString(intSlice2Str(val.Price, "<-"))
+		row.AddCell().SetString(strings.Join(val.Focus, "<-"))
+		row.AddCell().SetString(tmSlice2Str(val.Date, "<-"))
+	}
+
+	if err := file.Save(filename); err != nil {
 		log.Errorf("save file failed: %s|%q", filename, err)
 		return err
 	}

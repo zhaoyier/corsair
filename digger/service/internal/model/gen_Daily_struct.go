@@ -11,8 +11,8 @@ type Daily struct {
 	Secucode   string        `bson:"Secucode" json:"Secucode"`
 	EndDate    string        `bson:"EndDate" json:"EndDate"`
 	Price      float64       `bson:"Price" json:"Price"`
-	Market     string        `bson:"Market" json:"Market"`
-	Disabled   bool          `bson:"Disabled" json:"Disabled"`
+	Highest    float64       `bson:"Highest" json:"Highest"`
+	Minimum    float64       `bson:"Minimum" json:"Minimum"`
 	CreateDate int64         `bson:"CreateDate" json:"CreateDate"`
 	isNew      bool
 }
@@ -22,8 +22,8 @@ const (
 	DailyMgoFieldSecucode   = "Secucode"
 	DailyMgoFieldEndDate    = "EndDate"
 	DailyMgoFieldPrice      = "Price"
-	DailyMgoFieldMarket     = "Market"
-	DailyMgoFieldDisabled   = "Disabled"
+	DailyMgoFieldHighest    = "Highest"
+	DailyMgoFieldMinimum    = "Minimum"
 	DailyMgoFieldCreateDate = "CreateDate"
 )
 const (
