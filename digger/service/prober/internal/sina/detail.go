@@ -22,7 +22,11 @@ func GetDailyDataTicker() {
 	tk := time.NewTicker(time.Minute * 90)
 
 	for range tk.C {
+		weekday := time.Now().Weekday()
 		nowHour := time.Now().Local().Hour()
+		if weekday == time.Saturday || weekday == time.Sunday { //周
+			continue
+		}
 
 		log.Infof("get daily data charging up: %d", nowHour)
 		if nowHour >= 18 && nowHour < 20 {

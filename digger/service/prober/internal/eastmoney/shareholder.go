@@ -26,9 +26,10 @@ func GetShareholderTicker() {
 	for range tk.C {
 		weekday := time.Now().Weekday()
 		nowHour := time.Now().Local().Hour()
-		if weekday == time.Saturday || weekday != time.Sunday { //周
+		if weekday == time.Saturday || weekday == time.Sunday { //周
 			continue
 		}
+
 		log.Infof("get share holder charging up: %d", nowHour)
 		if nowHour >= 18 && nowHour < 20 {
 			log.Infof("get share holder in progress: %d", nowHour)

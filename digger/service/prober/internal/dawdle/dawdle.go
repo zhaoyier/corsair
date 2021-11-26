@@ -23,7 +23,11 @@ var (
 func GenShareholderTicker() {
 	tk := time.NewTicker(time.Minute * 90)
 	for range tk.C {
+		weekday := time.Now().Weekday()
 		nowHour := time.Now().Local().Hour()
+		if weekday == time.Saturday || weekday == time.Sunday { //周
+			continue
+		}
 
 		log.Infof("gen share holder charging up: %d", nowHour)
 		if nowHour >= 22 && nowHour < 24 {
