@@ -93,11 +93,12 @@ func getDawdleData(secucode string, since int64, file *xlsx.File) error {
 		return err
 	}
 
-	now := time.Now()
-	date := fmt.Sprintf("%d-%d-%d", now.Year(), now.Month(), now.Day())
-	dailyResult, err := orm.DailyMgr.FindOneBySecucodeEndDate(strings.Join(codes, "."), date)
+	// now := time.Now()
+	// date := fmt.Sprintf("%d-%d-%d", now.Year(), now.Month(), now.Day())
+	// dailyResult, err := orm.DailyMgr.FindOneBySecucodeEndDate(strings.Join(codes, "."), date)
+	dailyResult, err := orm.DailyMgr.FindOne(ezdb.M{"Secucode": strings.Join(codes, ".")}, "-CreateDate")
 	if err != nil {
-		log.Errorf("query daily failed: %s|%q", secucode, err)
+		log.Errorf("query daily failed 11: %s|%q", secucode, err)
 		return err
 	}
 
