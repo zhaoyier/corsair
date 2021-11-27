@@ -3,25 +3,10 @@ syntax = "proto3";
 option go_package="./;digger";
 package digger;
 
-service Prober {
-    rpc GetName(GetNameReq) returns(GetNameResp);
-}
-
-message ShareholderResp {
-    string name = 1;
-}
-
-message GetNameReq {
-
-}
-
-message GetNameResp {
-    
-}
-
 enum EastMoneyType {
     EastMoneyTypeUnknown = 0;
-    EastMoneyTypeHolder = 1;
-    EastMoneyTypeNews = 2;
-    EastMoneyTypeOperations = 3;
+    EastMoneyTypeHolder = 1;    //股东持股
+    EastMoneyTypeNews = 2;      //
+    EastMoneyTypeOperations = 3;   //操盘必读
+    EastMoneyTypeGPList = 4;        //股票列表
 }

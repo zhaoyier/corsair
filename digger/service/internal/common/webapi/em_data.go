@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 
 	"git.ezbuy.me/ezbuy/corsair/digger/rpc/digger"
 )
@@ -18,6 +19,9 @@ func GetEastmoneyData(typ digger.EastMoneyType, code string, resp interface{}) e
 		url = fmt.Sprintf("http://emweb.securities.eastmoney.com/PC_HSF10/NewsBulletin/PageAjax?code=%s", code)
 	case digger.EastMoneyType_EastMoneyTypeOperations:
 		url = fmt.Sprintf("http://emweb.securities.eastmoney.com/PC_HSF10/OperationsRequired/OperationsRequiredAjax?times=1&code=%s", code)
+	case digger.EastMoneyType_EastMoneyTypeGPList:
+		pageNum, _ := strconv.Atoi(code)
+		url = fmt.Sprintf("http://26.push2.eastmoney.com/api/qt/clist/get?cb=jQuery11240682916251377502_1637505893462&pn=%d&pz=40&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23,m:0+t:81+s:2048&fields=f2,f3,f4,f5,f6,f10,f12,f15,f17,f20,f21,f23", pageNum)
 	default:
 		return fmt.Errorf("invalid type: %+v", typ.String())
 	}

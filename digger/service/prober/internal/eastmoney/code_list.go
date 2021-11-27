@@ -65,7 +65,7 @@ func updateCodeList(req *StockList, col *mgo.Collection) error {
 	// 沪市科创板股票买卖的代码是以688开头的6位数编码。
 	for _, val := range req.Data.Diff {
 		exchange := "SH"
-		prefix := val.Code[0:3]
+		prefix := val.Secucode[0:3]
 		switch prefix {
 		case "600":
 		case "601":
@@ -76,9 +76,14 @@ func updateCodeList(req *StockList, col *mgo.Collection) error {
 			exchange = "SZ"
 		}
 
-		if err := applyCode(val.Code, exchange, val.Name, col); err != nil {
+		if err := applyCode(val.Secucode, exchange, val.Name, col); err != nil {
 			log.Errorf("apply failed: %+v|%+v\n", val, err)
 		}
+
+		if err := applyGPDaily(val, exchange); err != nil {
+			log.Errorf("apply failed: %+v|%+v\n", val, err)
+		}
+
 	}
 
 	return nil
@@ -108,5 +113,42 @@ func applyCode(secu, exchange, name string, col *mgo.Collection) error {
 	if _, err := col.Find(query).Apply(change, nil); err != nil {
 		return fmt.Errorf("%s|%q", secucode, err)
 	}
+	return nil
+}
+
+func applyGPDaily(data *CodeBase, exchange string) error {
+	secucode := exchange + "." + data.Secucode
+	createDate := time.Now().Format("2006-01-02")
+	result, err := orm.GPDailyMgr.FindOneBySecucodeCreateDate(secucode, createDate)
+	if err != nil && err != mgo.ErrNotFound {
+		log.Errorf("find gp daily failed: %s|%q", secucode, err)
+		return err
+	}
+	if result != nil {
+		return nil
+	}
+
+	result = orm.GPDailyMgr.NewGPDaily()
+	result.Secucode = data.Secucode
+	result.Name = data.Name
+	result.Closing = data.Closing
+	result.Rise = data.Rise
+	result.PRise = data.PRise
+	result.Turnover = data.Turnover
+	result.Business = data.Business
+	result.Liangbi = data.Liangbi
+	result.MaxPrice = data.MaxPrice
+	result.Opening = data.Opening
+	result.Market = data.Market
+	result.Traded = data.Traded
+	result.BookRatio = data.BookRatio
+	result.CreateDate = createDate
+	result.UpdateDate = time.Now().Unix()
+
+	if _, err := result.Save(); err != nil {
+		log.Errorf("save gp daily failed: %s|%q", secucode, err)
+		return err
+	}
+
 	return nil
 }

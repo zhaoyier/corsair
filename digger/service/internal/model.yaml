@@ -88,4 +88,27 @@ GPRecommend:
       - CreateDate: datetime
     uniques: [[Secucode,EndDate]]
     indexes: [[Level],[EndDate],[Disabled],[CreateDate]]
+
+GPDaily:
+    db: mongo
+    dbname: digger
+    fields:
+      - Secucode  : string 
+      - Name: string
+      - Closing   : float64 
+      - Rise      : float64 
+      - PRise     : float64 
+      - Turnover  : int64     
+      - Business  : float64 
+      - Liangbi   : string  
+      - MaxPrice  : float64 
+      - Opening   : float64 
+      - Market    : int64   
+      - Traded    : int64     
+      - BookRatio : float64
+      - CreateDate: string  #年月日
+      - UpdateDate: datetime
+    uniques: [[Secucode,CreateDate]]
+    indexes: [[Name],[UpdateDate]]
+
     

@@ -389,8 +389,19 @@ type Ybzy struct {
 }
 
 type CodeBase struct {
-	Code string `json:"f12"`
-	Name string `json:"f14"`
+	Closing   float64 `json:"f2"`  //收盘价
+	Rise      float64 `json:"f3"`  //涨幅
+	PRise     float64 `json:"f4"`  //涨跌价格
+	Turnover  int64   `json:"f5"`  //成交量
+	Business  float64 `json:"f6"`  //成交额
+	Liangbi   string  `json:"f10"` //量比
+	Secucode  string  `json:"f12"` //股票代码'000111'
+	Name      string  `json:"f14"` //最高价
+	MaxPrice  float64 `json:"f15"` //最高价
+	Opening   float64 `json:"f17"` //开盘价
+	Market    int64   `json:"f20"` //市值
+	Traded    int64   `json:"f21"` //流通市值
+	BookRatio float64 `json:"f23"` //市净率
 }
 type CodeData struct {
 	Total int         `json:"total"`

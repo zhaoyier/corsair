@@ -24,7 +24,7 @@ retry:
 }
 
 func eastmoneyCode(page, size int32, resp interface{}) error {
-	url := fmt.Sprintf("http://26.push2.eastmoney.com/api/qt/clist/get?cb=jQuery11240682916251377502_1637505893462&pn=%d&pz=%d&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23,m:0+t:81+s:2048&fields=f12,f14&_=1637505893550", page, size)
+	url := fmt.Sprintf("http://26.push2.eastmoney.com/api/qt/clist/get?cb=jQuery11240682916251377502_1637505893462&pn=%d&pz=%d&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23,m:0+t:81+s:2048&fields=f2,f3,f4,f5,f6,f10,f12,f15,f17,f20,f21,f23", page, size)
 	method := "GET"
 
 	client := &http.Client{}
@@ -62,7 +62,6 @@ func eastmoneyCode(page, size int32, resp interface{}) error {
 
 func filterPrefix(body []byte) []byte {
 	var start, end int
-	// results := make([]byte, 0, 256)
 	for idx, val := range body {
 		if val == '(' {
 			start = idx

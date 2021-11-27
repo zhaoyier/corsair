@@ -91,7 +91,7 @@ func getDawdleData(secucode string, since int64, file *xlsx.File) error {
 	query := ezdb.M{
 		"Secucode": secucode,
 	}
-	gdResults, err := orm.GDRenshuMgr.Find(query, 20, 0, "-EndDate")
+	gdResults, err := orm.GDRenshuMgr.Find(query, 30, 0, "-EndDate")
 	if err != nil {
 		log.Errorf("query gd renshu failed: %s|%q", secucode, err)
 		return err

@@ -28,6 +28,15 @@ func initDailyIndex() {
 	defer session.Close()
 
 	if err := collection.EnsureIndex(mgo.Index{
+		Key:        []string{"Secucode", "EndDate"},
+		Unique:     true,
+		Background: true,
+		Sparse:     true,
+	}); err != nil {
+		panic("ensureIndex digger.Daily SecucodeEndDate error:" + err.Error())
+	}
+
+	if err := collection.EnsureIndex(mgo.Index{
 		Key:        []string{"Secucode"},
 		Background: true,
 		Sparse:     true,
@@ -41,15 +50,6 @@ func initDailyIndex() {
 		Sparse:     true,
 	}); err != nil {
 		panic("ensureIndex digger.Daily EndDate error:" + err.Error())
-	}
-
-	if err := collection.EnsureIndex(mgo.Index{
-		Key:        []string{"Secucode", "EndDate"},
-		Unique:     true,
-		Background: true,
-		Sparse:     true,
-	}); err != nil {
-		panic("ensureIndex digger.Daily SecucodeEndDate error:" + err.Error())
 	}
 
 }
@@ -180,24 +180,6 @@ func (o *_DailyMgr) NQuery(query interface{}, limit, offset int, sortFields []st
 
 	return session, q
 }
-func (o *_DailyMgr) FindBySecucode(Secucode string, limit int, offset int, sortFields ...string) (result []*Daily, err error) {
-	query := db.M{
-		"Secucode": Secucode,
-	}
-	session, q := DailyMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
-}
-func (o *_DailyMgr) FindByEndDate(EndDate string, limit int, offset int, sortFields ...string) (result []*Daily, err error) {
-	query := db.M{
-		"EndDate": EndDate,
-	}
-	session, q := DailyMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
-}
 func (o *_DailyMgr) FindOneBySecucodeEndDate(Secucode string, EndDate string) (result *Daily, err error) {
 	query := db.M{
 		"Secucode": Secucode,
@@ -229,6 +211,24 @@ func (o *_DailyMgr) RemoveBySecucodeEndDate(Secucode string, EndDate string) (er
 		"EndDate":  EndDate,
 	}
 	return col.Remove(query)
+}
+func (o *_DailyMgr) FindBySecucode(Secucode string, limit int, offset int, sortFields ...string) (result []*Daily, err error) {
+	query := db.M{
+		"Secucode": Secucode,
+	}
+	session, q := DailyMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
+}
+func (o *_DailyMgr) FindByEndDate(EndDate string, limit int, offset int, sortFields ...string) (result []*Daily, err error) {
+	query := db.M{
+		"EndDate": EndDate,
+	}
+	session, q := DailyMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
 }
 
 func (o *_DailyMgr) Find(query interface{}, limit int, offset int, sortFields ...string) (result []*Daily, err error) {
