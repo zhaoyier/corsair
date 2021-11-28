@@ -394,7 +394,7 @@ type CodeBase struct {
 	PRise     float64 `json:"f4"`  //涨跌价格
 	Turnover  int64   `json:"f5"`  //成交量
 	Business  float64 `json:"f6"`  //成交额
-	Liangbi   string  `json:"f10"` //量比
+	Liangbi   float64 `json:"f10"` //量比
 	Secucode  string  `json:"f12"` //股票代码'000111'
 	Name      string  `json:"f14"` //最高价
 	MaxPrice  float64 `json:"f15"` //最高价

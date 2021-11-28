@@ -18,9 +18,9 @@ func GetRecommendList(in *gin.Context) {
 
 	limit, _ := strconv.Atoi(in.Query("limit"))
 	offset, _ := strconv.Atoi(in.Query("offset"))
-	resp.Total = int32(orm.GPRecommendMgr.Count(ezdb.M{}))
+	resp.Total = int32(orm.GDHoldRecommendMgr.Count(ezdb.M{}))
 
-	results, err := orm.GPRecommendMgr.Find(ezdb.M{}, limit, offset, "-Level", "-EndDate")
+	results, err := orm.GDHoldRecommendMgr.Find(ezdb.M{}, limit, offset, "-Level", "-EndDate")
 	if err != nil {
 		log.Errorf("query recommend failed: %q", err)
 		in.JSON(http.StatusFailedDependency, gin.H{"status": "!ok"})

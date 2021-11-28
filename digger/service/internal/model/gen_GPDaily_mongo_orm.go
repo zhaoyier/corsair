@@ -45,6 +45,14 @@ func initGPDailyIndex() {
 	}
 
 	if err := collection.EnsureIndex(mgo.Index{
+		Key:        []string{"CreateDate"},
+		Background: true,
+		Sparse:     true,
+	}); err != nil {
+		panic("ensureIndex digger.GPDaily CreateDate error:" + err.Error())
+	}
+
+	if err := collection.EnsureIndex(mgo.Index{
 		Key:        []string{"UpdateDate"},
 		Background: true,
 		Sparse:     true,
@@ -180,7 +188,7 @@ func (o *_GPDailyMgr) NQuery(query interface{}, limit, offset int, sortFields []
 
 	return session, q
 }
-func (o *_GPDailyMgr) FindOneBySecucodeCreateDate(Secucode string, CreateDate string) (result *GPDaily, err error) {
+func (o *_GPDailyMgr) FindOneBySecucodeCreateDate(Secucode string, CreateDate int64) (result *GPDaily, err error) {
 	query := db.M{
 		"Secucode":   Secucode,
 		"CreateDate": CreateDate,
@@ -191,7 +199,7 @@ func (o *_GPDailyMgr) FindOneBySecucodeCreateDate(Secucode string, CreateDate st
 	return
 }
 
-func (o *_GPDailyMgr) MustFindOneBySecucodeCreateDate(Secucode string, CreateDate string) (result *GPDaily) {
+func (o *_GPDailyMgr) MustFindOneBySecucodeCreateDate(Secucode string, CreateDate int64) (result *GPDaily) {
 	result, _ = o.FindOneBySecucodeCreateDate(Secucode, CreateDate)
 	if result == nil {
 		result = GPDailyMgr.NewGPDaily()
@@ -202,7 +210,7 @@ func (o *_GPDailyMgr) MustFindOneBySecucodeCreateDate(Secucode string, CreateDat
 	return
 }
 
-func (o *_GPDailyMgr) RemoveBySecucodeCreateDate(Secucode string, CreateDate string) (err error) {
+func (o *_GPDailyMgr) RemoveBySecucodeCreateDate(Secucode string, CreateDate int64) (err error) {
 	session, col := GPDailyMgr.GetCol()
 	defer session.Close()
 
@@ -215,6 +223,15 @@ func (o *_GPDailyMgr) RemoveBySecucodeCreateDate(Secucode string, CreateDate str
 func (o *_GPDailyMgr) FindByName(Name string, limit int, offset int, sortFields ...string) (result []*GPDaily, err error) {
 	query := db.M{
 		"Name": Name,
+	}
+	session, q := GPDailyMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
+}
+func (o *_GPDailyMgr) FindByCreateDate(CreateDate int64, limit int, offset int, sortFields ...string) (result []*GPDaily, err error) {
+	query := db.M{
+		"CreateDate": CreateDate,
 	}
 	session, q := GPDailyMgr.Query(query, limit, offset, sortFields)
 	defer session.Close()

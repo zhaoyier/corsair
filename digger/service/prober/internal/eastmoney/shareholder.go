@@ -9,6 +9,7 @@ import (
 
 	"git.ezbuy.me/ezbuy/corsair/digger/rpc/digger"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/common/webapi"
+	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/job"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
 	log "github.com/Sirupsen/logrus"
 	ezdb "github.com/ezbuy/ezorm/db"
@@ -34,7 +35,7 @@ func GetShareholderTicker() {
 		if nowHour >= 18 && nowHour < 20 {
 			log.Infof("get share holder in progress: %d", nowHour)
 			GetShareholder()
-			log.Infof("get share holder completed: %d", nowHour)
+
 		}
 	}
 }
@@ -52,7 +53,6 @@ func GetShareholder() {
 	var secucode *orm.CNSecucode
 	iter := col.Find(ezdb.M{}).Batch(100).Prefetch(0.25).Iter()
 	for iter.Next(&secucode) {
-
 		shareholder := new(ShareholderResearch)
 		code := strings.Replace(secucode.Secucode, ".", "", -1)
 		if err := webapi.GetEastmoneyData(digger.EastMoneyType_EastMoneyTypeHolder, code, shareholder); err != nil {
@@ -71,6 +71,8 @@ func GetShareholder() {
 
 		log.Infof("%s succeed", secucode.Secucode)
 	}
+
+	job.UpdateJob("GetShareholder", "ok")
 }
 
 func applyShareholder(data []Holder) error {

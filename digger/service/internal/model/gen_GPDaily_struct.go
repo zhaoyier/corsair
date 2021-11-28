@@ -15,13 +15,13 @@ type GPDaily struct {
 	PRise      float64       `bson:"PRise" json:"PRise"`
 	Turnover   int64         `bson:"Turnover" json:"Turnover"`
 	Business   float64       `bson:"Business" json:"Business"`
-	Liangbi    string        `bson:"Liangbi" json:"Liangbi"`
+	Liangbi    float64       `bson:"Liangbi" json:"Liangbi"`
 	MaxPrice   float64       `bson:"MaxPrice" json:"MaxPrice"`
 	Opening    float64       `bson:"Opening" json:"Opening"`
 	Market     int64         `bson:"Market" json:"Market"`
 	Traded     int64         `bson:"Traded" json:"Traded"`
 	BookRatio  float64       `bson:"BookRatio" json:"BookRatio"`
-	CreateDate string        `bson:"CreateDate" json:"CreateDate"`
+	CreateDate int64         `bson:"CreateDate" json:"CreateDate"`
 	UpdateDate int64         `bson:"UpdateDate" json:"UpdateDate"`
 	isNew      bool
 }

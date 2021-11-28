@@ -8,6 +8,7 @@ import (
 	"sync"
 	"time"
 
+	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/job"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
 	log "github.com/Sirupsen/logrus"
 	ezdb "github.com/ezbuy/ezorm/db"
@@ -17,7 +18,7 @@ import (
 
 var (
 	genShareholderOnce sync.Once
-	shareholderData    []*WeightValue
+	shareholderData    []*WeightData
 )
 
 func GenShareholderTicker() {
@@ -33,7 +34,7 @@ func GenShareholderTicker() {
 		if nowHour >= 22 && nowHour < 24 {
 			log.Infof("gen share holder in progress: %d", nowHour)
 			GenShareholder()
-			log.Infof("gen share holder completed: %d", nowHour)
+
 		}
 	}
 }
@@ -44,6 +45,7 @@ func GenShareholderOnce() {
 	})
 }
 
+// 临时测试
 func GenShareholderTmp(code string) error {
 	file, err := genDawdleTitle()
 	if err != nil {
@@ -77,6 +79,8 @@ func GenShareholder() error {
 	}
 
 	saveToFile(file)
+	// 更新任务
+	job.UpdateJob("GenShareholder", "ok")
 
 	return nil
 }
@@ -97,10 +101,7 @@ func getDawdleData(secucode string, since int64, file *xlsx.File) error {
 		return err
 	}
 
-	// now := time.Now()
-	// date := fmt.Sprintf("%d-%d-%d", now.Year(), now.Month(), now.Day())
-	// dailyResult, err := orm.DailyMgr.FindOneBySecucodeEndDate(strings.Join(codes, "."), date)
-	dailyResult, err := orm.DailyMgr.FindOne(ezdb.M{"Secucode": strings.Join(codes, ".")}, "-CreateDate")
+	dailyResult, err := orm.GPDailyMgr.FindOne(ezdb.M{"Secucode": codes[1]}, "-CreateDate")
 	if err != nil {
 		log.Errorf("query daily failed 11: %s|%q", secucode, err)
 		return err
@@ -111,7 +112,7 @@ func getDawdleData(secucode string, since int64, file *xlsx.File) error {
 		return nil
 	}
 
-	wv := NewWeightValue(secucode)
+	wv := NewWeightData(secucode)
 	for idx, r := range gdResults {
 		if idx > 6 {
 			continue
@@ -123,7 +124,7 @@ func getDawdleData(secucode string, since int64, file *xlsx.File) error {
 		wv.Date = append(wv.Date, r.EndDate)
 	}
 
-	wv.RecentPrice = dailyResult.Price
+	wv.RecentPrice = dailyResult.Closing
 
 	if err := fillDawdleData(file, wv); err != nil {
 		log.Errorf("fill file failed: %s|%q", secucode, err)
@@ -149,7 +150,7 @@ func genDawdleTitle() (*xlsx.File, error) {
 	return file, nil
 }
 
-func fillDawdleData(file *xlsx.File, wv *WeightValue) error {
+func fillDawdleData(file *xlsx.File, wv *WeightData) error {
 	if file == nil {
 		return fmt.Errorf("sheet is nil")
 	}
@@ -159,7 +160,7 @@ func fillDawdleData(file *xlsx.File, wv *WeightValue) error {
 	}
 
 	if cap(shareholderData) <= 0 {
-		shareholderData = make([]*WeightValue, 0, 8)
+		shareholderData = make([]*WeightData, 0, 8)
 	}
 
 	shareholderData = append(shareholderData, wv)
@@ -172,11 +173,11 @@ func fillDawdleData(file *xlsx.File, wv *WeightValue) error {
 }
 
 // 记录数据库
-func applyGpRecommend(wv *WeightValue) error {
+func applyGpRecommend(wv *WeightData) error {
 	// log.Infof("==>>TODO 311:%+v", wv.Secucode)
 	enddate := time.Unix(wv.Date[0], 0).Format("2006-01-02")
-	result, err := orm.GPRecommendMgr.FindOneBySecucodeEndDate(wv.Secucode, enddate)
-	// result, err := orm.GPRecommendMgr.FindOneBySecucodeEndDate(wv.Secucode, "2021-11-12")
+	result, err := orm.GDHoldRecommendMgr.FindOneBySecucodeEndDate(wv.Secucode, enddate)
+	// result, err := orm.GDHoldRecommendMgr.FindOneBySecucodeEndDate(wv.Secucode, "2021-11-12")
 	// log.Infof("==>>TODO 312:%+v|%+v", result, err)
 	// log.Infof("==>>TODO 313:%+v|%+v", err != nil, result != nil)
 	if err != nil && err != mgo.ErrNotFound {
@@ -188,7 +189,7 @@ func applyGpRecommend(wv *WeightValue) error {
 	}
 
 	// log.Infof("==>>TODO 315:%+v|%+v", result, err)
-	result = orm.GPRecommendMgr.NewGPRecommend()
+	result = orm.GDHoldRecommendMgr.NewGDHoldRecommend()
 	result.Level = wv.Weight
 	result.EndDate = enddate
 	result.Secucode = wv.Secucode

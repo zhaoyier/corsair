@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
 func GetEastmoneyCode(page, size int32, resp interface{}) error {
@@ -52,7 +53,8 @@ func eastmoneyCode(page, size int32, resp interface{}) error {
 	}
 
 	body = filterPrefix(body)
-	err = json.Unmarshal(body, resp)
+
+	err = json.Unmarshal(replacChar(body), resp)
 	if err != nil {
 		return fmt.Errorf("unmarshal response failed: %v", err)
 	}
@@ -73,4 +75,9 @@ func filterPrefix(body []byte) []byte {
 
 	body = body[start+1 : end]
 	return body
+}
+
+func replacChar(body []byte) []byte {
+	data := strings.ReplaceAll(string(body), `"-"`, "0")
+	return []byte(data)
 }

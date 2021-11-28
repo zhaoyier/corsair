@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	trpc "git.ezbuy.me/ezbuy/corsair/digger/rpc/digger"
 	log "github.com/Sirupsen/logrus"
 )
 
@@ -14,6 +15,7 @@ const (
 	shake_upper   float64 = 1.4 //不变
 	shake_lower   float64 = 0.6
 	one_ten       float64 = 0.1
+	three_ten     float64 = 0.3
 	one_fifth     float64 = 0.2
 	two_fifth     float64 = 0.4
 	three_fifth   float64 = 0.6
@@ -27,18 +29,26 @@ const (
 	cumulantPrice int     = 5
 	priceDiff     float64 = 1.25
 	dateDiff      int64   = 10 * 86400
+	accum         float64 = 15
 )
 
-type WeightRule struct {
+// type WeightUnit struct { //权重单元
+// 	Value       float64 //权重值
+// 	Accum       float64 //连续累加值
+// 	Consecutive int32   //连续计数
+// 	Counter     int     //计数器
+// }
+
+type WeightRule struct { //权重规则
 	Price              float64
 	Focus              float64
-	TotalNumRatio      float64
-	AvgFreesharesRatio float64
+	TotalNumRatio      *trpc.WeightUnit
+	AvgFreesharesRatio *trpc.WeightUnit
 	HoldRatioTotal     float64
 	FreeholdRatioTotal float64
 }
 
-type WeightValue struct {
+type WeightData struct { //权重数据
 	Secucode           string
 	Price              []float64
 	Focus              []string
@@ -52,8 +62,8 @@ type WeightValue struct {
 	wr                 *WeightRule
 }
 
-func NewWeightValue(secucode string) *WeightValue {
-	return &WeightValue{
+func NewWeightData(secucode string) *WeightData {
+	return &WeightData{
 		Secucode:           secucode,
 		Price:              make([]float64, 0, 8),
 		Focus:              make([]string, 0, 8),
@@ -68,8 +78,8 @@ func NewWeightValue(secucode string) *WeightValue {
 
 func defaultWeightRule() *WeightRule {
 	return &WeightRule{
-		TotalNumRatio:      15,
-		AvgFreesharesRatio: 10,
+		TotalNumRatio:      &trpc.WeightUnit{Value: 15},
+		AvgFreesharesRatio: &trpc.WeightUnit{Value: 10},
 		Focus:              30,
 		Price:              25,
 		HoldRatioTotal:     10,
@@ -77,7 +87,7 @@ func defaultWeightRule() *WeightRule {
 	}
 }
 
-func (wv *WeightValue) Cal() *WeightValue {
+func (wv *WeightData) Cal() *WeightData {
 	wv.CalPrice()
 	wv.CalFocus()
 	wv.CalTotalNumRatio()
@@ -87,7 +97,7 @@ func (wv *WeightValue) Cal() *WeightValue {
 	return wv
 }
 
-func (wv *WeightValue) CalPrice() {
+func (wv *WeightData) CalPrice() {
 	max, prev := wv.Price[0], wv.Price[0]
 	if len(wv.Price) > cumulantPrice {
 		wv.Price = wv.Price[0:cumulantPrice]
@@ -95,7 +105,7 @@ func (wv *WeightValue) CalPrice() {
 
 	for idx, val := range wv.Price {
 		// log.Infof("==>>TODO Price 401:%s|%+v|%f|%+v", wv.Secucode, idx, val, val <= 0)
-		if idx > cumulantPrice || val <= 0 {
+		if idx > cumulantPrice && val <= 0 {
 			wv.wr.Price = 0
 			return
 		}
@@ -113,15 +123,15 @@ func (wv *WeightValue) CalPrice() {
 	}
 
 	rate := Decimal((max - wv.Price[0]) / max)
-	// log.Infof("==>>TODO Price 405:%+v|%+v|%+v", max, wv.Price[0], rate)
-	if rate < two_fifth && rate > one_ten {
-		wv.wr.Price = wv.wr.Price * 0.5
+	log.Infof("==>>TODO Price 405:%+v|%+v|%+v", max, wv.Price[0], rate)
+	if rate < three_ten && rate > one_ten {
+		wv.wr.Price = wv.wr.Price * three_fifth
 	} else if rate <= one_ten {
 		wv.wr.Price = 0
 	}
 }
 
-func (wv *WeightValue) CalFocus() {
+func (wv *WeightData) CalFocus() {
 	var weight float64
 	for idx, val := range wv.Focus {
 		// log.Infof("==>>401: %+v|%+v|%+v", idx, val, val == "非常集中")
@@ -133,39 +143,95 @@ func (wv *WeightValue) CalFocus() {
 	// log.Infof("==>>405: %+v|%+v", wv.wr.Focus, weight)
 }
 
-func (wv *WeightValue) CalTotalNumRatio() { //+-,越小越好
-	var min float64
-	for idx, val := range wv.TotalNumRatio {
-		value := val
-		if idx <= cumulantRatio && value < 0 {
-			if value < min {
-				min = value
-			}
+func (wv *WeightData) CalTotalNumRatio() { //+-,越小越好
+	var pre, rate float64
+	unit := wv.wr.TotalNumRatio
+	for _, val := range wv.TotalNumRatio {
+		// 计数器
+		unit.Counter++
+		// 累加值
+		unit.Accum += val
+		// 计算连续值类型
+		if val < 0 && (pre == 0 || pre < 0) {
+			unit.Consecutive++
+		} else {
+			unit.Consecutive--
 		}
+
+		if unit.Accum <= -18 {
+			break
+		}
+
+		pre = val
 	}
 
-	if rate := math.Abs(min / TotalNumRatio); rate < 1 {
-		wv.wr.TotalNumRatio = Decimal(wv.wr.TotalNumRatio * rate)
+	// 最近是减少的
+	if unit.Consecutive >= 2 && unit.Counter <= 4 {
+		rate += 0.25
 	}
+
+	if unit.Accum <= -1*accum && unit.Consecutive >= 2 {
+		rate += 0.75
+	}
+
+	unit.Value = unit.Value * rate
+
+	// if rate := math.Abs(min / TotalNumRatio); rate < 1 {
+	// 	wv.wr.TotalNumRatio = Decimal(wv.wr.TotalNumRatio * rate)
+	// }
 }
 
-func (wv *WeightValue) CalAvgFreesharesRatio() { //+-,越大越好
-	var max float64
-	for idx, val := range wv.AvgFreesharesRatio {
-		value := val
-		if idx <= cumulantRatio && value > 0 {
-			if value > max {
-				max = value
-			}
+func (wv *WeightData) CalAvgFreesharesRatio() { //+-,越大越好
+	var pre, rate float64
+	unit := wv.wr.AvgFreesharesRatio
+	for _, val := range wv.AvgFreesharesRatio {
+		// 计数器
+		unit.Counter++
+		// 累加值
+		unit.Accum += val
+		// 计算连续值类型
+		if val > 0 && (pre == 0 || pre > 0) {
+			unit.Consecutive++
+		} else {
+			unit.Consecutive--
 		}
+
+		if unit.Accum >= 18 {
+			break
+		}
+
+		pre = val
 	}
 
-	if rate := math.Abs(max / TotalNumRatio); rate < 1 {
-		wv.wr.AvgFreesharesRatio = Decimal(wv.wr.AvgFreesharesRatio * rate)
+	// log.Infof("==>>TODO 421:%+v", unit)
+	// 最近是减少的
+	if unit.Consecutive >= 2 && unit.Counter <= 4 {
+		rate += 0.25
 	}
+
+	if unit.Accum >= accum && unit.Consecutive >= 2 {
+		rate += 0.75
+	}
+	// log.Infof("==>>TODO 428:%+v", rate)
+	unit.Value = unit.Value * rate
+	// -----------
+
+	// var max float64
+	// for idx, val := range wv.AvgFreesharesRatio {
+	// 	value := val
+	// 	if idx <= cumulantRatio && value > 0 {
+	// 		if value > max {
+	// 			max = value
+	// 		}
+	// 	}
+	// }
+
+	// if rate := math.Abs(max / TotalNumRatio); rate < 1 {
+	// 	wv.wr.AvgFreesharesRatio = Decimal(wv.wr.AvgFreesharesRatio * rate)
+	// }
 }
 
-func (wv *WeightValue) CalHoldRatioTotal() {
+func (wv *WeightData) CalHoldRatioTotal() {
 	if len(wv.HoldRatioTotal) <= 0 {
 		return
 	}
@@ -177,7 +243,7 @@ func (wv *WeightValue) CalHoldRatioTotal() {
 	wv.wr.HoldRatioTotal = 0
 }
 
-func (wv *WeightValue) CalFreeholdRatioTotal() {
+func (wv *WeightData) CalFreeholdRatioTotal() {
 	if len(wv.HoldRatioTotal) <= 0 {
 		return
 	}
@@ -189,13 +255,13 @@ func (wv *WeightValue) CalFreeholdRatioTotal() {
 	wv.wr.FreeholdRatioTotal = 0
 }
 
-func (wv *WeightValue) CalPriceDiff() {
+func (wv *WeightData) CalPriceDiff() {
 
 }
 
-func (wv *WeightValue) GetWeight() float64 {
+func (wv *WeightData) GetWeight() float64 {
 	wr, weight := wv.wr, float64(0)
-	// log.Infof("==>>TODO 451: %+v|%+v|%+v|%+v|%+v|%+v", wr.Price, wr.Focus, wr.TotalNumRatio, wr.AvgFreesharesRatio, wr.HoldRatioTotal, wr.FreeholdRatioTotal)
+	log.Infof("==>>TODO 451: %+v|%+v|%+v|%+v|%+v|%+v", wr.Price, wr.Focus, wr.TotalNumRatio.Value, wr.AvgFreesharesRatio.Value, wr.HoldRatioTotal, wr.FreeholdRatioTotal)
 	// 判断与当前的差价率
 	if wv.RecentPrice/wv.Price[0] > priceDiff {
 		log.Infof("invalid price: %s|%f|%f", wv.Secucode, wv.RecentPrice, wv.Price[0])
@@ -209,10 +275,10 @@ func (wv *WeightValue) GetWeight() float64 {
 	}
 
 	// log.Infof("==>>TODO 458: %+v|%+v|%+v|%+v|%+v|%+v", wr.Price, wr.Focus, wr.TotalNumRatio, wr.AvgFreesharesRatio, wr.HoldRatioTotal, wr.FreeholdRatioTotal)
-	weight = wr.Price + wr.Focus + wr.TotalNumRatio + wr.AvgFreesharesRatio + wr.HoldRatioTotal + wr.FreeholdRatioTotal
+	weight = wr.Price + wr.Focus + wr.TotalNumRatio.Value + wr.AvgFreesharesRatio.Value + wr.HoldRatioTotal + wr.FreeholdRatioTotal
 
 	wv.Weight, _ = strconv.ParseFloat(fmt.Sprintf("%.1f", weight), 64)
-	// log.Infof("==>>TODO 459: %+v|%+v", wv.Secucode, wv.Weight)
+	log.Infof("cal weight: %+v|%+v", wv.Secucode, wv.Weight)
 	return wv.Weight
 }
 

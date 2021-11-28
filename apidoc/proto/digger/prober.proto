@@ -10,3 +10,12 @@ enum EastMoneyType {
     EastMoneyTypeOperations = 3;   //操盘必读
     EastMoneyTypeGPList = 4;        //股票列表
 }
+
+//权重单元
+message WeightUnit  {
+    double value = 1;        //权重值
+    double accum = 2;        //连续累加值
+    int32 consecutive = 3;  //连续计数
+    int32 counter = 4;      //计数器
+    double present = 5;     //现在的
+}
