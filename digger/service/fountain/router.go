@@ -21,7 +21,7 @@ func startRoute(router *gin.Engine) {
 		c.String(http.StatusOK, "Welcome Gin Server")
 	})
 	//
-	router.GET("/api/digger.Fountain/GDHoldValueIndex", recommend.GDHoldValueIndexList)
+	router.GET("/api/digger.Fountain/GetLongLineList", recommend.GDHoldValueIndexList)
 	// 短线事故
-	router.GET("/api/digger.Fountain/GPStubIncident", recommend.GDHoldValueIndexList)
+	router.GET("/api/digger.Fountain/GetShortLineList", recommend.GDHoldValueIndexList)
 }
