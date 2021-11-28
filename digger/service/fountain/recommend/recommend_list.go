@@ -20,7 +20,7 @@ func GDHoldValueIndexList(in *gin.Context) {
 	offset, _ := strconv.Atoi(in.Query("offset"))
 	resp.Total = int32(orm.GDHoldValueIndexMgr.Count(ezdb.M{}))
 
-	results, err := orm.GDHoldValueIndexMgr.Find(ezdb.M{}, limit, offset, "-Level", "-EndDate")
+	results, err := orm.GDHoldValueIndexMgr.Find(ezdb.M{}, limit, offset, "-ValueIndex", "-EndDate")
 	if err != nil {
 		log.Errorf("query recommend failed: %q", err)
 		in.JSON(http.StatusFailedDependency, gin.H{"status": "!ok"})

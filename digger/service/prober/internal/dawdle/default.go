@@ -98,7 +98,7 @@ func (wv *WeightData) Cal() *WeightData {
 }
 
 func (wv *WeightData) CalPrice() {
-	max, prev := wv.Price[0], wv.Price[0]
+	max, min, prev := wv.Price[0], float64(0), wv.Price[0]
 	if len(wv.Price) > cumulantPrice {
 		wv.Price = wv.Price[0:cumulantPrice]
 	}
@@ -120,14 +120,30 @@ func (wv *WeightData) CalPrice() {
 		if max < val {
 			max = val
 		}
+
+		if min > val {
+			min = val
+		}
 	}
 
+	// 与最近一次价格比较--越跌越好
 	rate := Decimal((max - wv.Price[0]) / max)
-	log.Infof("==>>TODO Price 405:%+v|%+v|%+v", max, wv.Price[0], rate)
-	if rate < three_ten && rate > one_ten {
-		wv.wr.Price = wv.wr.Price * three_fifth
-	} else if rate <= one_ten {
+	if rate <= one_ten {
 		wv.wr.Price = 0
+	} else if rate < 0.3 {
+		wv.wr.Price = wv.wr.Price * 0.5
+	} else if rate < 0.4 {
+		wv.wr.Price = wv.wr.Price * 0.8
+	} else if rate < 0.5 {
+		wv.wr.Price = wv.wr.Price * 0.9
+	}
+
+	//100% 暂时不考虑--越涨越差
+	rate2 := Decimal((wv.RecentPrice - min) / min)
+	if rate2 >= 1 {
+		wv.wr.Price = 0
+	} else if rate2 > 0.5 {
+		wv.wr.Price = wv.wr.Price * 0.5
 	}
 }
 
@@ -170,15 +186,17 @@ func (wv *WeightData) CalTotalNumRatio() { //+-,越小越好
 		rate += 0.25
 	}
 	//
-	if unit.Accum <= -1*15 && unit.Consecutive <= 3 {
+	if unit.Accum <= -1*25 && unit.Consecutive <= 3 {
 		rate += 0.75
+	} else if unit.Accum <= -1*15 && unit.Consecutive <= 3 {
+		rate += 0.6
 	} else if unit.Accum <= -1*10 && unit.Consecutive <= 3 {
-		rate += 0.5
+		rate += 0.45
 	} else if unit.Accum <= -1*5 && unit.Consecutive <= 3 {
-		rate += 0.25
+		rate += 0.3
 	}
 
-	unit.Value = unit.Value * rate
+	unit.Value = Decimal(unit.Value * rate)
 }
 
 func (wv *WeightData) CalAvgFreesharesRatio() { //+-,越大越好
@@ -208,15 +226,16 @@ func (wv *WeightData) CalAvgFreesharesRatio() { //+-,越大越好
 	if unit.Consecutive >= 2 && unit.Counter <= 4 {
 		rate += 0.25
 	}
-
-	if unit.Accum >= 15 && unit.Consecutive <= 3 {
+	if unit.Accum >= 25 && unit.Consecutive <= 3 {
 		rate += 0.75
+	} else if unit.Accum >= 15 && unit.Consecutive <= 3 {
+		rate += 0.6
 	} else if unit.Accum >= 10 && unit.Consecutive <= 3 {
-		rate += 0.75
+		rate += 0.45
 	} else if unit.Accum >= 5 && unit.Consecutive <= 3 {
-		rate += 0.75
+		rate += 0.3
 	}
-	unit.Value = unit.Value * rate
+	unit.Value = Decimal(unit.Value * rate)
 }
 
 func (wv *WeightData) CalHoldRatioTotal() {

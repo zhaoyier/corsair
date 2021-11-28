@@ -185,11 +185,7 @@ func applyGpRecommend(wv *WeightData) error {
 		return nil
 	}
 
-	if wv.Cal().GetWeight() <= 50 {
-		return nil
-	}
-
-	log.Infof("==>>TODO 315:%+v|%+v", result, wv)
+	log.Infof("==>>TODO 315:%+v|%+v|%+v", wv.Secucode, wv.Weight, wv.Cal().GetWeight() <= 50)
 	result = orm.GDHoldValueIndexMgr.NewGDHoldValueIndex()
 	result.EndDate = enddate
 	result.Secucode = wv.Secucode
@@ -198,6 +194,10 @@ func applyGpRecommend(wv *WeightData) error {
 	result.CumulantFocus = strings.Join(wv.Focus, "<-")
 	result.CumulantDate = tmSlice2Str(wv.Date, "<-")
 	result.CreateDate = time.Now().Unix()
+
+	if result.ValueIndex <= 50 {
+		return nil
+	}
 
 	// log.Infof("==>>TODO 318:%+v", result)
 	if _, err := result.Save(); err != nil {
