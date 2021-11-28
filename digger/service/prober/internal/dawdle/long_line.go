@@ -21,8 +21,8 @@ var (
 	shareholderData    []*WeightData
 )
 
-func GenShareholderTicker() {
-	tk := time.NewTicker(time.Minute * 90)
+func GenLongLineTicker() {
+	tk := time.NewTicker(time.Minute * 40)
 	for range tk.C {
 		weekday := time.Now().Weekday()
 		nowHour := time.Now().Local().Hour()
@@ -30,16 +30,15 @@ func GenShareholderTicker() {
 			continue
 		}
 
-		log.Infof("gen share holder charging up: %d", nowHour)
-		if nowHour >= 22 && nowHour < 24 {
-			log.Infof("gen share holder in progress: %d", nowHour)
+		log.Infof("gen long line charging up: %d", nowHour)
+		if nowHour >= 21 && nowHour < 22 {
+			log.Infof("gen long line in progress: %d", nowHour)
 			GenShareholder()
-
 		}
 	}
 }
 
-func GenShareholderOnce() {
+func GenLongLineOnce() {
 	genShareholderOnce.Do(func() {
 		GenShareholder()
 	})
@@ -54,7 +53,7 @@ func GenShareholderTmp(code string) error {
 	}
 
 	start := time.Now().AddDate(0, -9, 0).Unix()
-	log.Infof("==>>TODO 201: %+v", start)
+	// log.Infof("==>>TODO 201: %+v", start)
 	// getDawdleData("SZ.003039", start, file)
 	getDawdleData(code, start, file)
 	saveToFile(file)
@@ -78,9 +77,11 @@ func GenShareholder() error {
 		getDawdleData(secucode.Secucode, start, file)
 	}
 
-	saveToFile(file)
+	if err := saveToFile(file); err != nil {
+		log.Errorf("save file failed: %s|%q", "", err)
+	}
 	// 更新任务
-	job.UpdateJob("GenShareholder", "ok")
+	job.UpdateJob("GenLongLine", "ok")
 
 	return nil
 }
@@ -155,10 +156,6 @@ func fillDawdleData(file *xlsx.File, wv *WeightData) error {
 		return fmt.Errorf("sheet is nil")
 	}
 
-	if weight := wv.Cal().GetWeight(); weight < 70 {
-		return fmt.Errorf("%s underweighting of stocks", wv.Secucode)
-	}
-
 	if cap(shareholderData) <= 0 {
 		shareholderData = make([]*WeightData, 0, 8)
 	}
@@ -176,8 +173,8 @@ func fillDawdleData(file *xlsx.File, wv *WeightData) error {
 func applyGpRecommend(wv *WeightData) error {
 	// log.Infof("==>>TODO 311:%+v", wv.Secucode)
 	enddate := time.Unix(wv.Date[0], 0).Format("2006-01-02")
-	result, err := orm.GDHoldRecommendMgr.FindOneBySecucodeEndDate(wv.Secucode, enddate)
-	// result, err := orm.GDHoldRecommendMgr.FindOneBySecucodeEndDate(wv.Secucode, "2021-11-12")
+	result, err := orm.GDHoldValueIndexMgr.FindOneBySecucodeEndDate(wv.Secucode, enddate)
+	// result, err := orm.GDHoldValueIndexMgr.FindOneBySecucodeEndDate(wv.Secucode, "2021-11-12")
 	// log.Infof("==>>TODO 312:%+v|%+v", result, err)
 	// log.Infof("==>>TODO 313:%+v|%+v", err != nil, result != nil)
 	if err != nil && err != mgo.ErrNotFound {
@@ -188,11 +185,15 @@ func applyGpRecommend(wv *WeightData) error {
 		return nil
 	}
 
-	// log.Infof("==>>TODO 315:%+v|%+v", result, err)
-	result = orm.GDHoldRecommendMgr.NewGDHoldRecommend()
-	result.Level = wv.Weight
+	if wv.Cal().GetWeight() <= 50 {
+		return nil
+	}
+
+	log.Infof("==>>TODO 315:%+v|%+v", result, wv)
+	result = orm.GDHoldValueIndexMgr.NewGDHoldValueIndex()
 	result.EndDate = enddate
 	result.Secucode = wv.Secucode
+	result.ValueIndex = wv.Cal().GetWeight()
 	result.CumulantPrice = intSlice2Str(wv.Price, "<-")
 	result.CumulantFocus = strings.Join(wv.Focus, "<-")
 	result.CumulantDate = tmSlice2Str(wv.Date, "<-")
@@ -219,6 +220,10 @@ func saveToFile(file *xlsx.File) error {
 	})
 
 	for _, val := range shareholderData {
+		if weight := val.Cal().GetWeight(); weight < 70 {
+			return fmt.Errorf("%s underweighting of stocks", val.Secucode)
+		}
+
 		row := sheet.AddRow()
 		row.AddCell().SetString(val.Secucode)
 		row.AddCell().SetString(fmt.Sprintf("%.1f", val.Weight))

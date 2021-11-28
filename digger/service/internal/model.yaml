@@ -73,12 +73,13 @@ GDsdlt:
   uniques: [[Secucode,EndDate,HolderName]]
   indexes: [[Secucode,EndDate],[CreateDate]]
 
-GDHoldRecommend:
+
+GDHoldValueIndex:
     db: mongo
     dbname: digger
     fields:
       - Secucode: string
-      - Level: float64
+      - ValueIndex: int32      #价值指数
       - CumulantPrice: string #价格梯度
       - CumulantFocus: string #集中度梯度
       - CumulantDate: string  #日期梯度
@@ -87,7 +88,7 @@ GDHoldRecommend:
       - EndDate: string        #截止日期
       - CreateDate: datetime
     uniques: [[Secucode,EndDate]]
-    indexes: [[Level],[EndDate],[Disabled],[CreateDate]]
+    indexes: [[ValueIndex],[EndDate],[Disabled],[CreateDate]]
 
 GPDaily:
     db: mongo
@@ -102,6 +103,7 @@ GPDaily:
       - Business  : float64 
       - Liangbi   : float64  
       - MaxPrice  : float64 
+      - MinPrice  : float64 
       - Opening   : float64 
       - Market    : int64   
       - Traded    : int64     
@@ -110,6 +112,18 @@ GPDaily:
       - UpdateDate: datetime
     uniques: [[Secucode,CreateDate]]
     indexes: [[Name],[CreateDate],[UpdateDate]]
+
+GPStubIncident:
+    db: mongo
+    dbname: digger
+    fields:
+      - Secucode  : string 
+      - PriceDiff: int32    #差价
+      - Decrease: int32     #跌幅
+      - CreateDate: int64  #年月日
+      - UpdateDate: datetime
+    uniques: [[Secucode,CreateDate]]
+    indexes: [[Secucode],[UpdateDate]]
 
 Job:
     db: mongo

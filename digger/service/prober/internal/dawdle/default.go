@@ -58,7 +58,7 @@ type WeightData struct { //权重数据
 	FreeholdRatioTotal []float64
 	Date               []int64
 	RecentPrice        float64
-	Weight             float64
+	Weight             int32
 	wr                 *WeightRule
 }
 
@@ -78,10 +78,10 @@ func NewWeightData(secucode string) *WeightData {
 
 func defaultWeightRule() *WeightRule {
 	return &WeightRule{
-		TotalNumRatio:      &trpc.WeightUnit{Value: 15},
-		AvgFreesharesRatio: &trpc.WeightUnit{Value: 10},
-		Focus:              30,
-		Price:              25,
+		TotalNumRatio:      &trpc.WeightUnit{Value: 20},
+		AvgFreesharesRatio: &trpc.WeightUnit{Value: 20},
+		Focus:              20,
+		Price:              20,
 		HoldRatioTotal:     10,
 		FreeholdRatioTotal: 10,
 	}
@@ -158,7 +158,7 @@ func (wv *WeightData) CalTotalNumRatio() { //+-,越小越好
 			unit.Consecutive--
 		}
 
-		if unit.Accum <= -18 {
+		if unit.Accum <= -15 {
 			break
 		}
 
@@ -169,16 +169,16 @@ func (wv *WeightData) CalTotalNumRatio() { //+-,越小越好
 	if unit.Consecutive >= 2 && unit.Counter <= 4 {
 		rate += 0.25
 	}
-
-	if unit.Accum <= -1*accum && unit.Consecutive >= 2 {
+	//
+	if unit.Accum <= -1*15 && unit.Consecutive <= 3 {
 		rate += 0.75
+	} else if unit.Accum <= -1*10 && unit.Consecutive <= 3 {
+		rate += 0.5
+	} else if unit.Accum <= -1*5 && unit.Consecutive <= 3 {
+		rate += 0.25
 	}
 
 	unit.Value = unit.Value * rate
-
-	// if rate := math.Abs(min / TotalNumRatio); rate < 1 {
-	// 	wv.wr.TotalNumRatio = Decimal(wv.wr.TotalNumRatio * rate)
-	// }
 }
 
 func (wv *WeightData) CalAvgFreesharesRatio() { //+-,越大越好
@@ -196,7 +196,7 @@ func (wv *WeightData) CalAvgFreesharesRatio() { //+-,越大越好
 			unit.Consecutive--
 		}
 
-		if unit.Accum >= 18 {
+		if unit.Accum >= 15 {
 			break
 		}
 
@@ -209,26 +209,14 @@ func (wv *WeightData) CalAvgFreesharesRatio() { //+-,越大越好
 		rate += 0.25
 	}
 
-	if unit.Accum >= accum && unit.Consecutive >= 2 {
+	if unit.Accum >= 15 && unit.Consecutive <= 3 {
+		rate += 0.75
+	} else if unit.Accum >= 10 && unit.Consecutive <= 3 {
+		rate += 0.75
+	} else if unit.Accum >= 5 && unit.Consecutive <= 3 {
 		rate += 0.75
 	}
-	// log.Infof("==>>TODO 428:%+v", rate)
 	unit.Value = unit.Value * rate
-	// -----------
-
-	// var max float64
-	// for idx, val := range wv.AvgFreesharesRatio {
-	// 	value := val
-	// 	if idx <= cumulantRatio && value > 0 {
-	// 		if value > max {
-	// 			max = value
-	// 		}
-	// 	}
-	// }
-
-	// if rate := math.Abs(max / TotalNumRatio); rate < 1 {
-	// 	wv.wr.AvgFreesharesRatio = Decimal(wv.wr.AvgFreesharesRatio * rate)
-	// }
 }
 
 func (wv *WeightData) CalHoldRatioTotal() {
@@ -238,9 +226,12 @@ func (wv *WeightData) CalHoldRatioTotal() {
 
 	currentHold := wv.HoldRatioTotal[0]
 	if currentHold > 60 {
-		return
+		wv.wr.HoldRatioTotal = 10
+	} else if currentHold > 45 {
+		wv.wr.HoldRatioTotal = 5
+	} else {
+		wv.wr.HoldRatioTotal = 0
 	}
-	wv.wr.HoldRatioTotal = 0
 }
 
 func (wv *WeightData) CalFreeholdRatioTotal() {
@@ -259,7 +250,7 @@ func (wv *WeightData) CalPriceDiff() {
 
 }
 
-func (wv *WeightData) GetWeight() float64 {
+func (wv *WeightData) GetWeight() int32 {
 	wr, weight := wv.wr, float64(0)
 	log.Infof("==>>TODO 451: %+v|%+v|%+v|%+v|%+v|%+v", wr.Price, wr.Focus, wr.TotalNumRatio.Value, wr.AvgFreesharesRatio.Value, wr.HoldRatioTotal, wr.FreeholdRatioTotal)
 	// 判断与当前的差价率
@@ -274,10 +265,11 @@ func (wv *WeightData) GetWeight() float64 {
 		return 0
 	}
 
-	// log.Infof("==>>TODO 458: %+v|%+v|%+v|%+v|%+v|%+v", wr.Price, wr.Focus, wr.TotalNumRatio, wr.AvgFreesharesRatio, wr.HoldRatioTotal, wr.FreeholdRatioTotal)
+	// log.Infof("==>>TODO 458: %+v|%+v|%+v|%+v|%+v|%+v", wr.Price, wr.Focus, wr.TotalNumRatio.Value, wr.AvgFreesharesRatio.Value, wr.HoldRatioTotal, wr.FreeholdRatioTotal)
 	weight = wr.Price + wr.Focus + wr.TotalNumRatio.Value + wr.AvgFreesharesRatio.Value + wr.HoldRatioTotal + wr.FreeholdRatioTotal
 
-	wv.Weight, _ = strconv.ParseFloat(fmt.Sprintf("%.1f", weight), 64)
+	wv.Weight = int32(weight)
+	// wv.Weight, _ = strconv.ParseFloat(fmt.Sprintf("%.1f", weight), 64)
 	log.Infof("cal weight: %+v|%+v", wv.Secucode, wv.Weight)
 	return wv.Weight
 }

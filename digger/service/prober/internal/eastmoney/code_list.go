@@ -43,8 +43,13 @@ func GetCodeList() {
 
 	resp, inc := new(StockList), int32(1)
 	for {
+		if inc > 70 { //5600个
+			return
+		}
+
 		if err := webapi.GetEastmoneyCode(inc, 80, resp); err != nil || resp.Data == nil {
-			log.Errorf("eastmoney get failed: %+v\n", err)
+			log.Errorf("eastmoney get failed: %d|%+v\n", inc, err)
+			inc++
 			continue
 		}
 
@@ -78,10 +83,9 @@ func updateCodeList(req *StockList, col *mgo.Collection) error {
 			exchange = "SZ"
 		}
 
-		if err := applyCode(val.Secucode, exchange, val.Name, col); err != nil {
+		if err := applyCNSecucode(val.Secucode, exchange, val.Name, col); err != nil {
 			log.Errorf("apply failed: %+v|%+v\n", val, err)
 		}
-
 		if err := applyGPDaily(val, exchange); err != nil {
 			log.Errorf("apply failed: %+v|%+v\n", val, err)
 		}
@@ -91,7 +95,7 @@ func updateCodeList(req *StockList, col *mgo.Collection) error {
 	return nil
 }
 
-func applyCode(secu, exchange, name string, col *mgo.Collection) error {
+func applyCNSecucode(secu, exchange, name string, col *mgo.Collection) error {
 	r, err := orm.CNSecucodeMgr.FindOneBySecucode(secu)
 	if r != nil {
 		return fmt.Errorf("unupdate %+v", err)
@@ -139,8 +143,9 @@ func applyGPDaily(data *CodeBase, exchange string) error {
 	result.PRise = data.PRise
 	result.Turnover = data.Turnover
 	result.Business = data.Business
-	// result.Liangbi = data.Liangbi
+	result.Liangbi = data.Liangbi
 	result.MaxPrice = data.MaxPrice
+	result.MinPrice = data.MinPrice
 	result.Opening = data.Opening
 	result.Market = data.Market
 	result.Traded = data.Traded

@@ -11,16 +11,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetRecommendList(in *gin.Context) {
+func GDHoldValueIndexList(in *gin.Context) {
 	resp := digger.GetRecommendListResp{
 		Rows: make([]*digger.RecommendData, 0, 4),
 	}
 
 	limit, _ := strconv.Atoi(in.Query("limit"))
 	offset, _ := strconv.Atoi(in.Query("offset"))
-	resp.Total = int32(orm.GDHoldRecommendMgr.Count(ezdb.M{}))
+	resp.Total = int32(orm.GDHoldValueIndexMgr.Count(ezdb.M{}))
 
-	results, err := orm.GDHoldRecommendMgr.Find(ezdb.M{}, limit, offset, "-Level", "-EndDate")
+	results, err := orm.GDHoldValueIndexMgr.Find(ezdb.M{}, limit, offset, "-Level", "-EndDate")
 	if err != nil {
 		log.Errorf("query recommend failed: %q", err)
 		in.JSON(http.StatusFailedDependency, gin.H{"status": "!ok"})
@@ -31,7 +31,7 @@ func GetRecommendList(in *gin.Context) {
 		resp.Rows = append(resp.Rows, &digger.RecommendData{
 			Id:            int32(idx + 1),
 			Secucode:      item.Secucode,
-			Level:         float32(item.Level),
+			ValueIndex:    float32(item.ValueIndex),
 			CumulantFocus: item.CumulantFocus,
 			CumulantPrice: item.CumulantPrice,
 			CumulantDate:  item.CumulantDate,

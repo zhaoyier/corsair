@@ -396,8 +396,9 @@ type CodeBase struct {
 	Business  float64 `json:"f6"`  //成交额
 	Liangbi   float64 `json:"f10"` //量比
 	Secucode  string  `json:"f12"` //股票代码'000111'
-	Name      string  `json:"f14"` //最高价
+	Name      string  `json:"f14"` //名称
 	MaxPrice  float64 `json:"f15"` //最高价
+	MinPrice  float64 `json:"f16"` //最低价
 	Opening   float64 `json:"f17"` //开盘价
 	Market    int64   `json:"f20"` //市值
 	Traded    int64   `json:"f21"` //流通市值

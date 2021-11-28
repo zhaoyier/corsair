@@ -15,7 +15,7 @@ message GetRecommendListReq {
 message RecommendData {
     int32 id = 1;
     string secucode = 2;
-    float level = 3;
+    float valueIndex = 3;
     string cumulantPrice = 4;
     string cumulantFocus = 5;
     string cumulantDate = 6;

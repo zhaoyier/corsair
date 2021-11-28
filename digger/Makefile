@@ -2,8 +2,9 @@ pub:
 	rm -rf rpc/digger/*
 	go generate && go build
 	mv digger /home/gopath/bin/
-	supervisorctl restart digger_prober
-	supervisorctl status digger_prober
+	cp web/hold_recom.html /data/www/index.html
+	supervisorctl restart all
+	supervisorctl status
 
 regen:
 	rm -rf rpc/digger/*.pb.go

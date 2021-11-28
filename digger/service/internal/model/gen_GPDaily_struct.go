@@ -17,6 +17,7 @@ type GPDaily struct {
 	Business   float64       `bson:"Business" json:"Business"`
 	Liangbi    float64       `bson:"Liangbi" json:"Liangbi"`
 	MaxPrice   float64       `bson:"MaxPrice" json:"MaxPrice"`
+	MinPrice   float64       `bson:"MinPrice" json:"MinPrice"`
 	Opening    float64       `bson:"Opening" json:"Opening"`
 	Market     int64         `bson:"Market" json:"Market"`
 	Traded     int64         `bson:"Traded" json:"Traded"`
@@ -37,6 +38,7 @@ const (
 	GPDailyMgoFieldBusiness   = "Business"
 	GPDailyMgoFieldLiangbi    = "Liangbi"
 	GPDailyMgoFieldMaxPrice   = "MaxPrice"
+	GPDailyMgoFieldMinPrice   = "MinPrice"
 	GPDailyMgoFieldOpening    = "Opening"
 	GPDailyMgoFieldMarket     = "Market"
 	GPDailyMgoFieldTraded     = "Traded"
