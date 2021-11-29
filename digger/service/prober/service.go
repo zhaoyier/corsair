@@ -26,7 +26,7 @@ func Start() {
 	// go sina.GetDailyDataTicker()
 	// go sina.GetDailyDataOnce()
 	// sina.GetDailyDataTmp("SZ.300897")
-	// dawdle.GenShareholderTmp("SZ.300855")
+	// dawdle.GenShareholderTmp("SZ.300897")
 
 	for {
 

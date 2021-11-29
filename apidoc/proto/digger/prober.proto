@@ -18,4 +18,5 @@ message WeightUnit  {
     int32 consecutive = 3;  //连续计数
     int32 counter = 4;      //计数器
     double present = 5;     //现在的
+    bool subNew = 6;        //次新
 }

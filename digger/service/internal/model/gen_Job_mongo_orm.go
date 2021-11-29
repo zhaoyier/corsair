@@ -28,15 +28,6 @@ func initJobIndex() {
 	defer session.Close()
 
 	if err := collection.EnsureIndex(mgo.Index{
-		Key:        []string{"Name", "CreateDate"},
-		Unique:     true,
-		Background: true,
-		Sparse:     true,
-	}); err != nil {
-		panic("ensureIndex digger.Job NameCreateDate error:" + err.Error())
-	}
-
-	if err := collection.EnsureIndex(mgo.Index{
 		Key:        []string{"Name"},
 		Background: true,
 		Sparse:     true,
@@ -50,6 +41,15 @@ func initJobIndex() {
 		Sparse:     true,
 	}); err != nil {
 		panic("ensureIndex digger.Job CreateDate error:" + err.Error())
+	}
+
+	if err := collection.EnsureIndex(mgo.Index{
+		Key:        []string{"Name", "CreateDate"},
+		Unique:     true,
+		Background: true,
+		Sparse:     true,
+	}); err != nil {
+		panic("ensureIndex digger.Job NameCreateDate error:" + err.Error())
 	}
 
 }
@@ -180,6 +180,24 @@ func (o *_JobMgr) NQuery(query interface{}, limit, offset int, sortFields []stri
 
 	return session, q
 }
+func (o *_JobMgr) FindByName(Name string, limit int, offset int, sortFields ...string) (result []*Job, err error) {
+	query := db.M{
+		"Name": Name,
+	}
+	session, q := JobMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
+}
+func (o *_JobMgr) FindByCreateDate(CreateDate string, limit int, offset int, sortFields ...string) (result []*Job, err error) {
+	query := db.M{
+		"CreateDate": CreateDate,
+	}
+	session, q := JobMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
+}
 func (o *_JobMgr) FindOneByNameCreateDate(Name string, CreateDate string) (result *Job, err error) {
 	query := db.M{
 		"Name":       Name,
@@ -211,24 +229,6 @@ func (o *_JobMgr) RemoveByNameCreateDate(Name string, CreateDate string) (err er
 		"CreateDate": CreateDate,
 	}
 	return col.Remove(query)
-}
-func (o *_JobMgr) FindByName(Name string, limit int, offset int, sortFields ...string) (result []*Job, err error) {
-	query := db.M{
-		"Name": Name,
-	}
-	session, q := JobMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
-}
-func (o *_JobMgr) FindByCreateDate(CreateDate string, limit int, offset int, sortFields ...string) (result []*Job, err error) {
-	query := db.M{
-		"CreateDate": CreateDate,
-	}
-	session, q := JobMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
 }
 
 func (o *_JobMgr) Find(query interface{}, limit int, offset int, sortFields ...string) (result []*Job, err error) {
