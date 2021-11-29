@@ -16,17 +16,18 @@ func Start() {
 	})
 
 	go eastmoney.GetCodeListTicker()
-	// go eastmoney.GetCodeListOnce()
 	go eastmoney.GetShareholderTicker()
-	//go eastmoney.GetShareholderOnce()
 	go dawdle.GenLongLineTicker()
-	// go dawdle.GenLongLineOnce()
 	go dawdle.GenShortLineTicker()
+
+	// go eastmoney.GetCodeListOnce()
+	// go eastmoney.GetShareholderOnce()
+	go dawdle.GenLongLineOnce()
 	// go dawdle.GenShortLineOnce()
 	// go sina.GetDailyDataTicker()
 	// go sina.GetDailyDataOnce()
 	// sina.GetDailyDataTmp("SZ.300897")
-	// dawdle.GenShareholderTmp("SZ.300897")
+	dawdle.GenShareholderTmp("SZ.300897")
 
 	for {
 

@@ -79,9 +79,14 @@ func applyShareholder(data []Holder) error {
 	for _, holder := range data {
 		loc, _ := time.LoadLocation("Local")
 		tmp, _ := time.ParseInLocation(timeLayout, holder.ENDDATE, loc)
-		result, err := orm.GDRenshuMgr.FindOneBySecucodeEndDate(holder.SECUCODE, tmp.Unix())
+		codes := strings.Split(holder.SECUCODE, ".")
+		if len(codes) < 2 {
+			continue
+		}
+		secucode := codes[1] + "." + codes[0]
+		result, err := orm.GDRenshuMgr.FindOneBySecucodeEndDate(secucode, tmp.Unix())
 		if err != nil && err != mgo.ErrNotFound {
-			log.Errorf("find gd renshu failed: %s|%s", holder.SECUCODE, holder.ENDDATE)
+			log.Errorf("find gd renshu failed: %s|%s", secucode, holder.ENDDATE)
 			return err
 		}
 		if result != nil {
@@ -89,7 +94,7 @@ func applyShareholder(data []Holder) error {
 		}
 
 		result = orm.GDRenshuMgr.NewGDRenshu()
-		result.Secucode = holder.SECUCODE
+		result.Secucode = secucode
 		result.SecurityCode = holder.SECURITYCODE
 
 		result.EndDate = tmp.Unix()
@@ -108,7 +113,7 @@ func applyShareholder(data []Holder) error {
 		result.CreateDate = time.Now().Unix()
 
 		if _, err := result.Save(); err != nil {
-			log.Errorf("save gd renshu failed: %s|%q", holder.SECUCODE, err)
+			log.Errorf("save gd renshu failed: %s|%q", secucode, err)
 			return err
 		}
 	}
@@ -119,10 +124,15 @@ func applyShareholder(data []Holder) error {
 func applyGDsdlt(data []Sdltgd) error {
 	for _, gd := range data {
 		loc, _ := time.LoadLocation("Local")
+		codes := strings.Split(gd.SECUCODE, ".")
+		if len(codes) < 2 {
+			continue
+		}
+		secucode := codes[1] + "." + codes[0]
 		tmp, _ := time.ParseInLocation(timeLayout, gd.ENDDATE, loc)
-		result, err := orm.GDsdltMgr.FindOneBySecucodeEndDateHolderName(gd.SECUCODE, tmp.Unix(), gd.HOLDERNAME)
+		result, err := orm.GDsdltMgr.FindOneBySecucodeEndDateHolderName(secucode, tmp.Unix(), gd.HOLDERNAME)
 		if err != nil && err != mgo.ErrNotFound {
-			log.Errorf("find gd renshu failed: %s|%s", gd.SECUCODE, gd.ENDDATE)
+			log.Errorf("find gd renshu failed: %s|%s", secucode, gd.ENDDATE)
 			return err
 		}
 		if result != nil {
@@ -130,8 +140,7 @@ func applyGDsdlt(data []Sdltgd) error {
 		}
 
 		result = orm.GDsdltMgr.NewGDsdlt()
-		result.Secucode = gd.SECUCODE
-
+		result.Secucode = secucode
 		result.EndDate = tmp.Unix()
 		result.HolderRank = int32(gd.HOLDERRANK)
 		result.HolderName = gd.HOLDERNAME

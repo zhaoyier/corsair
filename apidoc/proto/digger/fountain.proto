@@ -15,12 +15,14 @@ message GetRecommendListReq {
 message RecommendData {
     int32 id = 1;
     string secucode = 2;
-    float valueIndex = 3;
-    string cumulantPrice = 4;
-    string cumulantFocus = 5;
-    string cumulantDate = 6;
-    string endDate = 7;
-    int64 createDate=8;
+    string name = 3;
+    float valueIndex = 4;
+    string cumulantPrice = 5;
+    string cumulantFocus = 6;
+    string cumulantDate = 7;
+    string gdreduceRatio = 8;
+    string endDate = 9;
+    int64 createDate=10;
 }
 
 

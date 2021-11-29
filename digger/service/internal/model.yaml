@@ -43,7 +43,7 @@ GDNiusan:
     - UpdateDate: datetime
   indexes: [[SecurityCode],[Niusan]]
 
-Daily:
+SinaDaily:
   db: mongo
   dbname: digger
   fields:
@@ -74,15 +74,17 @@ GDsdlt:
   indexes: [[Secucode,EndDate],[CreateDate]]
 
 
-GDHoldValueIndex:
+GDLongLine:
     db: mongo
     dbname: digger
     fields:
       - Secucode: string
+      - Name: string            #名称
       - ValueIndex: int32      #价值指数
       - CumulantPrice: string #价格梯度
       - CumulantFocus: string #集中度梯度
       - CumulantDate: string  #日期梯度
+      - GDReduceRatio: string    #最近三次股东减少比例
       - Disabled: bool
       - Remark: string
       - EndDate: string        #截止日期

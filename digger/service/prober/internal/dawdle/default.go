@@ -9,6 +9,7 @@ import (
 	"time"
 
 	trpc "git.ezbuy.me/ezbuy/corsair/digger/rpc/digger"
+	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
 	log "github.com/Sirupsen/logrus"
 )
 
@@ -60,7 +61,7 @@ type WeightData struct { //权重数据
 	HoldRatioTotal     []float64
 	FreeholdRatioTotal []float64
 	Date               []int64
-	RecentPrice        float64
+	GPDaily            *orm.GPDaily
 	Weight             int32
 	wr                 *WeightRule
 }
@@ -117,16 +118,21 @@ func (wv *WeightData) CalPrice() {
 	if len(wv.Price) > cumulantPrice {
 		wv.Price = wv.Price[0:cumulantPrice]
 	}
-	// log.Infof("==>>TODO Price 320:%+v|%+v", len(wv.Price))
+	// log.Infof("==>>TODO Price 320:%+v", len(wv.Price))
 
 	for idx, val := range wv.Price {
 		unit.Counter++
 		// log.Infof("==>>TODO Price 401:%s|%+v|%f|%+v", wv.Secucode, idx, val, val <= 0)
+		if val <= 0 {
+			continue
+		}
 
 		// 价格跳动太大就舍弃了
-		// log.Infof("==>>TODO Price 323:%s|%+v|%f|%f", wv.Secucode, idx, math.Pow(1.1, float64(idx)), priceDiff*math.Pow(1.1, float64(idx)))
+		// log.Infof("==>>TODO Price 322:%+v|%+v|%+v|%+v", prev, val, math.Abs(prev-val), val)
+		// log.Infof("==>>TODO Price 323:%s|%+v|%f|%f", wv.Secucode, idx, (math.Abs(prev-val) / val), priceDiff*math.Pow(1.1, float64(idx)))
 		if (math.Abs(prev-val) / val) > priceDiff*math.Pow(1.1, float64(idx)) {
 			// wv.wr.Price = 0
+			// log.Infof("==>>TODO Price 326:%+v|%+v", prev, val)
 			unit.Value = 0
 			return
 		}
@@ -157,9 +163,9 @@ func (wv *WeightData) CalPrice() {
 	} else if rate < 0.5 {
 		unit.Value = unit.Value * 0.9
 	}
-	// log.Infof("==>>TODO Price 325:%+v|%+v|%+v", unit.Value, wv.RecentPrice, min)
+	// log.Infof("==>>TODO Price 325:%+v|%+v|%+v", unit.Value, wv.GPDaily.Closing, min)
 	//100%直接放弃--越涨越差
-	rate2 := Decimal((wv.RecentPrice - min) / min)
+	rate2 := Decimal((wv.GPDaily.Closing - min) / min)
 	if rate2 >= 1 {
 		unit.Value = 0
 	} else if rate2 > 0.5 {
@@ -183,11 +189,15 @@ func (wv *WeightData) CalFocus() {
 func (wv *WeightData) CalTotalNumRatio() { //+-,越小越好
 	var pre, rate float64
 	unit := wv.wr.TotalNumRatio
-	for _, val := range wv.TotalNumRatio {
+	for idx, val := range wv.TotalNumRatio {
 		// 计数器
 		unit.Counter++
 		// 累加值
 		unit.Accum += val
+		if idx == 0 && val <= -35 {
+			rate = 1
+			break
+		}
 		// 计算连续值类型
 		if val < 0 && (pre == 0 || pre < 0) {
 			unit.Consecutive++
@@ -202,13 +212,11 @@ func (wv *WeightData) CalTotalNumRatio() { //+-,越小越好
 
 		pre = val
 	}
-	// value:5 accum:-43 consecutive:5 counter:5
 	// log.Infof("==>>TODO 305:%+v", unit)
 	// 最近是减少的
 	if unit.Consecutive >= 2 && unit.Counter <= 4 {
 		rate += 0.25
 	}
-	//value:20 accum:-25 consecutive:3 counter:3
 	if unit.Accum <= -1*25 && unit.Consecutive <= 3 {
 		rate += 0.75
 	} else if unit.Accum <= -1*15 && unit.Consecutive <= 3 {
@@ -219,17 +227,21 @@ func (wv *WeightData) CalTotalNumRatio() { //+-,越小越好
 		rate += 0.3
 	}
 	// log.Infof("==>>TODO 309:%+v", rate)
-	unit.Value = Decimal(unit.Value * rate)
+	unit.Value = Decimal(unit.Value * math.Min(rate, 1))
 }
 
 func (wv *WeightData) CalAvgFreesharesRatio() { //+-,越大越好
 	var pre, rate float64
 	unit := wv.wr.AvgFreesharesRatio
-	for _, val := range wv.AvgFreesharesRatio {
+	for idx, val := range wv.AvgFreesharesRatio {
 		// 计数器
 		unit.Counter++
 		// 累加值
 		unit.Accum += val
+		if idx == 0 && val >= 35 {
+			rate = 1
+			break
+		}
 		// 计算连续值类型
 		if val > 0 && (pre == 0 || pre > 0) {
 			unit.Consecutive++
@@ -258,7 +270,7 @@ func (wv *WeightData) CalAvgFreesharesRatio() { //+-,越大越好
 	} else if unit.Accum >= 5 && unit.Consecutive <= 3 {
 		rate += 0.3
 	}
-	unit.Value = Decimal(unit.Value * rate)
+	unit.Value = Decimal(unit.Value * math.Min(rate, 1))
 }
 
 func (wv *WeightData) CalHoldRatioTotal() {
@@ -298,8 +310,8 @@ func (wv *WeightData) GetWeight() int32 {
 		// log.Infof("==>>TODO 450: %+v", wv.Focus)
 		// log.Infof("==>>TODO 451: %+v|%+v|%+v|%+v|%+v|%+v|%+v", wv.Secucode, wr.Price.Value, wr.Focus, wr.TotalNumRatio.Value, wr.AvgFreesharesRatio.Value, wr.HoldRatioTotal, wr.FreeholdRatioTotal)
 		// 判断与当前的差价率
-		if wv.RecentPrice/wv.Price[0] > priceDiff {
-			log.Infof("invalid price: %s|%f|%f", wv.Secucode, wv.RecentPrice, wv.Price[0])
+		if wv.GPDaily.Closing/wv.Price[0] > priceDiff {
+			log.Infof("invalid price: %s|%f|%f", wv.Secucode, wv.GPDaily.Closing, wv.Price[0])
 			wv.Weight = 0
 			return
 		}
@@ -309,11 +321,12 @@ func (wv *WeightData) GetWeight() int32 {
 			log.Infof("invalid date: %s|%s", wv.Secucode, time.Unix(wv.Date[0], 0).Format("2006-01-02"))
 			wv.Weight = 0
 			return
+		} else if time.Now().Unix()-wv.Date[0] > dateDiff && !wr.Price.SubNew {
+			wv.Weight -= 10
 		}
 
 		// log.Infof("==>>TODO 458: %+v|%+v|%+v|%+v|%+v|%+v", wr.Price, wr.Focus, wr.TotalNumRatio.Value, wr.AvgFreesharesRatio.Value, wr.HoldRatioTotal, wr.FreeholdRatioTotal)
 		weight = wr.Price.Value + wr.Focus + wr.TotalNumRatio.Value + wr.AvgFreesharesRatio.Value + wr.HoldRatioTotal + wr.FreeholdRatioTotal
-
 		wv.Weight = int32(weight)
 		// wv.Weight, _ = strconv.ParseFloat(fmt.Sprintf("%.1f", weight), 64)
 		log.Infof("cal weight: %+v|%+v", wv.Secucode, wv.Weight)

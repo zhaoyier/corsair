@@ -15,7 +15,6 @@ import (
 
 var (
 	genShareholderOnce sync.Once
-	shareholderData    []*WeightData
 )
 
 func GenLongLineTicker() {
@@ -67,12 +66,14 @@ func GenShareholder() error {
 }
 
 func getDawdleData(secucode string, since int64) error {
+	wv := NewWeightData(secucode)
 	codes := strings.Split(secucode, ".")
 	if len(codes) < 2 {
 		log.Errorf("invalid secucode %s", secucode)
 		return nil
 	}
-	secucode = codes[1] + "." + codes[0]
+
+	dailyCode := codes[1]
 	query := ezdb.M{
 		"Secucode": secucode,
 	}
@@ -82,7 +83,7 @@ func getDawdleData(secucode string, since int64) error {
 		return err
 	}
 	// log.Infof("==>>TODO 502: %+v", len(gdResults))
-	dailyResult, err := orm.GPDailyMgr.FindOne(ezdb.M{"Secucode": codes[1]}, "-CreateDate")
+	wv.GPDaily, err = orm.GPDailyMgr.FindOne(ezdb.M{"Secucode": dailyCode}, "-CreateDate")
 	if err != nil {
 		log.Errorf("query daily failed 11: %s|%q", secucode, err)
 		return err
@@ -93,7 +94,6 @@ func getDawdleData(secucode string, since int64) error {
 		return nil
 	}
 
-	wv := NewWeightData(secucode)
 	for _, r := range gdResults {
 		wv.Price = append(wv.Price, r.Price)
 		wv.Focus = append(wv.Focus, r.HoldFocus)
@@ -102,25 +102,11 @@ func getDawdleData(secucode string, since int64) error {
 		wv.Date = append(wv.Date, r.EndDate)
 	}
 	// log.Infof("==>>TODO 503: %+v", len(wv.Price))
-	wv.RecentPrice = dailyResult.Closing
-
-	if err := fillDawdleData(wv); err != nil {
-		log.Errorf("fill file failed: %s|%q", secucode, err)
-		return nil
-	}
-
-	return nil
-}
-
-func fillDawdleData(wv *WeightData) error {
-	if cap(shareholderData) <= 0 {
-		shareholderData = make([]*WeightData, 0, 8)
-	}
-
-	shareholderData = append(shareholderData, wv)
+	// wv.GPDaily = dailyResult
 
 	if err := applyGPRecommend(wv); err != nil {
-		log.Infof("apply recommend failed: %s|%+v", wv.Secucode, err)
+		log.Errorf("apply recommend failed: %s|%q", secucode, err)
+		return nil
 	}
 
 	return nil
@@ -128,8 +114,10 @@ func fillDawdleData(wv *WeightData) error {
 
 // 记录数据库
 func applyGPRecommend(wv *WeightData) error {
+	// log.Infof("==>>TODO 312:%+v|%+v|%+v", wv, nil, nil)
 	enddate := time.Unix(wv.Date[0], 0).Format("2006-01-02")
-	result, err := orm.GDHoldValueIndexMgr.FindOneBySecucodeEndDate(wv.Secucode, enddate)
+	result, err := orm.GDLongLineMgr.FindOneBySecucodeEndDate(wv.Secucode, enddate)
+	// log.Infof("==>>TODO 313:%+v|%+v|%+v", nil, result, err)
 	if err != nil && err != mgo.ErrNotFound {
 		log.Errorf("apply recommend failed: %s|%s", wv.Secucode, err)
 		return err
@@ -139,14 +127,17 @@ func applyGPRecommend(wv *WeightData) error {
 	}
 
 	// log.Infof("==>>TODO 315:%+v|%+v|%+v", wv.Secucode, wv.Weight, wv.Cal().GetWeight() <= 50)
-	result = orm.GDHoldValueIndexMgr.NewGDHoldValueIndex()
+	result = orm.GDLongLineMgr.NewGDLongLine()
 	result.EndDate = enddate
 	result.Secucode = wv.Secucode
+	result.Name = wv.GPDaily.Name
 	result.ValueIndex = wv.Cal().GetWeight()
 	result.CumulantPrice = intSlice2Str(wv.Price, "<-")
 	result.CumulantFocus = utils.GetFocusStr(wv.Focus, "<-")
-	result.CumulantDate = tmSlice2Str(wv.Date, "<-")
+	result.CumulantDate = utils.GetDateStr(wv.Date, "<-")
+	result.GDReduceRatio = utils.GetGDReduceRatio(wv.TotalNumRatio, "&")
 	result.CreateDate = time.Now().Unix()
+	log.Infof("long line data:%+v|%+v", result.Name, result.ValueIndex)
 	if result.ValueIndex <= 50 {
 		return nil
 	}

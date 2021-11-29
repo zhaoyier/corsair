@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"fmt"
+	"strings"
 	"time"
 
 	log "github.com/Sirupsen/logrus"
@@ -32,7 +34,7 @@ func GetFocusStr(cells []string, sep string) string {
 	}
 	pre, str := cells[0], cells[0]
 	for idx, cell := range cells {
-		if idx <= 0 {
+		if idx <= 0 || idx > 5 {
 			continue
 		}
 		if cell == pre {
@@ -43,4 +45,33 @@ func GetFocusStr(cells []string, sep string) string {
 		pre = cell
 	}
 	return str
+}
+
+func GetDateStr(cells []int64, sep string) string {
+	var results []string
+	for idx, cell := range cells {
+		if idx > 5 {
+			continue
+		}
+
+		tm := time.Unix(cell, 0)
+		tmp := fmt.Sprintf("%d.%d", tm.Month(), tm.Day())
+		results = append(results, fmt.Sprintf("%s", tmp))
+	}
+
+	return strings.Join(results, sep)
+}
+
+// 最近
+func GetGDReduceRatio(cells []float64, sep string) string {
+	var counter int32
+	var sum float64
+	for _, cell := range cells {
+		if cell > 0 {
+			break
+		}
+		counter++
+		sum += cell
+	}
+	return fmt.Sprintf("%d%s%.1f", counter, sep, sum)
 }

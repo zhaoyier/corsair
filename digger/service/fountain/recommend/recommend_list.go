@@ -18,9 +18,9 @@ func GDHoldValueIndexList(in *gin.Context) {
 
 	limit, _ := strconv.Atoi(in.Query("limit"))
 	offset, _ := strconv.Atoi(in.Query("offset"))
-	resp.Total = int32(orm.GDHoldValueIndexMgr.Count(ezdb.M{}))
+	resp.Total = int32(orm.GDLongLineMgr.Count(ezdb.M{}))
 
-	results, err := orm.GDHoldValueIndexMgr.Find(ezdb.M{}, limit, offset, "-ValueIndex", "-EndDate")
+	results, err := orm.GDLongLineMgr.Find(ezdb.M{}, limit, offset, "-ValueIndex", "-EndDate")
 	if err != nil {
 		log.Errorf("query recommend failed: %q", err)
 		in.JSON(http.StatusFailedDependency, gin.H{"status": "!ok"})
@@ -31,10 +31,12 @@ func GDHoldValueIndexList(in *gin.Context) {
 		resp.Rows = append(resp.Rows, &digger.RecommendData{
 			Id:            int32(idx + 1),
 			Secucode:      item.Secucode,
+			Name:          item.Name,
 			ValueIndex:    float32(item.ValueIndex),
 			CumulantFocus: item.CumulantFocus,
 			CumulantPrice: item.CumulantPrice,
 			CumulantDate:  item.CumulantDate,
+			GdreduceRatio: item.GDReduceRatio,
 			EndDate:       item.EndDate,
 			CreateDate:    item.CreateDate,
 		})
