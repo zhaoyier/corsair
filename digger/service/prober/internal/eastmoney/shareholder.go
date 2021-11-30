@@ -11,6 +11,7 @@ import (
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/common/webapi"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/job"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
+	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
 	log "github.com/Sirupsen/logrus"
 	ezdb "github.com/ezbuy/ezorm/db"
 	mgo "gopkg.in/mgo.v2"
@@ -72,7 +73,7 @@ func GetShareholder() {
 		log.Infof("%s succeed", secucode.Secucode)
 	}
 
-	job.UpdateJob("GetShareholder", "ok")
+	job.UpdateJob("GetShareholder")
 }
 
 func applyShareholder(data []Holder) error {
@@ -146,7 +147,7 @@ func applyGDsdlt(data []Sdltgd) error {
 		result.HolderName = gd.HOLDERNAME
 		result.HolderType = gd.HOLDERTYPE
 		result.HoldNum = int32(gd.HOLDNUM)
-		result.FreeHoldnumRation = gd.FREEHOLDNUMRATIO
+		result.FreeHoldnumRation = utils.Decimal(gd.FREEHOLDNUMRATIO)
 		result.HoldNumChange = gd.HOLDNUMCHANGE
 		result.CreateDate = time.Now().Unix()
 

@@ -31,7 +31,7 @@ func RecommendedLongTicker() {
 		if nowHour >= 23 && nowHour < 24 {
 			log.Infof("get code list in progress: %d", nowHour)
 			getRecommendedLongData()
-			job.UpdateJob("RecommendedLong", "ok")
+			job.UpdateJob("RecommendedLong")
 		}
 	}
 }
@@ -55,7 +55,7 @@ func getRecommendedLongData() {
 
 func genLongLine(gdll *orm.GDLongLine) error {
 	secucode := strings.Split(gdll.Secucode, ".")
-	tm := time.Now().AddDate(0, 1, 0).Unix()
+	tm := time.Now().AddDate(0, -1, 0).Unix()
 	query := ezdb.M{
 		"Secucode":   secucode[1],
 		"CreateDate": ezdb.M{"$gte": tm},
@@ -72,7 +72,6 @@ func genLongLine(gdll *orm.GDLongLine) error {
 	}
 
 	var max, current float64
-	data := getGPRecommend(gdll.Secucode)
 	for idx, daily := range dailies {
 		if idx == 0 {
 			current = math.Min(daily.Closing, daily.MinPrice)
@@ -82,9 +81,9 @@ func genLongLine(gdll *orm.GDLongLine) error {
 		}
 	}
 
-	data.Secucode = gdll.Secucode
-	data.MonthDrop = int32((max-current)/max) * 100
-	data.RmType = digger.RMType_RmTypeLong.GetValue()
+	data := getGPRecommend(gdll.Secucode)
+	data.MDecrease = int32((max-current)/max) * 100
+	data.RMType = int32(digger.RMType_RmTypeLong)
 	if err := applyGPRecommend(data); err != nil {
 		log.Errorf("apply recommend failed: %s|%q", gdll.Secucode, err)
 		return err
@@ -92,8 +91,12 @@ func genLongLine(gdll *orm.GDLongLine) error {
 	return nil
 }
 
+func genShortLine() error {
+	return nil
+}
+
 func applyGPRecommend(data *orm.GPRecommend) error {
-	if data.MonthDrop > GPDecrease {
+	if data.MDecrease > GPDecrease {
 		data.State = int32(digger.RMState_RMStateStarted)
 	} else {
 		data.State = int32(digger.RMState_RMStatePrepared)
@@ -111,6 +114,7 @@ func getGPRecommend(secucode string) *orm.GPRecommend {
 	result, err := orm.GPRecommendMgr.FindOneBySecucodeDisabled(secucode, false)
 	if err != nil || result == nil {
 		result = orm.GPRecommendMgr.NewGPRecommend()
+		result.Secucode = secucode
 		result.CreateDate = time.Now().Unix()
 	}
 	return result

@@ -6,12 +6,11 @@ import (
 	"sync"
 	"time"
 
+	"git.ezbuy.me/ezbuy/corsair/digger/rpc/digger"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/job"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
-	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
 	log "github.com/Sirupsen/logrus"
 	ezdb "github.com/ezbuy/ezorm/db"
-	mgo "gopkg.in/mgo.v2"
 )
 
 var (
@@ -55,13 +54,17 @@ func GenShortLineData() {
 		}
 	}
 	// 更新任务
-	job.UpdateJob("GenShortLine", "ok")
+	job.UpdateJob("GenShortLine")
 }
 
 // 最近10日数据
 func getShortLineData(secucode string, start int64) error {
 	codes := strings.Split(secucode, ".")
-	query := ezdb.M{"Secucode": codes[1]}
+	tm := time.Now().AddDate(0, 0, -10).Unix()
+	query := ezdb.M{
+		"Secucode":   codes[1],
+		"CreateDate": ezdb.M{"$gte": tm},
+	}
 
 	results, err := orm.GPDailyMgr.Find(query, 10, 0, "-CreateDate")
 	if err != nil {
@@ -84,32 +87,17 @@ func getShortLineData(secucode string, start int64) error {
 	}
 
 	decrease := int32((max-current)/max) * 100
-
 	if decrease < GPDecrease { //幅度太小的不做考虑
 		return nil
 	}
 
-	createDate := utils.GetZeroTS()
-	result, err := orm.GPStubIncidentMgr.FindOneBySecucodeCreateDate(secucode, createDate)
-	if err != nil && err != mgo.ErrNotFound {
-		log.Errorf("find gp daily failed: %s|%q", secucode, err)
+	data := getGPRecommend(secucode)
+	data.MDecrease = decrease
+	data.RMType = int32(digger.RMType_RmTypeShort)
+
+	if err := applyGPRecommend(data); err != nil {
+		log.Errorf("apply recommend failed: %s|%q", secucode, err)
 		return err
 	}
-
-	if result != nil {
-		return nil
-	}
-
-	result = orm.GPStubIncidentMgr.NewGPStubIncident()
-	result.Secucode = secucode
-	result.PriceDiff = int32(max - min)
-	result.Decrease = decrease
-	result.CreateDate = createDate
-	result.UpdateDate = time.Now().Unix()
-	if _, err := result.Save(); err != nil {
-		log.Errorf("save gp daily failed: %s|%q", secucode, err)
-		return err
-	}
-
 	return nil
 }

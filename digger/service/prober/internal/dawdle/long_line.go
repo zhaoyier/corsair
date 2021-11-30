@@ -60,7 +60,7 @@ func GenShareholder() error {
 	}
 
 	// 更新任务
-	job.UpdateJob("GenLongLine", "ok")
+	job.UpdateJob("GenLongLine")
 
 	return nil
 }

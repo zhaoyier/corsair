@@ -20,7 +20,7 @@ func Start() {
 	go dawdle.GenLongLineTicker()
 	go dawdle.GenShortLineTicker()
 	go dawdle.RecommendedLongTicker()
-
+	// go dawdle.RecommendedLongOnce()
 	// go eastmoney.GetCodeListOnce()
 	// go eastmoney.GetShareholderOnce()
 	// go dawdle.GenLongLineOnce()

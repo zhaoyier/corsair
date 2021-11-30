@@ -8,8 +8,7 @@ var _ time.Time
 
 type Job struct {
 	ID         bson.ObjectId `json:"id" bson:"_id,omitempty"`
-	Name       string        `bson:"Name" json:"Name"`
-	Mgs        string        `bson:"Mgs" json:"Mgs"`
+	Msg        []string      `bson:"Msg" json:"Msg"`
 	CreateDate string        `bson:"CreateDate" json:"CreateDate"`
 	UpdateDate int64         `bson:"UpdateDate" json:"UpdateDate"`
 	isNew      bool
@@ -17,8 +16,7 @@ type Job struct {
 
 const (
 	JobMgoFieldID         = "_id"
-	JobMgoFieldName       = "Name"
-	JobMgoFieldMgs        = "Mgs"
+	JobMgoFieldMsg        = "Msg"
 	JobMgoFieldCreateDate = "CreateDate"
 	JobMgoFieldUpdateDate = "UpdateDate"
 )

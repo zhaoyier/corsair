@@ -26,7 +26,7 @@ func GetCodeListTicker() {
 		if nowHour >= 18 && nowHour < 20 {
 			log.Infof("get code list in progress: %d", nowHour)
 			GetCodeList()
-			job.UpdateJob("GetCodeList", "ok")
+			job.UpdateJob("GetCodeList")
 		}
 	}
 }

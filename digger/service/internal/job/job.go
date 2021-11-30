@@ -5,31 +5,19 @@ import (
 
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
 	log "github.com/Sirupsen/logrus"
-	ezdb "github.com/ezbuy/ezorm/db"
-	mgo "gopkg.in/mgo.v2"
 )
 
-func UpdateJob(name, msg string) {
+func UpdateJob(msg string) {
 	createDate := time.Now().Format("2006-01-02")
 
-	sess, col := orm.JobMgr.GetCol()
-
-	defer sess.Close()
-
-	query := ezdb.M{"Name": name, "CreateDate": createDate}
-
-	change := mgo.Change{
-		Update: ezdb.M{
-			"$set": ezdb.M{
-				"Msg":        msg,
-				"UpdateDate": time.Now().Unix(),
-			},
-		},
-		Upsert:    true,
-		ReturnNew: true,
+	result, err := orm.JobMgr.FindOneByCreateDate(createDate)
+	if err != nil {
+		log.Errorf("query job failed: %s|%q", createDate, err)
+		return
 	}
-
-	if _, err := col.Find(query).Apply(change, nil); err != nil {
-		log.Errorf("%s|%q", name, err)
+	result.Msg = append(result.Msg, msg)
+	result.UpdateDate = time.Now().Unix()
+	if _, err := result.Save(); err != nil {
+		log.Errorf("save job failed: %s|%q", createDate, err)
 	}
 }

@@ -115,7 +115,7 @@ GPDaily:
     uniques: [[Secucode,CreateDate]]
     indexes: [[Name],[CreateDate],[UpdateDate]]
 
-GPStubIncident:
+GPShortLine:
     db: mongo
     dbname: digger
     fields:
@@ -132,11 +132,10 @@ GPRecommend:
     dbname: digger
     fields:
       - Secucode  : string 
-      - RmIndex:  int32 
-      - RmType: int32
-      - MonthDrop: int32
-      - RmDate: int64   #日期
-      - RmPhase: int32  #阶段
+      - RMIndex:  int32 
+      - RMType: int32
+      - MDecrease: int32    #月跌幅
+      - RMPhase: int32  #阶段
       - State: int32  #1准备,2开始, 3进行中,4结束,5放弃
       - Remark: map[string]string  #map[date]xxx
       - Disabled: bool
@@ -150,9 +149,7 @@ Job:
     db: mongo
     dbname: digger
     fields:
-      - Name: string
-      - Mgs: string
+      - Msg: list<string>
       - CreateDate: string  #年月日
       - UpdateDate: datetime
-    uniques: [[Name,CreateDate]] 
-    indexes: [[Name],[CreateDate]]
+    uniques: [[CreateDate]] 

@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -74,4 +75,9 @@ func GetGDReduceRatio(cells []float64, sep string) string {
 		sum += cell
 	}
 	return fmt.Sprintf("%d%s%.1f", counter, sep, sum)
+}
+
+func Decimal(value float64) float64 {
+	value, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", value), 64)
+	return value
 }
