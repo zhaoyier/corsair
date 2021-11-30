@@ -32,6 +32,7 @@ const (
 	priceDiff     float64 = 1.25
 	dateDiff      int64   = 10 * 86400
 	accum         float64 = 15
+	GPDecrease    int32   = 30
 )
 
 // type WeightUnit struct { //权重单元

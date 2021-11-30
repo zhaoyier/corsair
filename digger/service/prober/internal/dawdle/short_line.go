@@ -1,6 +1,7 @@
 package dawdle
 
 import (
+	"math"
 	"strings"
 	"sync"
 	"time"
@@ -28,7 +29,7 @@ func GenShortLineTicker() {
 		}
 
 		log.Infof("gen share holder charging up: %d", nowHour)
-		if nowHour >= 22 && nowHour < 23 {
+		if nowHour >= 21 && nowHour < 22 {
 			log.Infof("gen share holder in progress: %d", nowHour)
 			GenShortLineData()
 		}
@@ -68,18 +69,24 @@ func getShortLineData(secucode string, start int64) error {
 		return err
 	}
 
-	if len(results) < 10 {
-		return nil
-	}
-
-	var max, min float64
-	for _, result := range results {
-		if max < result.MaxPrice {
+	var max, current, min float64
+	for idx, result := range results {
+		if idx == 0 {
+			current = math.Min(result.Closing, result.MinPrice)
+		}
+		if result.MaxPrice > max {
 			max = result.MaxPrice
 		}
-		if min > result.MaxPrice {
-			min = result.MaxPrice
+
+		if min > result.MinPrice {
+			min = result.MinPrice
 		}
+	}
+
+	decrease := int32((max-current)/max) * 100
+
+	if decrease < GPDecrease { //幅度太小的不做考虑
+		return nil
 	}
 
 	createDate := utils.GetZeroTS()
@@ -90,11 +97,6 @@ func getShortLineData(secucode string, start int64) error {
 	}
 
 	if result != nil {
-		return nil
-	}
-
-	decrease := int32((max - min) / max)
-	if decrease < 30 { //幅度太小的不做考虑
 		return nil
 	}
 

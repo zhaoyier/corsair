@@ -104,7 +104,7 @@ func getDawdleData(secucode string, since int64) error {
 	// log.Infof("==>>TODO 503: %+v", len(wv.Price))
 	// wv.GPDaily = dailyResult
 
-	if err := applyGPRecommend(wv); err != nil {
+	if err := applyLongLine(wv); err != nil {
 		log.Errorf("apply recommend failed: %s|%q", secucode, err)
 		return nil
 	}
@@ -113,7 +113,7 @@ func getDawdleData(secucode string, since int64) error {
 }
 
 // 记录数据库
-func applyGPRecommend(wv *WeightData) error {
+func applyLongLine(wv *WeightData) error {
 	// log.Infof("==>>TODO 312:%+v|%+v|%+v", wv, nil, nil)
 	enddate := time.Unix(wv.Date[0], 0).Format("2006-01-02")
 	result, err := orm.GDLongLineMgr.FindOneBySecucodeEndDate(wv.Secucode, enddate)
@@ -145,6 +145,31 @@ func applyGPRecommend(wv *WeightData) error {
 	if _, err := result.Save(); err != nil {
 		log.Errorf("save recommend failed: %s|%q", wv.Secucode, err)
 		return err
+	}
+
+	if err := disabledLongLine(result.Secucode, enddate); err != nil {
+		log.Errorf("disabled long line failed: %s|%q", wv.Secucode, err)
+		return err
+	}
+	return nil
+}
+
+func disabledLongLine(secucode, enddate string) error {
+	query := ezdb.M{
+		"Secucode": secucode,
+	}
+	results, err := orm.GDLongLineMgr.FindAll(query)
+	if err != nil {
+		return err
+	}
+	for _, result := range results {
+		if result.EndDate == enddate {
+			continue
+		}
+		result.Disabled = true
+		if _, err := result.Save(); err != nil {
+			log.Errorf("update long line failed: %s|%q", secucode, err)
+		}
 	}
 	return nil
 }
