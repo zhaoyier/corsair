@@ -127,6 +127,23 @@ GPStubIncident:
     uniques: [[Secucode,CreateDate]]
     indexes: [[Secucode],[UpdateDate]]
 
+GPLongRecommend:
+    db: mongo
+    dbname: digger
+    fields:
+      - Secucode  : string 
+      - RmIndex:  int32
+      - MonthRate: int32
+      - RmDate: int64
+      - RmPhase: int32  #
+      - State: int32  #0准备,1开始, 2进行中,3,4结束
+      - Remark: map[string]string  #map[date]xxx
+      - Disabled: bool
+      - CreateDate: datetime
+      - UpdateDate: datetime
+    uniques: [[Secucode,Disabled]]
+    indexes: [[Secucode,State],[CreateDate]]
+
 Job:
     db: mongo
     dbname: digger
