@@ -81,3 +81,21 @@ func Decimal(value float64) float64 {
 	value, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", value), 64)
 	return value
 }
+
+func DecreasePercent(max, min float64) int32 {
+	if max <= 0 || min <= 0 {
+		return 0
+	}
+
+	rate := (max - min) / max
+	return int32(rate * 100)
+}
+
+func GetRate(max, min float64) float64 {
+	if max <= 0 || min <= 0 {
+		return 0
+	}
+	rate := (max - min) / max
+	value, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", rate), 64)
+	return value
+}

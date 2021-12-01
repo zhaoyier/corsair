@@ -89,7 +89,7 @@ func getDawdleData(secucode string, since int64) error {
 		return err
 	}
 
-	if len(gdResults) <= cumulantPrice {
+	if len(gdResults) <= 0 {
 		log.Warningf("maybe is new filter: %s|%d", secucode, len(gdResults))
 		return nil
 	}
@@ -114,7 +114,8 @@ func getDawdleData(secucode string, since int64) error {
 
 // 记录数据库
 func applyLongLine(wv *WeightData) error {
-	// log.Infof("==>>TODO 312:%+v|%+v|%+v", wv, nil, nil)
+	// if wv.Date
+	log.Infof("==>>TODO 312:%+v|%+v|%+v", wv.Date[0], len(wv.Date), wv.Secucode)
 	enddate := time.Unix(wv.Date[0], 0).Format("2006-01-02")
 	result, err := orm.GDLongLineMgr.FindOneBySecucodeEndDate(wv.Secucode, enddate)
 	// log.Infof("==>>TODO 313:%+v|%+v|%+v", nil, result, err)
@@ -123,6 +124,12 @@ func applyLongLine(wv *WeightData) error {
 		return err
 	}
 	if result != nil {
+		return nil
+	}
+
+	valueIndex := wv.Cal().GetWeight()
+	if valueIndex < 50 {
+		log.Infof("value low failed: %s|%d", wv.Secucode, valueIndex)
 		return nil
 	}
 

@@ -10,29 +10,31 @@ import (
 
 	trpc "git.ezbuy.me/ezbuy/corsair/digger/rpc/digger"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
+	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
 	log "github.com/Sirupsen/logrus"
 )
 
 const (
-	shake_upper   float64 = 1.4 //不变
-	shake_lower   float64 = 0.6
-	one_ten       float64 = 0.1
-	three_ten     float64 = 0.3
-	one_fifth     float64 = 0.2
-	two_fifth     float64 = 0.4
-	three_fifth   float64 = 0.6
-	four_fifth    float64 = 0.8
-	two_rate      float64 = 2.0
-	three_rate    float64 = 3.0
-	four_rate     float64 = 4.0
-	five_rate     float64 = 5.0
-	TotalNumRatio float64 = 45
-	cumulantRatio int     = 3
-	cumulantPrice int     = 5
-	priceDiff     float64 = 1.25
-	dateDiff      int64   = 10 * 86400
-	accum         float64 = 15
-	GPDecrease    int32   = 30
+	shake_upper     float64 = 1.4 //不变
+	shake_lower     float64 = 0.6
+	one_ten         float64 = 0.1
+	three_ten       float64 = 0.3
+	one_fifth       float64 = 0.2
+	two_fifth       float64 = 0.4
+	three_fifth     float64 = 0.6
+	four_fifth      float64 = 0.8
+	two_rate        float64 = 2.0
+	three_rate      float64 = 3.0
+	four_rate       float64 = 4.0
+	five_rate       float64 = 5.0
+	TotalNumRatio   float64 = 45
+	cumulantRatio   int     = 3
+	cumulantPrice   int     = 5
+	priceDiff       float64 = 1.25
+	dateDiff        int64   = 10 * 86400
+	accum           float64 = 15
+	GPLongDecrease  int32   = 30
+	GPShortDecrease int32   = 35
 )
 
 // type WeightUnit struct { //权重单元
@@ -107,6 +109,7 @@ func (wv *WeightData) Cal() *WeightData {
 
 func (wv *WeightData) CalPrice() {
 	unit := wv.wr.Price
+	// log.Infof("==>>TODO Price 3211:%+v", len(wv.Price))
 	max, min, prev := wv.Price[0], wv.Price[0], wv.Price[0]
 	for _, val := range wv.Price {
 		// log.Infof("==>>TODO Price 321:%+v|%+v", val, val < 0)
@@ -153,7 +156,8 @@ func (wv *WeightData) CalPrice() {
 	}
 
 	// 与最近一次价格比较--越跌越好
-	rate := Decimal((max - wv.Price[0]) / max)
+	// rate := Decimal((max - wv.Price[0]) / max)
+	rate := utils.GetRate(max, wv.Price[0])
 	// log.Infof("==>>TODO Price 324:%+v|%+v|%+v", max, wv.Price[0], rate)
 	if rate <= one_ten {
 		unit.Value = 0
@@ -308,22 +312,20 @@ func (wv *WeightData) CalPriceDiff() {
 func (wv *WeightData) GetWeight() int32 {
 	wv.weightOnce.Do(func() {
 		wr, weight := wv.wr, float64(0)
-		// log.Infof("==>>TODO 450: %+v", wv.Focus)
+		// log.Infof("==>>TODO 450: %+v|%+v|%+v", wv.Focus, wv.GPDaily.Closing, wv.Price[0])
 		// log.Infof("==>>TODO 451: %+v|%+v|%+v|%+v|%+v|%+v|%+v", wv.Secucode, wr.Price.Value, wr.Focus, wr.TotalNumRatio.Value, wr.AvgFreesharesRatio.Value, wr.HoldRatioTotal, wr.FreeholdRatioTotal)
 		// 判断与当前的差价率
-		if wv.GPDaily.Closing/wv.Price[0] > priceDiff {
+		if wv.Price[0] <= 0 || utils.GetRate(wv.GPDaily.Closing, wv.Price[0]) > 0.25 {
 			log.Infof("invalid price: %s|%f|%f", wv.Secucode, wv.GPDaily.Closing, wv.Price[0])
 			wv.Weight = 0
 			return
 		}
 		// 判断时间差值
 		// log.Infof("==>>TODO 452: %+v|%+v|%+v", wv.Secucode, time.Unix(wv.Date[0], 0).Format("2006-01-02"), wv.Date[0])
-		if time.Now().Unix()-wv.Date[0] > dateDiff && !wr.Price.SubNew {
+		if time.Now().Unix()-wv.Date[0] > dateDiff {
 			log.Infof("invalid date: %s|%s", wv.Secucode, time.Unix(wv.Date[0], 0).Format("2006-01-02"))
 			wv.Weight = 0
 			return
-		} else if time.Now().Unix()-wv.Date[0] > dateDiff && !wr.Price.SubNew {
-			wv.Weight -= 10
 		}
 
 		// log.Infof("==>>TODO 458: %+v|%+v|%+v|%+v|%+v|%+v", wr.Price, wr.Focus, wr.TotalNumRatio.Value, wr.AvgFreesharesRatio.Value, wr.HoldRatioTotal, wr.FreeholdRatioTotal)

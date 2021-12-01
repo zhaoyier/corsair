@@ -134,8 +134,11 @@ GPRecommend:
       - Secucode  : string 
       - RMIndex:  int32 
       - RMType: int32
+      - HDecrease: int32    #半月
       - MDecrease: int32    #月跌幅
-      - RMPhase: int32  #阶段
+      - TDecrease: int32    #两月
+      - DecreaseDay: string 
+      - GDRenshu: int32     #
       - State: int32  #1准备,2开始, 3进行中,4结束,5放弃
       - Remark: map[string]string  #map[date]xxx
       - Disabled: bool

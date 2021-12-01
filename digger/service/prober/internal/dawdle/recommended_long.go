@@ -10,6 +10,7 @@ import (
 	"git.ezbuy.me/ezbuy/corsair/digger/rpc/digger"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/job"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
+	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
 	log "github.com/Sirupsen/logrus"
 	ezdb "github.com/ezbuy/ezorm/db"
 )
@@ -82,7 +83,7 @@ func genLongLine(gdll *orm.GDLongLine) error {
 	}
 
 	data := getGPRecommend(gdll.Secucode)
-	data.MDecrease = int32((max-current)/max) * 100
+	data.MDecrease = utils.DecreasePercent(max, current)
 	data.RMType = int32(digger.RMType_RmTypeLong)
 	if err := applyGPRecommend(data); err != nil {
 		log.Errorf("apply recommend failed: %s|%q", gdll.Secucode, err)
@@ -91,12 +92,8 @@ func genLongLine(gdll *orm.GDLongLine) error {
 	return nil
 }
 
-func genShortLine() error {
-	return nil
-}
-
 func applyGPRecommend(data *orm.GPRecommend) error {
-	if data.MDecrease > GPDecrease {
+	if data.MDecrease > GPLongDecrease {
 		data.State = int32(digger.RMState_RMStateStarted)
 	} else {
 		data.State = int32(digger.RMState_RMStatePrepared)
