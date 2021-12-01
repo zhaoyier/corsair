@@ -37,13 +37,6 @@ const (
 	GPShortDecrease int32   = 35
 )
 
-// type WeightUnit struct { //权重单元
-// 	Value       float64 //权重值
-// 	Accum       float64 //连续累加值
-// 	Consecutive int32   //连续计数
-// 	Counter     int     //计数器
-// }
-
 type WeightRule struct { //权重规则
 	Price              *trpc.WeightUnit //float64
 	Focus              float64

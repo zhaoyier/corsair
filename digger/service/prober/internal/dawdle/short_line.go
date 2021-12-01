@@ -67,14 +67,17 @@ func getShortLineData(secucode string) error {
 	codes := strings.Split(secucode, ".")
 	data := getGPRecommend(secucode)
 	var half, onem, twom string
+	// log.Infof("==>>TODO 212:%+v", data)
 	data.HDecrease, half = getLastDecrease(codes[1], -15)
 	data.MDecrease, onem = getLastDecrease(codes[1], -30)
 	data.TDecrease, twom = getLastDecrease(codes[1], -60)
 	if data.HDecrease < GPShortDecrease && data.MDecrease < GPShortDecrease && data.TDecrease < GPShortDecrease {
 		return nil
 	}
+	data.RMPrice = calRecommendPrice(codes[1], -15, -30)
 	data.DecreaseDay = fmt.Sprintf("%s|%s|%s", half, onem, twom)
 	data.RMType = int32(digger.RMType_RmTypeShort)
+	// log.Infof("==>>TODO 214:%+v", data)
 
 	if err := applyGPRecommend(data); err != nil {
 		log.Errorf("apply recommend failed: %s|%q", secucode, err)
@@ -90,7 +93,7 @@ func getLastDecrease(secucode string, day int) (int32, string) {
 		"CreateDate": ezdb.M{"$gte": tm},
 	}
 
-	results, err := orm.GPDailyMgr.Find(query, 10, 0, "-CreateDate")
+	results, err := orm.GPDailyMgr.FindAll(query, "-CreateDate")
 	if err != nil {
 		log.Errorf("query daily failed: %s|%q", secucode, err)
 		return 0, ""
@@ -101,7 +104,9 @@ func getLastDecrease(secucode string, day int) (int32, string) {
 	var max, current float64
 	now := time.Now().Unix()
 	for _, result := range results {
-		if now-result.CreateDate <= int64(86400*1.5) {
+		// log.Infof("==>>TODO 221:%+v|%+v", max, time.Unix(result.CreateDate, 0).Format("2006-01-02"))
+
+		if now-result.CreateDate <= int64(86400*2.5) {
 			current = math.Min(result.Closing, result.MinPrice)
 		}
 
@@ -118,4 +123,38 @@ func getLastDecrease(secucode string, day int) (int32, string) {
 	}
 
 	return utils.DecreasePercent(max, current), fmt.Sprintf("%d&%s", counter, dateStr)
+}
+
+func calRecommendPrice(secucode string, latest, farthest int) string {
+	lasttm := time.Now().AddDate(0, 0, latest).Unix()
+	fasttm := time.Now().AddDate(0, 0, farthest).Unix()
+	query := ezdb.M{
+		"Secucode":   secucode,
+		"CreateDate": ezdb.M{"$gte": fasttm},
+	}
+
+	results, err := orm.GPDailyMgr.FindAll(query, "-CreateDate")
+	if err != nil {
+		log.Errorf("query daily failed: %s|%q", secucode, err)
+		return ""
+	}
+
+	var lastmax, fastmax, counter float64
+	for _, result := range results {
+		if result.CreateDate > lasttm && result.MaxPrice > lastmax {
+			counter++
+			lastmax = result.MaxPrice
+		}
+
+		if result.MaxPrice > fastmax {
+			fastmax = result.MaxPrice
+		}
+	}
+
+	if counter == 1 {
+		return ""
+	}
+
+	max := math.Max(lastmax, fastmax)
+	return fmt.Sprintf("%.1f-%.1f", max*0.55, max*0.6)
 }
