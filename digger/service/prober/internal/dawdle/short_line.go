@@ -156,5 +156,5 @@ func calRecommendPrice(secucode string, latest, farthest int) string {
 	}
 
 	max := math.Max(lastmax, fastmax)
-	return fmt.Sprintf("%.1f-%.1f", max*0.55, max*0.6)
+	return fmt.Sprintf("%.1f-%.1f", math.Ceil(max*0.55), math.Floor(max*0.6))
 }

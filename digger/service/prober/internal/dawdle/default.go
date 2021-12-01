@@ -1,10 +1,7 @@
 package dawdle
 
 import (
-	"fmt"
 	"math"
-	"strconv"
-	"strings"
 	"sync"
 	"time"
 
@@ -163,7 +160,7 @@ func (wv *WeightData) CalPrice() {
 	}
 	// log.Infof("==>>TODO Price 325:%+v|%+v|%+v", unit.Value, wv.GPDaily.Closing, min)
 	//100%直接放弃--越涨越差
-	rate2 := Decimal((wv.GPDaily.Closing - min) / min)
+	rate2 := utils.Decimal((wv.GPDaily.Closing - min) / min)
 	if rate2 >= 1 {
 		unit.Value = 0
 	} else if rate2 > 0.5 {
@@ -225,7 +222,7 @@ func (wv *WeightData) CalTotalNumRatio() { //+-,越小越好
 		rate += 0.3
 	}
 	// log.Infof("==>>TODO 309:%+v", rate)
-	unit.Value = Decimal(unit.Value * math.Min(rate, 1))
+	unit.Value = utils.Decimal(unit.Value * math.Min(rate, 1))
 }
 
 func (wv *WeightData) CalAvgFreesharesRatio() { //+-,越大越好
@@ -268,7 +265,7 @@ func (wv *WeightData) CalAvgFreesharesRatio() { //+-,越大越好
 	} else if unit.Accum >= 5 && unit.Consecutive <= 3 {
 		rate += 0.3
 	}
-	unit.Value = Decimal(unit.Value * math.Min(rate, 1))
+	unit.Value = utils.Decimal(unit.Value * math.Min(rate, 1))
 }
 
 func (wv *WeightData) CalHoldRatioTotal() {
@@ -329,26 +326,4 @@ func (wv *WeightData) GetWeight() int32 {
 	})
 
 	return wv.Weight
-}
-
-func intSlice2Str(values []float64, sep string) string {
-	results := make([]string, 0, len(values))
-	for _, val := range values {
-		results = append(results, fmt.Sprintf("%v", val))
-	}
-	return strings.Join(results, sep)
-}
-
-func tmSlice2Str(dates []int64, sep string) string {
-	var results []string
-	for _, val := range dates {
-		tm := time.Unix(val, 0)
-		results = append(results, fmt.Sprintf("%d-%d", tm.Month(), tm.Day()))
-	}
-	return strings.Join(results, sep)
-}
-
-func Decimal(value float64) float64 {
-	value, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", value), 64)
-	return value
 }

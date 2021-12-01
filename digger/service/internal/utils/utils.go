@@ -2,7 +2,7 @@ package utils
 
 import (
 	"fmt"
-	"strconv"
+	"math"
 	"strings"
 	"time"
 
@@ -78,8 +78,7 @@ func GetGDReduceRatio(cells []float64, sep string) string {
 }
 
 func Decimal(value float64) float64 {
-	value, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", value), 64)
-	return value
+	return math.Ceil(value)
 }
 
 func DecreasePercent(max, min float64) int32 {
@@ -95,7 +94,13 @@ func GetRate(max, min float64) float64 {
 	if max <= 0 || min <= 0 {
 		return 0
 	}
-	rate := (max - min) / max
-	value, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", rate), 64)
-	return value
+	return math.Ceil((max - min) / max)
+}
+
+func FloatSlice2Str(values []float64, sep string) string {
+	results := make([]string, 0, len(values))
+	for _, val := range values {
+		results = append(results, fmt.Sprintf("%v", val))
+	}
+	return strings.Join(results, sep)
 }

@@ -9,6 +9,7 @@ import (
 
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/common/webapi"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
+	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
 	log "github.com/Sirupsen/logrus"
 	ezdb "github.com/ezbuy/ezorm/db"
 	mgo "gopkg.in/mgo.v2"
@@ -103,19 +104,19 @@ func applyDaily(secucode, date string, results []string) error {
 
 	if len(results) > 4 {
 		if val, err := strconv.ParseFloat(results[3], 64); err == nil {
-			result.Price = Decimal(val)
+			result.Price = utils.Decimal(val)
 		}
 	}
 
 	if len(results) > 5 {
 		if val, err := strconv.ParseFloat(results[4], 64); err == nil {
-			result.Highest = Decimal(val)
+			result.Highest = utils.Decimal(val)
 		}
 	}
 
 	if len(results) > 6 {
 		if val, err := strconv.ParseFloat(results[5], 64); err == nil {
-			result.Minimum = Decimal(val)
+			result.Minimum = utils.Decimal(val)
 		}
 	}
 	// log.Infof("==>>TODO daily 337:%+v", result)

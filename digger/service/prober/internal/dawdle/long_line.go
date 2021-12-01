@@ -139,7 +139,7 @@ func applyLongLine(wv *WeightData) error {
 	result.Secucode = wv.Secucode
 	result.Name = wv.GPDaily.Name
 	result.ValueIndex = wv.Cal().GetWeight()
-	result.CumulantPrice = intSlice2Str(wv.Price, "<-")
+	result.CumulantPrice = utils.FloatSlice2Str(wv.Price, "<-")
 	result.CumulantFocus = utils.GetFocusStr(wv.Focus, "<-")
 	result.CumulantDate = utils.GetDateStr(wv.Date, "<-")
 	result.GDReduceRatio = utils.GetGDReduceRatio(wv.TotalNumRatio, "&")
