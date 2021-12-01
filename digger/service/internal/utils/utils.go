@@ -7,6 +7,7 @@ import (
 	"time"
 
 	log "github.com/Sirupsen/logrus"
+	"github.com/shopspring/decimal"
 )
 
 func GetZeroTS() int64 {
@@ -78,7 +79,8 @@ func GetGDReduceRatio(cells []float64, sep string) string {
 }
 
 func Decimal(value float64) float64 {
-	return math.Ceil(value)
+	result, _ := decimal.NewFromFloat(value).Round(2).Float64()
+	return result
 }
 
 func DecreasePercent(max, min float64) int32 {
@@ -86,15 +88,16 @@ func DecreasePercent(max, min float64) int32 {
 		return 0
 	}
 
-	rate := (max - min) / max
-	return int32(rate * 100)
+	rate := Decimal((max - min) / max)
+	return int32(math.Ceil(rate * 100))
 }
 
 func GetRate(max, min float64) float64 {
 	if max <= 0 || min <= 0 {
 		return 0
 	}
-	return math.Ceil((max - min) / max)
+
+	return Decimal((max - min) / max)
 }
 
 func FloatSlice2Str(values []float64, sep string) string {

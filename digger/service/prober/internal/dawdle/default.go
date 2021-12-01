@@ -31,7 +31,7 @@ const (
 	dateDiff        int64   = 10 * 86400
 	accum           float64 = 15
 	GPLongDecrease  int32   = 30
-	GPShortDecrease int32   = 35
+	GPShortDecrease int32   = 38
 )
 
 type WeightRule struct { //权重规则

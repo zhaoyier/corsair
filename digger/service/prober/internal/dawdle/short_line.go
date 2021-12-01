@@ -67,7 +67,6 @@ func getShortLineData(secucode string) error {
 	codes := strings.Split(secucode, ".")
 	data := getGPRecommend(secucode)
 	var half, onem, twom string
-	// log.Infof("==>>TODO 212:%+v", data)
 	data.HDecrease, half = getLastDecrease(codes[1], -15)
 	data.MDecrease, onem = getLastDecrease(codes[1], -30)
 	data.TDecrease, twom = getLastDecrease(codes[1], -60)
@@ -77,7 +76,7 @@ func getShortLineData(secucode string) error {
 	data.RMPrice = calRecommendPrice(codes[1], -15, -30)
 	data.DecreaseDay = fmt.Sprintf("%s|%s|%s", half, onem, twom)
 	data.RMType = int32(digger.RMType_RmTypeShort)
-	// log.Infof("==>>TODO 214:%+v", data)
+	//
 
 	if err := applyGPRecommend(data); err != nil {
 		log.Errorf("apply recommend failed: %s|%q", secucode, err)
@@ -104,9 +103,7 @@ func getLastDecrease(secucode string, day int) (int32, string) {
 	var max, current float64
 	now := time.Now().Unix()
 	for _, result := range results {
-		// log.Infof("==>>TODO 221:%+v|%+v", max, time.Unix(result.CreateDate, 0).Format("2006-01-02"))
-
-		if now-result.CreateDate <= int64(86400*2.5) {
+		if now-result.CreateDate <= int64(86400*1.5) {
 			current = math.Min(result.Closing, result.MinPrice)
 		}
 
@@ -116,7 +113,6 @@ func getLastDecrease(secucode string, day int) (int32, string) {
 			createDate = result.CreateDate
 		}
 	}
-
 	dateStr := time.Unix(createDate, 0).Format("2006-01-02")
 	if counter == 1 {
 		return 0, ""
@@ -156,5 +152,5 @@ func calRecommendPrice(secucode string, latest, farthest int) string {
 	}
 
 	max := math.Max(lastmax, fastmax)
-	return fmt.Sprintf("%.1f-%.1f", math.Ceil(max*0.55), math.Floor(max*0.6))
+	return fmt.Sprintf("%.1f-%.1f", math.Floor(max*0.55), math.Ceil(max*0.6))
 }
