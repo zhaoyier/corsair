@@ -4,15 +4,16 @@ option go_package="./;digger";
 package digger;
 
 service Fountain {
-    rpc GetRecommendList(GetRecommendListReq) returns(GetRecommendListResp);
+    rpc GDHoldValueIndexList(GDHoldValueIndexListReq) returns(GDHoldValueIndexListResp);
+    rpc GPRecommendList(GPRecommendListReq) returns(GPRecommendListResp);
 }
 
-message GetRecommendListReq {
+message GDHoldValueIndexListReq {
     int32 offset = 1;
     int32 limit = 2;
 }
 
-message RecommendData {
+message HoldValueIndex {
     int32 id = 1;
     string secucode = 2;
     string name = 3;
@@ -26,7 +27,28 @@ message RecommendData {
 }
 
 
-message GetRecommendListResp {
-    repeated RecommendData rows = 1;
+message GDHoldValueIndexListResp {
+    repeated HoldValueIndex rows = 1;
+    int32 total = 2;
+}
+
+message GPRecommendListReq {
+
+}
+
+message GPRecommend {
+    int32 id = 1;
+    string secucode = 2;
+    string name = 3;
+    int32 hDecrease = 4;
+    int32 mDecrease = 5;
+    int32 tDecrease = 6;
+    string rMPrice = 7;
+    string gDDecrease = 8;
+    string updateDate=10;
+}
+
+message GPRecommendListResp {
+    repeated GPRecommend rows = 1;
     int32 total = 2;
 }

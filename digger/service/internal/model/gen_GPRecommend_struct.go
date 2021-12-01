@@ -15,7 +15,7 @@ type GPRecommend struct {
 	MDecrease   int32             `bson:"MDecrease" json:"MDecrease"`
 	TDecrease   int32             `bson:"TDecrease" json:"TDecrease"`
 	DecreaseDay string            `bson:"DecreaseDay" json:"DecreaseDay"`
-	GDRenshu    int32             `bson:"GDRenshu" json:"GDRenshu"`
+	GDDecrease  int32             `bson:"GDDecrease" json:"GDDecrease"`
 	RMPrice     string            `bson:"RMPrice" json:"RMPrice"`
 	State       int32             `bson:"State" json:"State"`
 	Remark      map[string]string `bson:"Remark" json:"Remark"`
@@ -35,7 +35,7 @@ const (
 	GPRecommendMgoFieldMDecrease   = "MDecrease"
 	GPRecommendMgoFieldTDecrease   = "TDecrease"
 	GPRecommendMgoFieldDecreaseDay = "DecreaseDay"
-	GPRecommendMgoFieldGDRenshu    = "GDRenshu"
+	GPRecommendMgoFieldGDDecrease  = "GDDecrease"
 	GPRecommendMgoFieldRMPrice     = "RMPrice"
 	GPRecommendMgoFieldState       = "State"
 	GPRecommendMgoFieldRemark      = "Remark"

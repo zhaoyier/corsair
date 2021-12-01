@@ -104,3 +104,7 @@ func FloatSlice2Str(values []float64, sep string) string {
 	}
 	return strings.Join(results, sep)
 }
+
+func TS2Date(ts int64) string {
+	return time.Unix(ts, 0).Format("2006-01-02 15:04:05")
+}

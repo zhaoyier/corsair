@@ -34,57 +34,57 @@ var _ = strings.TrimPrefix
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
-type GetRecommendListReq struct {
+type GDHoldValueIndexListReq struct {
 	//
 	Offset int32 `protobuf:"varint,1,opt,name=offset,proto3" json:"offset"`
 	//
 	Limit int32 `protobuf:"varint,2,opt,name=limit,proto3" json:"limit"`
 }
 
-func (m *GetRecommendListReq) Validate() error {
+func (m *GDHoldValueIndexListReq) Validate() error {
 	return nil
 }
 
-func (m *GetRecommendListReq) Reset()         { *m = GetRecommendListReq{} }
-func (m *GetRecommendListReq) String() string { return proto.CompactTextString(m) }
-func (*GetRecommendListReq) ProtoMessage()    {}
-func (*GetRecommendListReq) Descriptor() ([]byte, []int) {
+func (m *GDHoldValueIndexListReq) Reset()         { *m = GDHoldValueIndexListReq{} }
+func (m *GDHoldValueIndexListReq) String() string { return proto.CompactTextString(m) }
+func (*GDHoldValueIndexListReq) ProtoMessage()    {}
+func (*GDHoldValueIndexListReq) Descriptor() ([]byte, []int) {
 	return fileDescriptor_a9d02a9263fc9247, []int{0}
 }
 
-func (m *GetRecommendListReq) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetRecommendListReq.Unmarshal(m, b)
+func (m *GDHoldValueIndexListReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GDHoldValueIndexListReq.Unmarshal(m, b)
 }
-func (m *GetRecommendListReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetRecommendListReq.Marshal(b, m, deterministic)
+func (m *GDHoldValueIndexListReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GDHoldValueIndexListReq.Marshal(b, m, deterministic)
 }
-func (m *GetRecommendListReq) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetRecommendListReq.Merge(m, src)
+func (m *GDHoldValueIndexListReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GDHoldValueIndexListReq.Merge(m, src)
 }
-func (m *GetRecommendListReq) XXX_Size() int {
-	return xxx_messageInfo_GetRecommendListReq.Size(m)
+func (m *GDHoldValueIndexListReq) XXX_Size() int {
+	return xxx_messageInfo_GDHoldValueIndexListReq.Size(m)
 }
-func (m *GetRecommendListReq) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetRecommendListReq.DiscardUnknown(m)
+func (m *GDHoldValueIndexListReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_GDHoldValueIndexListReq.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_GetRecommendListReq proto.InternalMessageInfo
+var xxx_messageInfo_GDHoldValueIndexListReq proto.InternalMessageInfo
 
-func (m *GetRecommendListReq) GetOffset() int32 {
+func (m *GDHoldValueIndexListReq) GetOffset() int32 {
 	if m != nil {
 		return m.Offset
 	}
 	return 0
 }
 
-func (m *GetRecommendListReq) GetLimit() int32 {
+func (m *GDHoldValueIndexListReq) GetLimit() int32 {
 	if m != nil {
 		return m.Limit
 	}
 	return 0
 }
 
-type RecommendData struct {
+type HoldValueIndex struct {
 	//
 	Id int32 `protobuf:"varint,1,opt,name=id,proto3" json:"id"`
 	//
@@ -107,149 +107,344 @@ type RecommendData struct {
 	CreateDate int64 `protobuf:"varint,10,opt,name=createDate,proto3" json:"createDate"`
 }
 
-func (m *RecommendData) Validate() error {
+func (m *HoldValueIndex) Validate() error {
 	return nil
 }
 
-func (m *RecommendData) Reset()         { *m = RecommendData{} }
-func (m *RecommendData) String() string { return proto.CompactTextString(m) }
-func (*RecommendData) ProtoMessage()    {}
-func (*RecommendData) Descriptor() ([]byte, []int) {
+func (m *HoldValueIndex) Reset()         { *m = HoldValueIndex{} }
+func (m *HoldValueIndex) String() string { return proto.CompactTextString(m) }
+func (*HoldValueIndex) ProtoMessage()    {}
+func (*HoldValueIndex) Descriptor() ([]byte, []int) {
 	return fileDescriptor_a9d02a9263fc9247, []int{1}
 }
 
-func (m *RecommendData) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_RecommendData.Unmarshal(m, b)
+func (m *HoldValueIndex) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_HoldValueIndex.Unmarshal(m, b)
 }
-func (m *RecommendData) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_RecommendData.Marshal(b, m, deterministic)
+func (m *HoldValueIndex) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_HoldValueIndex.Marshal(b, m, deterministic)
 }
-func (m *RecommendData) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_RecommendData.Merge(m, src)
+func (m *HoldValueIndex) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_HoldValueIndex.Merge(m, src)
 }
-func (m *RecommendData) XXX_Size() int {
-	return xxx_messageInfo_RecommendData.Size(m)
+func (m *HoldValueIndex) XXX_Size() int {
+	return xxx_messageInfo_HoldValueIndex.Size(m)
 }
-func (m *RecommendData) XXX_DiscardUnknown() {
-	xxx_messageInfo_RecommendData.DiscardUnknown(m)
+func (m *HoldValueIndex) XXX_DiscardUnknown() {
+	xxx_messageInfo_HoldValueIndex.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_RecommendData proto.InternalMessageInfo
+var xxx_messageInfo_HoldValueIndex proto.InternalMessageInfo
 
-func (m *RecommendData) GetId() int32 {
+func (m *HoldValueIndex) GetId() int32 {
 	if m != nil {
 		return m.Id
 	}
 	return 0
 }
 
-func (m *RecommendData) GetSecucode() string {
+func (m *HoldValueIndex) GetSecucode() string {
 	if m != nil {
 		return m.Secucode
 	}
 	return ""
 }
 
-func (m *RecommendData) GetName() string {
+func (m *HoldValueIndex) GetName() string {
 	if m != nil {
 		return m.Name
 	}
 	return ""
 }
 
-func (m *RecommendData) GetValueIndex() float32 {
+func (m *HoldValueIndex) GetValueIndex() float32 {
 	if m != nil {
 		return m.ValueIndex
 	}
 	return 0
 }
 
-func (m *RecommendData) GetCumulantPrice() string {
+func (m *HoldValueIndex) GetCumulantPrice() string {
 	if m != nil {
 		return m.CumulantPrice
 	}
 	return ""
 }
 
-func (m *RecommendData) GetCumulantFocus() string {
+func (m *HoldValueIndex) GetCumulantFocus() string {
 	if m != nil {
 		return m.CumulantFocus
 	}
 	return ""
 }
 
-func (m *RecommendData) GetCumulantDate() string {
+func (m *HoldValueIndex) GetCumulantDate() string {
 	if m != nil {
 		return m.CumulantDate
 	}
 	return ""
 }
 
-func (m *RecommendData) GetGdreduceRatio() string {
+func (m *HoldValueIndex) GetGdreduceRatio() string {
 	if m != nil {
 		return m.GdreduceRatio
 	}
 	return ""
 }
 
-func (m *RecommendData) GetEndDate() string {
+func (m *HoldValueIndex) GetEndDate() string {
 	if m != nil {
 		return m.EndDate
 	}
 	return ""
 }
 
-func (m *RecommendData) GetCreateDate() int64 {
+func (m *HoldValueIndex) GetCreateDate() int64 {
 	if m != nil {
 		return m.CreateDate
 	}
 	return 0
 }
 
-type GetRecommendListResp struct {
+type GDHoldValueIndexListResp struct {
 	//
-	Rows []*RecommendData `protobuf:"bytes,1,rep,name=rows,proto3" json:"rows"`
+	Rows []*HoldValueIndex `protobuf:"bytes,1,rep,name=rows,proto3" json:"rows"`
 	//
 	Total int32 `protobuf:"varint,2,opt,name=total,proto3" json:"total"`
 }
 
-func (m *GetRecommendListResp) Validate() error {
+func (m *GDHoldValueIndexListResp) Validate() error {
 	return nil
 }
 
-func (m *GetRecommendListResp) Reset()         { *m = GetRecommendListResp{} }
-func (m *GetRecommendListResp) String() string { return proto.CompactTextString(m) }
-func (*GetRecommendListResp) ProtoMessage()    {}
-func (*GetRecommendListResp) Descriptor() ([]byte, []int) {
+func (m *GDHoldValueIndexListResp) Reset()         { *m = GDHoldValueIndexListResp{} }
+func (m *GDHoldValueIndexListResp) String() string { return proto.CompactTextString(m) }
+func (*GDHoldValueIndexListResp) ProtoMessage()    {}
+func (*GDHoldValueIndexListResp) Descriptor() ([]byte, []int) {
 	return fileDescriptor_a9d02a9263fc9247, []int{2}
 }
 
-func (m *GetRecommendListResp) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetRecommendListResp.Unmarshal(m, b)
+func (m *GDHoldValueIndexListResp) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GDHoldValueIndexListResp.Unmarshal(m, b)
 }
-func (m *GetRecommendListResp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetRecommendListResp.Marshal(b, m, deterministic)
+func (m *GDHoldValueIndexListResp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GDHoldValueIndexListResp.Marshal(b, m, deterministic)
 }
-func (m *GetRecommendListResp) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetRecommendListResp.Merge(m, src)
+func (m *GDHoldValueIndexListResp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GDHoldValueIndexListResp.Merge(m, src)
 }
-func (m *GetRecommendListResp) XXX_Size() int {
-	return xxx_messageInfo_GetRecommendListResp.Size(m)
+func (m *GDHoldValueIndexListResp) XXX_Size() int {
+	return xxx_messageInfo_GDHoldValueIndexListResp.Size(m)
 }
-func (m *GetRecommendListResp) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetRecommendListResp.DiscardUnknown(m)
+func (m *GDHoldValueIndexListResp) XXX_DiscardUnknown() {
+	xxx_messageInfo_GDHoldValueIndexListResp.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_GetRecommendListResp proto.InternalMessageInfo
+var xxx_messageInfo_GDHoldValueIndexListResp proto.InternalMessageInfo
 
-func (m *GetRecommendListResp) GetRows() []*RecommendData {
+func (m *GDHoldValueIndexListResp) GetRows() []*HoldValueIndex {
 	if m != nil {
 		return m.Rows
 	}
 	return nil
 }
 
-func (m *GetRecommendListResp) GetTotal() int32 {
+func (m *GDHoldValueIndexListResp) GetTotal() int32 {
+	if m != nil {
+		return m.Total
+	}
+	return 0
+}
+
+type GPRecommendListReq struct {
+}
+
+func (m *GPRecommendListReq) Validate() error {
+	return nil
+}
+
+func (m *GPRecommendListReq) Reset()         { *m = GPRecommendListReq{} }
+func (m *GPRecommendListReq) String() string { return proto.CompactTextString(m) }
+func (*GPRecommendListReq) ProtoMessage()    {}
+func (*GPRecommendListReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a9d02a9263fc9247, []int{3}
+}
+
+func (m *GPRecommendListReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GPRecommendListReq.Unmarshal(m, b)
+}
+func (m *GPRecommendListReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GPRecommendListReq.Marshal(b, m, deterministic)
+}
+func (m *GPRecommendListReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GPRecommendListReq.Merge(m, src)
+}
+func (m *GPRecommendListReq) XXX_Size() int {
+	return xxx_messageInfo_GPRecommendListReq.Size(m)
+}
+func (m *GPRecommendListReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_GPRecommendListReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GPRecommendListReq proto.InternalMessageInfo
+
+type GPRecommend struct {
+	//
+	Id int32 `protobuf:"varint,1,opt,name=id,proto3" json:"id"`
+	//
+	Secucode string `protobuf:"bytes,2,opt,name=secucode,proto3" json:"secucode"`
+	//
+	Name string `protobuf:"bytes,3,opt,name=name,proto3" json:"name"`
+	//
+	HDecrease int32 `protobuf:"varint,4,opt,name=hDecrease,proto3" json:"hDecrease"`
+	//
+	MDecrease int32 `protobuf:"varint,5,opt,name=mDecrease,proto3" json:"mDecrease"`
+	//
+	TDecrease int32 `protobuf:"varint,6,opt,name=tDecrease,proto3" json:"tDecrease"`
+	//
+	RMPrice string `protobuf:"bytes,7,opt,name=rMPrice,proto3" json:"rMPrice"`
+	//
+	GDDecrease string `protobuf:"bytes,8,opt,name=gDDecrease,proto3" json:"gDDecrease"`
+	//
+	UpdateDate string `protobuf:"bytes,10,opt,name=updateDate,proto3" json:"updateDate"`
+}
+
+func (m *GPRecommend) Validate() error {
+	return nil
+}
+
+func (m *GPRecommend) Reset()         { *m = GPRecommend{} }
+func (m *GPRecommend) String() string { return proto.CompactTextString(m) }
+func (*GPRecommend) ProtoMessage()    {}
+func (*GPRecommend) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a9d02a9263fc9247, []int{4}
+}
+
+func (m *GPRecommend) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GPRecommend.Unmarshal(m, b)
+}
+func (m *GPRecommend) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GPRecommend.Marshal(b, m, deterministic)
+}
+func (m *GPRecommend) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GPRecommend.Merge(m, src)
+}
+func (m *GPRecommend) XXX_Size() int {
+	return xxx_messageInfo_GPRecommend.Size(m)
+}
+func (m *GPRecommend) XXX_DiscardUnknown() {
+	xxx_messageInfo_GPRecommend.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GPRecommend proto.InternalMessageInfo
+
+func (m *GPRecommend) GetId() int32 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
+func (m *GPRecommend) GetSecucode() string {
+	if m != nil {
+		return m.Secucode
+	}
+	return ""
+}
+
+func (m *GPRecommend) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *GPRecommend) GetHDecrease() int32 {
+	if m != nil {
+		return m.HDecrease
+	}
+	return 0
+}
+
+func (m *GPRecommend) GetMDecrease() int32 {
+	if m != nil {
+		return m.MDecrease
+	}
+	return 0
+}
+
+func (m *GPRecommend) GetTDecrease() int32 {
+	if m != nil {
+		return m.TDecrease
+	}
+	return 0
+}
+
+func (m *GPRecommend) GetRMPrice() string {
+	if m != nil {
+		return m.RMPrice
+	}
+	return ""
+}
+
+func (m *GPRecommend) GetGDDecrease() string {
+	if m != nil {
+		return m.GDDecrease
+	}
+	return ""
+}
+
+func (m *GPRecommend) GetUpdateDate() string {
+	if m != nil {
+		return m.UpdateDate
+	}
+	return ""
+}
+
+type GPRecommendListResp struct {
+	//
+	Rows []*GPRecommend `protobuf:"bytes,1,rep,name=rows,proto3" json:"rows"`
+	//
+	Total int32 `protobuf:"varint,2,opt,name=total,proto3" json:"total"`
+}
+
+func (m *GPRecommendListResp) Validate() error {
+	return nil
+}
+
+func (m *GPRecommendListResp) Reset()         { *m = GPRecommendListResp{} }
+func (m *GPRecommendListResp) String() string { return proto.CompactTextString(m) }
+func (*GPRecommendListResp) ProtoMessage()    {}
+func (*GPRecommendListResp) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a9d02a9263fc9247, []int{5}
+}
+
+func (m *GPRecommendListResp) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GPRecommendListResp.Unmarshal(m, b)
+}
+func (m *GPRecommendListResp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GPRecommendListResp.Marshal(b, m, deterministic)
+}
+func (m *GPRecommendListResp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GPRecommendListResp.Merge(m, src)
+}
+func (m *GPRecommendListResp) XXX_Size() int {
+	return xxx_messageInfo_GPRecommendListResp.Size(m)
+}
+func (m *GPRecommendListResp) XXX_DiscardUnknown() {
+	xxx_messageInfo_GPRecommendListResp.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GPRecommendListResp proto.InternalMessageInfo
+
+func (m *GPRecommendListResp) GetRows() []*GPRecommend {
+	if m != nil {
+		return m.Rows
+	}
+	return nil
+}
+
+func (m *GPRecommendListResp) GetTotal() int32 {
 	if m != nil {
 		return m.Total
 	}
@@ -257,37 +452,48 @@ func (m *GetRecommendListResp) GetTotal() int32 {
 }
 
 func init() {
-	proto.RegisterType((*GetRecommendListReq)(nil), "digger.GetRecommendListReq")
-	proto.RegisterType((*RecommendData)(nil), "digger.RecommendData")
-	proto.RegisterType((*GetRecommendListResp)(nil), "digger.GetRecommendListResp")
+	proto.RegisterType((*GDHoldValueIndexListReq)(nil), "digger.GDHoldValueIndexListReq")
+	proto.RegisterType((*HoldValueIndex)(nil), "digger.HoldValueIndex")
+	proto.RegisterType((*GDHoldValueIndexListResp)(nil), "digger.GDHoldValueIndexListResp")
+	proto.RegisterType((*GPRecommendListReq)(nil), "digger.GPRecommendListReq")
+	proto.RegisterType((*GPRecommend)(nil), "digger.GPRecommend")
+	proto.RegisterType((*GPRecommendListResp)(nil), "digger.GPRecommendListResp")
 }
 
 func init() { proto.RegisterFile("digger/fountain.proto", fileDescriptor_a9d02a9263fc9247) }
 
 var fileDescriptor_a9d02a9263fc9247 = []byte{
-	// 348 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x04, 0x03, 0x02, 0x01, 0x02, 0xff, 0x74, 0x92, 0xdf, 0x4b, 0xfb, 0x30,
-	0x14, 0xc5, 0x69, 0xb7, 0x75, 0xdb, 0xdd, 0x77, 0x5f, 0x24, 0x6e, 0x12, 0xa6, 0x48, 0x29, 0x3e,
-	0xd4, 0x97, 0x0e, 0xe6, 0xa3, 0x6f, 0x3a, 0x26, 0x82, 0x82, 0xe4, 0x45, 0xf4, 0x2d, 0x26, 0x77,
-	0x23, 0xd0, 0x36, 0xb3, 0x4d, 0xd4, 0xff, 0xce, 0x7f, 0x4d, 0x96, 0xae, 0x63, 0xf5, 0xc7, 0x5b,
-	0xcf, 0xe7, 0x9e, 0x7b, 0x4a, 0x72, 0x02, 0x63, 0xa9, 0x56, 0x2b, 0x2c, 0xa6, 0x4b, 0x6d, 0x73,
-	0xc3, 0x55, 0x9e, 0xac, 0x0b, 0x6d, 0x34, 0x09, 0x2a, 0x1c, 0x5d, 0xc3, 0xe1, 0x0d, 0x1a, 0x86,
-	0x42, 0x67, 0x19, 0xe6, 0xf2, 0x4e, 0x95, 0x86, 0xe1, 0x2b, 0x39, 0x82, 0x40, 0x2f, 0x97, 0x25,
-	0x1a, 0xea, 0x85, 0x5e, 0xdc, 0x61, 0x5b, 0x45, 0x46, 0xd0, 0x49, 0x55, 0xa6, 0x0c, 0xf5, 0x1d,
-	0xae, 0x44, 0xf4, 0xe9, 0xc3, 0x70, 0x17, 0x31, 0xe7, 0x86, 0x93, 0xff, 0xe0, 0x2b, 0xb9, 0xdd,
-	0xf5, 0x95, 0x24, 0x13, 0xe8, 0x95, 0x28, 0xac, 0xd0, 0x12, 0xdd, 0x6a, 0x9f, 0xed, 0x34, 0x21,
-	0xd0, 0xce, 0x79, 0x86, 0xb4, 0xe5, 0xb8, 0xfb, 0x26, 0xa7, 0x00, 0x6f, 0x3c, 0xb5, 0x78, 0x9b,
-	0x4b, 0xfc, 0xa0, 0xed, 0xd0, 0x8b, 0x7d, 0xb6, 0x47, 0xc8, 0x19, 0x0c, 0x85, 0xcd, 0x6c, 0xca,
-	0x73, 0xf3, 0x50, 0x28, 0x81, 0xb4, 0xe3, 0x96, 0x9b, 0x70, 0xdf, 0xb5, 0xd0, 0xc2, 0x96, 0x34,
-	0x68, 0xba, 0x1c, 0x24, 0x11, 0xfc, 0xab, 0xc1, 0x9c, 0x1b, 0xa4, 0x5d, 0x67, 0x6a, 0xb0, 0x4d,
-	0xd2, 0x4a, 0x16, 0x28, 0xad, 0x40, 0xc6, 0x8d, 0xd2, 0xb4, 0x57, 0x25, 0x35, 0x20, 0xa1, 0xd0,
-	0xad, 0x2e, 0x00, 0x69, 0xdf, 0xcd, 0x6b, 0xb9, 0x39, 0x8f, 0x28, 0x90, 0x1b, 0x74, 0x43, 0x08,
-	0xbd, 0xb8, 0xc5, 0xf6, 0x48, 0xf4, 0x08, 0xa3, 0x9f, 0x35, 0x94, 0x6b, 0x72, 0x0e, 0xed, 0x42,
-	0xbf, 0x97, 0xd4, 0x0b, 0x5b, 0xf1, 0x60, 0x36, 0x4e, 0xaa, 0xd6, 0x92, 0xc6, 0x65, 0x33, 0x67,
-	0xd9, 0x54, 0x63, 0xb4, 0xe1, 0x69, 0x5d, 0x8d, 0x13, 0xb3, 0x27, 0xe8, 0x2d, 0xb6, 0xcd, 0x93,
-	0x7b, 0x38, 0xf8, 0xfe, 0x13, 0x72, 0x5c, 0x47, 0xfe, 0xf2, 0x0a, 0x26, 0x27, 0x7f, 0x0f, 0xcb,
-	0xf5, 0xd5, 0xe0, 0xb9, 0x9f, 0x4c, 0x2f, 0x2b, 0xc7, 0x4b, 0xe0, 0x9e, 0xd5, 0xc5, 0x57, 0x00,
-	0x00, 0x00, 0xff, 0xff, 0x71, 0x25, 0xcd, 0xbf, 0x6f, 0x02, 0x00, 0x00,
+	// 466 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x04, 0x03, 0x02, 0x01, 0x02, 0xff, 0xa4, 0x94, 0xc1, 0x8a, 0xd4, 0x40,
+	0x10, 0x86, 0x49, 0x76, 0x92, 0x9d, 0xd4, 0xe8, 0x0a, 0xb5, 0xe3, 0xda, 0x8c, 0xa2, 0x21, 0x08,
+	0x0e, 0x1e, 0x66, 0x61, 0x3d, 0x7a, 0x93, 0x61, 0x47, 0x45, 0x61, 0x69, 0x44, 0x50, 0xbc, 0xc4,
+	0x74, 0xcd, 0x18, 0x48, 0xd2, 0x31, 0xdd, 0x51, 0xaf, 0x3e, 0x92, 0x6f, 0xe0, 0xa3, 0x49, 0xba,
+	0x27, 0xb1, 0xa3, 0xe3, 0x5e, 0xbc, 0xa5, 0xbe, 0xff, 0xaf, 0xa2, 0xbb, 0x7e, 0x3a, 0x70, 0x5b,
+	0xe4, 0xbb, 0x1d, 0x35, 0xe7, 0x5b, 0xd9, 0x56, 0x3a, 0xcd, 0xab, 0x55, 0xdd, 0x48, 0x2d, 0x31,
+	0xb4, 0x38, 0xd9, 0xc0, 0x9d, 0xcd, 0xfa, 0xb9, 0x2c, 0xc4, 0xdb, 0xb4, 0x68, 0xe9, 0x45, 0x25,
+	0xe8, 0xdb, 0xab, 0x5c, 0x69, 0x4e, 0x9f, 0xf1, 0x0c, 0x42, 0xb9, 0xdd, 0x2a, 0xd2, 0xcc, 0x8b,
+	0xbd, 0x65, 0xc0, 0xf7, 0x15, 0xce, 0x21, 0x28, 0xf2, 0x32, 0xd7, 0xcc, 0x37, 0xd8, 0x16, 0xc9,
+	0x4f, 0x1f, 0x4e, 0xc6, 0x73, 0xf0, 0x04, 0xfc, 0x5c, 0xec, 0x9b, 0xfd, 0x5c, 0xe0, 0x02, 0xa6,
+	0x8a, 0xb2, 0x36, 0x93, 0x82, 0x4c, 0x6f, 0xc4, 0x87, 0x1a, 0x11, 0x26, 0x55, 0x5a, 0x12, 0x3b,
+	0x32, 0xdc, 0x7c, 0xe3, 0x7d, 0x80, 0x2f, 0xc3, 0x34, 0x36, 0x89, 0xbd, 0xa5, 0xcf, 0x1d, 0x82,
+	0x0f, 0xe1, 0x66, 0xd6, 0x96, 0x6d, 0x91, 0x56, 0xfa, 0xaa, 0xc9, 0x33, 0x62, 0x81, 0x69, 0x1e,
+	0x43, 0xd7, 0x75, 0x29, 0xb3, 0x56, 0xb1, 0x70, 0xec, 0x32, 0x10, 0x13, 0xb8, 0xd1, 0x83, 0x75,
+	0xaa, 0x89, 0x1d, 0x1b, 0xd3, 0x88, 0x75, 0x93, 0x76, 0xa2, 0x21, 0xd1, 0x66, 0xc4, 0x53, 0x9d,
+	0x4b, 0x36, 0xb5, 0x93, 0x46, 0x10, 0x19, 0x1c, 0x53, 0x25, 0xcc, 0x90, 0xc8, 0xe8, 0x7d, 0xd9,
+	0xdd, 0x27, 0x6b, 0x28, 0xd5, 0x64, 0x44, 0x88, 0xbd, 0xe5, 0x11, 0x77, 0x48, 0xf2, 0x01, 0xd8,
+	0xe1, 0x2c, 0x54, 0x8d, 0x8f, 0x61, 0xd2, 0xc8, 0xaf, 0x8a, 0x79, 0xf1, 0xd1, 0x72, 0x76, 0x71,
+	0xb6, 0xb2, 0xf1, 0xad, 0xc6, 0x6e, 0x6e, 0x3c, 0x5d, 0x40, 0x5a, 0xea, 0xb4, 0xe8, 0x03, 0x32,
+	0x45, 0x32, 0x07, 0xdc, 0x5c, 0x71, 0xca, 0x64, 0x59, 0x52, 0x25, 0xf6, 0x21, 0x27, 0xdf, 0x7d,
+	0x98, 0x39, 0xf8, 0xbf, 0x33, 0xbb, 0x07, 0xd1, 0xa7, 0x35, 0x75, 0x97, 0x52, 0x64, 0x22, 0x0b,
+	0xf8, 0x6f, 0xd0, 0xa9, 0xe5, 0xa0, 0x06, 0x56, 0x2d, 0x5d, 0x55, 0x0f, 0x6a, 0x68, 0xd5, 0x01,
+	0x74, 0x7b, 0x6d, 0x5e, 0xdb, 0x9c, 0x6d, 0x38, 0x7d, 0xd9, 0xed, 0x75, 0xb7, 0x1e, 0x1a, 0x6d,
+	0x28, 0x0e, 0xe9, 0xf4, 0xb6, 0x16, 0xee, 0xde, 0x23, 0xee, 0x90, 0xe4, 0x0d, 0x9c, 0xfe, 0xb5,
+	0x19, 0x55, 0xe3, 0xa3, 0xd1, 0xca, 0x4f, 0xfb, 0x95, 0x3b, 0xd6, 0xeb, 0xf6, 0x7d, 0xf1, 0xc3,
+	0x83, 0xe9, 0xe5, 0xfe, 0xd1, 0xe1, 0x3b, 0x98, 0x1f, 0x8a, 0x16, 0x1f, 0x0c, 0x53, 0x0f, 0x3f,
+	0xc2, 0x45, 0x7c, 0xbd, 0x41, 0xd5, 0xf8, 0x12, 0x6e, 0xfd, 0x71, 0x7a, 0x5c, 0x1c, 0x38, 0x6b,
+	0x3f, 0xf0, 0xee, 0x3f, 0x35, 0x55, 0x3f, 0x9b, 0xbd, 0x8f, 0x56, 0xe7, 0x4f, 0xad, 0xe1, 0x63,
+	0x68, 0xfe, 0x14, 0x4f, 0x7e, 0x05, 0x00, 0x00, 0xff, 0xff, 0x93, 0x32, 0x48, 0x2c, 0x42, 0x04,
+	0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -303,7 +509,8 @@ const _ = grpc1.SupportPackageIsVersion6
 const ServiceFountain = "digger.Fountain"
 
 var ServiceMethodFountain = []string{
-	"GetRecommendList",
+	"GDHoldValueIndexList",
+	"GPRecommendList",
 }
 
 // Client API for Fountain service
@@ -312,7 +519,8 @@ var ServiceMethodFountain = []string{
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type FountainClient interface {
-	GetRecommendList(ctx context.T, in *GetRecommendListReq, opts ...grpc1.CallOption) (*GetRecommendListResp, error)
+	GDHoldValueIndexList(ctx context.T, in *GDHoldValueIndexListReq, opts ...grpc1.CallOption) (*GDHoldValueIndexListResp, error)
+	GPRecommendList(ctx context.T, in *GPRecommendListReq, opts ...grpc1.CallOption) (*GPRecommendListResp, error)
 }
 
 type fountainClient struct {
@@ -347,9 +555,18 @@ func NewFountainClient(cc *grpc1.ClientConn) FountainClient {
 	return &fountainClient{cc}
 }
 
-func (c *fountainClient) GetRecommendList(ctx context.T, in *GetRecommendListReq, opts ...grpc1.CallOption) (*GetRecommendListResp, error) {
-	out := new(GetRecommendListResp)
-	err := c.cc.Invoke(ctx, "/digger.Fountain/GetRecommendList", in, out, opts...)
+func (c *fountainClient) GDHoldValueIndexList(ctx context.T, in *GDHoldValueIndexListReq, opts ...grpc1.CallOption) (*GDHoldValueIndexListResp, error) {
+	out := new(GDHoldValueIndexListResp)
+	err := c.cc.Invoke(ctx, "/digger.Fountain/GDHoldValueIndexList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fountainClient) GPRecommendList(ctx context.T, in *GPRecommendListReq, opts ...grpc1.CallOption) (*GPRecommendListResp, error) {
+	out := new(GPRecommendListResp)
+	err := c.cc.Invoke(ctx, "/digger.Fountain/GPRecommendList", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -358,7 +575,8 @@ func (c *fountainClient) GetRecommendList(ctx context.T, in *GetRecommendListReq
 
 // FountainServer is the server API for Fountain service.
 type FountainServer interface {
-	GetRecommendList(context.T, *GetRecommendListReq) (*GetRecommendListResp, error)
+	GDHoldValueIndexList(context.T, *GDHoldValueIndexListReq) (*GDHoldValueIndexListResp, error)
+	GPRecommendList(context.T, *GPRecommendListReq) (*GPRecommendListResp, error)
 }
 
 func RegisterFountainGrpc(s FountainGrpcRegister) {
@@ -375,8 +593,11 @@ func RegisterFountainGrpcImpl(s mservice.GrpcRegister, impl FountainServer) {
 type UnimplementedFountainServer struct {
 }
 
-func (*UnimplementedFountainServer) GetRecommendList(ctx context1.Context, req *GetRecommendListReq) (*GetRecommendListResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetRecommendList not implemented")
+func (*UnimplementedFountainServer) GDHoldValueIndexList(ctx context1.Context, req *GDHoldValueIndexListReq) (*GDHoldValueIndexListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GDHoldValueIndexList not implemented")
+}
+func (*UnimplementedFountainServer) GPRecommendList(ctx context1.Context, req *GPRecommendListReq) (*GPRecommendListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GPRecommendList not implemented")
 }
 
 func RegisterFountainServer(s *grpc1.Server, srv FountainServer) {
@@ -415,13 +636,15 @@ func RegisterFountainWebApi(s FountainWebApiRegister) {
 func RegisterFountainWebApiImpl(s mservice.WebApiRegister, impl FountainServer) {
 	wrap := &FountainWebapi{server: impl, register: s}
 	_ = wrap
-	s.WebApiRegister("/api/digger.Fountain/GetRecommendList", wrap.GetRecommendList)
+	s.WebApiRegister("/api/digger.Fountain/GDHoldValueIndexList", wrap.GDHoldValueIndexList)
+	s.WebApiRegister("/api/digger.Fountain/GPRecommendList", wrap.GPRecommendList)
 }
 
 func RegisterFountainWebapiEx(s FountainWebApiRegister) {
 	wrap := &FountainWebapi{server: s, register: s}
 	_ = wrap
-	s.WebApiRegisterMethod("digger.Fountain", "GetRecommendList", wrap.GetRecommendList)
+	s.WebApiRegisterMethod("digger.Fountain", "GDHoldValueIndexList", wrap.GDHoldValueIndexList)
+	s.WebApiRegisterMethod("digger.Fountain", "GPRecommendList", wrap.GPRecommendList)
 }
 
 type FountainWebapi struct {
@@ -429,13 +652,23 @@ type FountainWebapi struct {
 	register mservice.WebApiRegister
 }
 
-func (s *FountainWebapi) GetRecommendList(ctx *context.T, w http.ResponseWriter, req *http.Request) {
-	params := new(GetRecommendListReq)
+func (s *FountainWebapi) GDHoldValueIndexList(ctx *context.T, w http.ResponseWriter, req *http.Request) {
+	params := new(GDHoldValueIndexListReq)
 	if err := s.register.WebApiDecode(ctx, req, params); err != nil {
 		s.register.WebApiHandleResp(ctx, w, nil, err)
 		return
 	}
-	resp, err := s.server.GetRecommendList(*ctx, params)
+	resp, err := s.server.GDHoldValueIndexList(*ctx, params)
+	s.register.WebApiHandleResp(ctx, w, resp, err)
+}
+
+func (s *FountainWebapi) GPRecommendList(ctx *context.T, w http.ResponseWriter, req *http.Request) {
+	params := new(GPRecommendListReq)
+	if err := s.register.WebApiDecode(ctx, req, params); err != nil {
+		s.register.WebApiHandleResp(ctx, w, nil, err)
+		return
+	}
+	resp, err := s.server.GPRecommendList(*ctx, params)
 	s.register.WebApiHandleResp(ctx, w, resp, err)
 }
 
@@ -455,8 +688,8 @@ type FountainWebSocket struct {
 	register mservice.WebSocketRegister
 }
 
-func _Fountain_GetRecommendList_Handler(srv interface{}, ctx context1.Context, dec func(interface{}) error, interceptor grpc1.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetRecommendListReq)
+func _Fountain_GDHoldValueIndexList_Handler(srv interface{}, ctx context1.Context, dec func(interface{}) error, interceptor grpc1.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GDHoldValueIndexListReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -464,14 +697,35 @@ func _Fountain_GetRecommendList_Handler(srv interface{}, ctx context1.Context, d
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FountainServer).GetRecommendList(context.From(ctx), in)
+		return srv.(FountainServer).GDHoldValueIndexList(context.From(ctx), in)
 	}
 	info := &grpc1.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/digger.Fountain/GetRecommendList",
+		FullMethod: "/digger.Fountain/GDHoldValueIndexList",
 	}
 	handler := func(ctx context1.Context, req interface{}) (interface{}, error) {
-		return srv.(FountainServer).GetRecommendList(context.From(ctx), req.(*GetRecommendListReq))
+		return srv.(FountainServer).GDHoldValueIndexList(context.From(ctx), req.(*GDHoldValueIndexListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Fountain_GPRecommendList_Handler(srv interface{}, ctx context1.Context, dec func(interface{}) error, interceptor grpc1.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GPRecommendListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if err := in.Validate(); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FountainServer).GPRecommendList(context.From(ctx), in)
+	}
+	info := &grpc1.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/digger.Fountain/GPRecommendList",
+	}
+	handler := func(ctx context1.Context, req interface{}) (interface{}, error) {
+		return srv.(FountainServer).GPRecommendList(context.From(ctx), req.(*GPRecommendListReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -481,8 +735,12 @@ var _Fountain_serviceDesc = grpc1.ServiceDesc{
 	HandlerType: (*FountainServer)(nil),
 	Methods: []grpc1.MethodDesc{
 		{
-			MethodName: "GetRecommendList",
-			Handler:    _Fountain_GetRecommendList_Handler,
+			MethodName: "GDHoldValueIndexList",
+			Handler:    _Fountain_GDHoldValueIndexList_Handler,
+		},
+		{
+			MethodName: "GPRecommendList",
+			Handler:    _Fountain_GPRecommendList_Handler,
 		},
 	},
 	Streams:  []grpc1.StreamDesc{},
@@ -490,8 +748,9 @@ var _Fountain_serviceDesc = grpc1.ServiceDesc{
 }
 
 var OptionFountain = ezcommon.GenOption([]byte{
-	// 37 bytes of Option
+	// 60 bytes of Option
 	0x0a, 0x0f, 0x64, 0x69, 0x67, 0x67, 0x65, 0x72, 0x2e, 0x46, 0x6f, 0x75, 0x6e, 0x74, 0x61, 0x69,
-	0x6e, 0x1a, 0x12, 0x0a, 0x10, 0x47, 0x65, 0x74, 0x52, 0x65, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e,
-	0x64, 0x4c, 0x69, 0x73, 0x74,
+	0x6e, 0x1a, 0x16, 0x0a, 0x14, 0x47, 0x44, 0x48, 0x6f, 0x6c, 0x64, 0x56, 0x61, 0x6c, 0x75, 0x65,
+	0x49, 0x6e, 0x64, 0x65, 0x78, 0x4c, 0x69, 0x73, 0x74, 0x1a, 0x11, 0x0a, 0x0f, 0x47, 0x50, 0x52,
+	0x65, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x64, 0x4c, 0x69, 0x73, 0x74,
 })

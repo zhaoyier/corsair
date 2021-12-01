@@ -40,22 +40,22 @@
             field: 'name',
             title: '名称'
         }, {
-            field: 'valueIndex',
-            title: '指数'
+            field: 'hDecrease',
+            title: '半月跌幅'
         },{
-            field: 'gdreduceRatio',
-            title: '股东减少率'
+            field: 'mDecrease',
+            title: '月跌幅'
         },{
-            field: 'cumulantPrice',
-            title: '价格阶'
+            field: 'tDecrease',
+            title: '两月跌幅'
         },{
-            field: 'cumulantFocus',
-            title: '集中阶'
+            field: 'rMPrice',
+            title: '推荐价格'
         },{
-            field: 'cumulantDate',
-            title: '日期阶'
+            field: 'gDDecrease',
+            title: '股东变化'
         },{
-            field: 'endDate',
+            field: 'updateDate',
             title: '更新日期'
         }];
  
@@ -65,7 +65,7 @@
           classes: "table table-bordered table-striped table-sm table-dark", //设置表格样式
            height:400,
           //******服务器端分页设置****
-           url: "http://81.69.250.236:12303/api/digger.Fountain/GetLongLineList", //服务器返回数据的网址
+           url: "http://81.69.250.236:12303/api/digger.Fountain/GPRecommendList", //服务器返回数据的网址
            method: 'GET',   //数据请求方式
            sidePagination:'server',
            search:true, //******开启搜索框****//
