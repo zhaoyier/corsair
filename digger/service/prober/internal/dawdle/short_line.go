@@ -52,7 +52,7 @@ func GenShortLineData() {
 	defer sess.Close()
 
 	var secucode *orm.CNSecucode
-	iter := col.Find(ezdb.M{}).Batch(100).Prefetch(0.25).Iter()
+	iter := col.Find(ezdb.M{"Disabled": false}).Batch(100).Prefetch(0.25).Iter()
 	for iter.Next(&secucode) {
 		if err := getShortLineData(secucode.Secucode); err != nil {
 			log.Infof("gen short line failed: %s|%q", secucode.Secucode, err)

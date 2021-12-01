@@ -11,7 +11,7 @@ type CNSecucode struct {
 	Name       string        `bson:"Name" json:"Name"`
 	Secucode   string        `bson:"Secucode" json:"Secucode"`
 	Focus      bool          `bson:"Focus" json:"Focus"`
-	Remark     string        `bson:"Remark" json:"Remark"`
+	Disabled   bool          `bson:"Disabled" json:"Disabled"`
 	CreateDate int64         `bson:"CreateDate" json:"CreateDate"`
 	UpdateDate int64         `bson:"UpdateDate" json:"UpdateDate"`
 	isNew      bool
@@ -22,7 +22,7 @@ const (
 	CNSecucodeMgoFieldName       = "Name"
 	CNSecucodeMgoFieldSecucode   = "Secucode"
 	CNSecucodeMgoFieldFocus      = "Focus"
-	CNSecucodeMgoFieldRemark     = "Remark"
+	CNSecucodeMgoFieldDisabled   = "Disabled"
 	CNSecucodeMgoFieldCreateDate = "CreateDate"
 	CNSecucodeMgoFieldUpdateDate = "UpdateDate"
 )

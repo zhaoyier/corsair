@@ -54,7 +54,7 @@ func GenShareholder() error {
 
 	start := time.Now().AddDate(0, -9, 0).Unix()
 	var secucode *orm.CNSecucode
-	iter := col.Find(ezdb.M{}).Batch(100).Prefetch(0.25).Iter()
+	iter := col.Find(ezdb.M{"Disabled": false}).Batch(100).Prefetch(0.25).Iter()
 	for iter.Next(&secucode) {
 		getDawdleData(secucode.Secucode, start)
 	}

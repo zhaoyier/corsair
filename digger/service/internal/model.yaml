@@ -5,7 +5,7 @@ CNSecucode:
     - Name: string        #名称
     - Secucode: string
     - Focus: bool         #关注   
-    - Remark: string      #备足
+    - Disabled: bool     #
     - CreateDate: datetime
     - UpdateDate: datetime
   uniques: [[Secucode]]
