@@ -7,9 +7,8 @@ import (
 	"sync"
 	"time"
 
-	"git.ezbuy.me/ezbuy/corsair/digger/rpc/digger"
-	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/job"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
+	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
 	log "github.com/Sirupsen/logrus"
 	ezdb "github.com/ezbuy/ezorm/db"
@@ -20,19 +19,10 @@ var (
 )
 
 func RecommendedLongTicker() {
-	tk := time.NewTicker(time.Minute * 90)
+	tk := time.NewTicker(time.Minute * 10)
 	for range tk.C {
-		weekday := time.Now().Weekday()
-		nowHour := time.Now().Local().Hour()
-		if weekday == time.Saturday || weekday == time.Sunday { //周
-			continue
-		}
-
-		log.Infof("get code list charging up: %d", nowHour)
-		if nowHour >= 23 && nowHour < 24 {
-			log.Infof("get code list in progress: %d", nowHour)
+		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeRecommendedLong) {
 			getRecommendedLongData()
-			job.UpdateJob("RecommendedLong")
 		}
 	}
 }
@@ -52,6 +42,8 @@ func getRecommendedLongData() {
 	for iter.Next(&gdll) {
 		genLongLine(gdll)
 	}
+
+	utils.UpdateFunction(trpc.FunctionType_FunctionTypeRecommendedLong)
 }
 
 func genLongLine(gdll *orm.GDLongLine) error {
@@ -83,8 +75,8 @@ func genLongLine(gdll *orm.GDLongLine) error {
 	}
 
 	data := getGPRecommend(gdll.Secucode)
-	data.MDecrease = utils.DecreasePercent(max, current)
-	data.RMType = int32(digger.RMType_RmTypeLong)
+	data.Decrease = utils.DecreasePercent(max, current)
+	data.RMType = int32(trpc.RMType_RmTypeLong)
 	if err := applyGPRecommend(data); err != nil {
 		log.Errorf("apply recommend failed: %s|%q", gdll.Secucode, err)
 		return err
@@ -93,10 +85,10 @@ func genLongLine(gdll *orm.GDLongLine) error {
 }
 
 func applyGPRecommend(data *orm.GPRecommend) error {
-	if data.MDecrease > GPLongDecrease {
-		data.State = int32(digger.RMState_RMStateStarted)
+	if data.Decrease > GPLongDecrease {
+		data.State = int32(trpc.RMState_RMStateStarted)
 	} else {
-		data.State = int32(digger.RMState_RMStatePrepared)
+		data.State = int32(trpc.RMState_RMStatePrepared)
 	}
 
 	data.UpdateDate = time.Now().Unix()

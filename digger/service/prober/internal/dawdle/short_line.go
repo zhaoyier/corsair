@@ -7,9 +7,8 @@ import (
 	"sync"
 	"time"
 
-	"git.ezbuy.me/ezbuy/corsair/digger/rpc/digger"
-	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/job"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
+	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
 	log "github.com/Sirupsen/logrus"
 	ezdb "github.com/ezbuy/ezorm/db"
@@ -17,22 +16,14 @@ import (
 
 var (
 	genShortLineOnce sync.Once
-	// shareholderData    []*WeightData
 )
 
 func GenShortLineTicker() {
-	tk := time.NewTicker(time.Minute * 40)
+	tk := time.NewTicker(time.Minute * 10)
 	for range tk.C {
-		weekday := time.Now().Weekday()
-		nowHour := time.Now().Local().Hour()
-		if weekday == time.Saturday || weekday == time.Sunday { //周
-			continue
-		}
-
-		log.Infof("gen share holder charging up: %d", nowHour)
-		if nowHour >= 21 && nowHour < 22 {
-			log.Infof("gen share holder in progress: %d", nowHour)
+		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeShortLine) {
 			GenShortLineData()
+
 		}
 	}
 }
@@ -59,24 +50,22 @@ func GenShortLineData() {
 		}
 	}
 	// 更新任务
-	job.UpdateJob("GenShortLine")
+	utils.UpdateFunction(trpc.FunctionType_FunctionTypeShortLine)
 }
 
-// 最近10日数据
+// 最近60日数据
 func getShortLineData(secucode string) error {
 	codes := strings.Split(secucode, ".")
 	data := getGPRecommend(secucode)
-	var half, onem, twom string
-	data.HDecrease, half = getLastDecrease(codes[1], -15)
-	data.MDecrease, onem = getLastDecrease(codes[1], -30)
-	data.TDecrease, twom = getLastDecrease(codes[1], -60)
-	if data.HDecrease < GPShortDecrease && data.MDecrease < GPShortDecrease && data.TDecrease < GPShortDecrease {
+	if err := getLastDecrease(data); err != nil {
+		return err
+	}
+	data.DecreaseTag = getDecreaseValue(codes[1])
+	if data.Decrease < data.DecreaseTag {
 		return nil
 	}
-	data.RMPrice = calRecommendPrice(codes[1], -15, -30)
-	data.DecreaseDay = fmt.Sprintf("%s|%s|%s", half, onem, twom)
-	data.RMType = int32(digger.RMType_RmTypeShort)
-	//
+	data.RMPrice = calRecommendPrice(data)
+	data.RMType = int32(trpc.RMType_RmTypeShort)
 
 	if err := applyGPRecommend(data); err != nil {
 		log.Errorf("apply recommend failed: %s|%q", secucode, err)
@@ -85,8 +74,9 @@ func getShortLineData(secucode string) error {
 	return nil
 }
 
-func getLastDecrease(secucode string, day int) (int32, string) {
-	tm := time.Now().AddDate(0, 0, day).Unix()
+func getLastDecrease(data *orm.GPRecommend) error {
+	secucode := utils.GetSecucode(data.Secucode)
+	tm := time.Now().AddDate(0, -2, 0).Unix()
 	query := ezdb.M{
 		"Secucode":   secucode,
 		"CreateDate": ezdb.M{"$gte": tm},
@@ -95,62 +85,57 @@ func getLastDecrease(secucode string, day int) (int32, string) {
 	results, err := orm.GPDailyMgr.FindAll(query, "-CreateDate")
 	if err != nil {
 		log.Errorf("query daily failed: %s|%q", secucode, err)
-		return 0, ""
+		return err
 	}
 
-	var counter int
 	var createDate int64
-	var max, current float64
-	now := time.Now().Unix()
-	for _, result := range results {
-		if now-result.CreateDate <= int64(86400*1.5) {
-			current = math.Min(result.Closing, result.MinPrice)
+	for idx, result := range results {
+		if idx == 0 {
+			data.PresentPrice = math.Min(result.Closing, result.MinPrice)
 		}
 
-		if result.MaxPrice > max {
-			counter++
-			max = result.MaxPrice
+		if result.MaxPrice > data.MaxPrice {
+			data.MaxDay++
+			data.MaxPrice = result.MaxPrice
 			createDate = result.CreateDate
 		}
 	}
 	dateStr := time.Unix(createDate, 0).Format("2006-01-02")
-	if counter == 1 {
-		return 0, ""
+	if data.MaxDay == 1 {
+		return fmt.Errorf("invalid data:%s", data.Secucode)
 	}
-
-	return utils.DecreasePercent(max, current), fmt.Sprintf("%d&%s", counter, dateStr)
+	data.MaxPrice = utils.Decimal(data.MaxPrice)
+	data.PresentPrice = utils.Decimal(data.PresentPrice)
+	data.Decrease = utils.DecreasePercent(data.MaxPrice, data.PresentPrice)
+	data.DecreaseDay = fmt.Sprintf("%d&%s", data.MaxDay, dateStr)
+	return nil
 }
 
-func calRecommendPrice(secucode string, latest, farthest int) string {
-	lasttm := time.Now().AddDate(0, 0, latest).Unix()
-	fasttm := time.Now().AddDate(0, 0, farthest).Unix()
+func calRecommendPrice(data *orm.GPRecommend) string {
+	price := data.MaxPrice
+	tag := utils.Decimal(1 - utils.GetPercentum(data.DecreaseTag))
+	max, min := utils.Decimal(tag+0.05), utils.Decimal(tag-0.05)
+	return fmt.Sprintf("%.1f(1)-%.1f(2)-%.1f(3)", math.Floor(price*max), math.Ceil(price*tag), math.Floor(price*min))
+}
+
+func getDecreaseValue(secucode string) int32 {
 	query := ezdb.M{
-		"Secucode":   secucode,
-		"CreateDate": ezdb.M{"$gte": fasttm},
+		"Secucode": secucode,
 	}
-
-	results, err := orm.GPDailyMgr.FindAll(query, "-CreateDate")
+	result, err := orm.GPDailyMgr.FindOne(query, "-CreateDate")
 	if err != nil {
-		log.Errorf("query daily failed: %s|%q", secucode, err)
-		return ""
+		return GPShortDecrease
 	}
-
-	var lastmax, fastmax, counter float64
-	for _, result := range results {
-		if result.CreateDate > lasttm && result.MaxPrice > lastmax {
-			counter++
-			lastmax = result.MaxPrice
-		}
-
-		if result.MaxPrice > fastmax {
-			fastmax = result.MaxPrice
-		}
+	if result.Market > int64(math.Pow10(11)*2) {
+		return GPShortDecrease - 8
+	} else if result.Market > int64(math.Pow10(11)) {
+		return GPShortDecrease - 6
+	} else if result.Market > int64(math.Pow10(10)*5) {
+		return GPShortDecrease - 4
+	} else if result.Market > int64(math.Pow10(10)) {
+		return GPShortDecrease - 3
+	} else if result.Market > int64(math.Pow10(9)) {
+		return GPShortDecrease - 3
 	}
-
-	if counter == 1 {
-		return ""
-	}
-
-	max := math.Max(lastmax, fastmax)
-	return fmt.Sprintf("%.1f-%.1f", math.Floor(max*0.55), math.Ceil(max*0.6))
+	return GPShortDecrease
 }

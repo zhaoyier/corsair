@@ -5,8 +5,8 @@ import (
 	"sync"
 	"time"
 
-	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/job"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
+	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
 	log "github.com/Sirupsen/logrus"
 	ezdb "github.com/ezbuy/ezorm/db"
@@ -18,17 +18,9 @@ var (
 )
 
 func GenLongLineTicker() {
-	tk := time.NewTicker(time.Minute * 40)
+	tk := time.NewTicker(time.Minute * 10)
 	for range tk.C {
-		weekday := time.Now().Weekday()
-		nowHour := time.Now().Local().Hour()
-		if weekday == time.Saturday || weekday == time.Sunday { //周
-			continue
-		}
-
-		log.Infof("gen long line charging up: %d", nowHour)
-		if nowHour >= 21 && nowHour < 22 {
-			log.Infof("gen long line in progress: %d", nowHour)
+		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeLongLine) {
 			GenShareholder()
 		}
 	}
@@ -60,7 +52,7 @@ func GenShareholder() error {
 	}
 
 	// 更新任务
-	job.UpdateJob("GenLongLine")
+	utils.UpdateFunction(trpc.FunctionType_FunctionTypeLongLine)
 
 	return nil
 }

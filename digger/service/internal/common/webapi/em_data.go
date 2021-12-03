@@ -7,19 +7,19 @@ import (
 	"net/http"
 	"strconv"
 
-	"git.ezbuy.me/ezbuy/corsair/digger/rpc/digger"
+	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
 )
 
-func GetEastmoneyData(typ digger.EastMoneyType, code string, resp interface{}) error {
+func GetEastmoneyData(typ trpc.EastMoneyType, code string, resp interface{}) error {
 	url, retryTime := "", 0
 	switch typ {
-	case digger.EastMoneyType_EastMoneyTypeHolder:
+	case trpc.EastMoneyType_EastMoneyTypeHolder:
 		url = fmt.Sprintf("http://emweb.securities.eastmoney.com/PC_HSF10/ShareholderResearch/PageAjax?code=%s", code)
-	case digger.EastMoneyType_EastMoneyTypeNews:
+	case trpc.EastMoneyType_EastMoneyTypeNews:
 		url = fmt.Sprintf("http://emweb.securities.eastmoney.com/PC_HSF10/NewsBulletin/PageAjax?code=%s", code)
-	case digger.EastMoneyType_EastMoneyTypeOperations:
+	case trpc.EastMoneyType_EastMoneyTypeOperations:
 		url = fmt.Sprintf("http://emweb.securities.eastmoney.com/PC_HSF10/OperationsRequired/OperationsRequiredAjax?times=1&code=%s", code)
-	case digger.EastMoneyType_EastMoneyTypeGPList:
+	case trpc.EastMoneyType_EastMoneyTypeGPList:
 		pageNum, _ := strconv.Atoi(code)
 		url = fmt.Sprintf("http://26.push2.eastmoney.com/api/qt/clist/get?cb=jQuery11240682916251377502_1637505893462&pn=%d&pz=40&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23,m:0+t:81+s:2048&fields=f2,f3,f4,f5,f6,f10,f12,f15,f17,f20,f21,f23", pageNum)
 	default:

@@ -5,28 +5,20 @@ import (
 	"time"
 
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/common/webapi"
-	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/job"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
+	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
+	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
 	log "github.com/Sirupsen/logrus"
 	ezdb "github.com/ezbuy/ezorm/db"
 	mgo "gopkg.in/mgo.v2"
 )
 
-// 每周更新一次
 func GetCodeListTicker() {
-	tk := time.NewTicker(time.Minute * 90)
+	tk := time.NewTicker(time.Minute * 10)
 	for range tk.C {
-		weekday := time.Now().Weekday()
-		nowHour := time.Now().Local().Hour()
-		if weekday == time.Saturday || weekday == time.Sunday { //周
-			continue
-		}
-
-		log.Infof("get code list charging up: %d", nowHour)
-		if nowHour >= 18 && nowHour < 20 {
-			log.Infof("get code list in progress: %d", nowHour)
+		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeCodeList) {
 			GetCodeList()
-			job.UpdateJob("GetCodeList")
+
 		}
 	}
 }
@@ -44,7 +36,7 @@ func GetCodeList() {
 	resp, inc := new(StockList), int32(1)
 	for {
 		if inc > 70 { //5600个
-			return
+			break
 		}
 
 		if err := webapi.GetEastmoneyCode(inc, 80, resp); err != nil || resp.Data == nil {
@@ -59,6 +51,7 @@ func GetCodeList() {
 
 		inc++
 	}
+	utils.UpdateFunction(trpc.FunctionType_FunctionTypeCodeList)
 }
 
 func updateCodeList(req *StockList, col *mgo.Collection) error {

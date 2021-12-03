@@ -7,10 +7,9 @@ import (
 	"sync"
 	"time"
 
-	"git.ezbuy.me/ezbuy/corsair/digger/rpc/digger"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/common/webapi"
-	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/job"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
+	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
 	log "github.com/Sirupsen/logrus"
 	ezdb "github.com/ezbuy/ezorm/db"
@@ -24,19 +23,10 @@ var (
 )
 
 func GetShareholderTicker() {
-	tk := time.NewTicker(time.Minute * 90)
+	tk := time.NewTicker(time.Minute * 10)
 	for range tk.C {
-		weekday := time.Now().Weekday()
-		nowHour := time.Now().Local().Hour()
-		if weekday == time.Saturday || weekday == time.Sunday { //周
-			continue
-		}
-
-		log.Infof("get share holder charging up: %d", nowHour)
-		if nowHour >= 18 && nowHour < 20 {
-			log.Infof("get share holder in progress: %d", nowHour)
+		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeShareholder) {
 			GetShareholder()
-
 		}
 	}
 }
@@ -56,7 +46,7 @@ func GetShareholder() {
 	for iter.Next(&secucode) {
 		shareholder := new(ShareholderResearch)
 		code := strings.Replace(secucode.Secucode, ".", "", -1)
-		if err := webapi.GetEastmoneyData(digger.EastMoneyType_EastMoneyTypeHolder, code, shareholder); err != nil {
+		if err := webapi.GetEastmoneyData(trpc.EastMoneyType_EastMoneyTypeHolder, code, shareholder); err != nil {
 			log.Infof("eastmoney get failed: %s|%+v\n", code, err)
 			continue
 		}
@@ -73,7 +63,7 @@ func GetShareholder() {
 		log.Infof("%s succeed", secucode.Secucode)
 	}
 
-	job.UpdateJob("GetShareholder")
+	utils.UpdateFunction(trpc.FunctionType_FunctionTypeShareholder)
 }
 
 func applyShareholder(data []Holder) error {

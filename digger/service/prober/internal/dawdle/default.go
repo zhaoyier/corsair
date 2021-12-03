@@ -5,8 +5,8 @@ import (
 	"sync"
 	"time"
 
-	trpc "git.ezbuy.me/ezbuy/corsair/digger/rpc/digger"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
+	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
 	log "github.com/Sirupsen/logrus"
 )

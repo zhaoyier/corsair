@@ -3,6 +3,7 @@ package utils
 import (
 	"fmt"
 	"math"
+	"strconv"
 	"strings"
 	"time"
 
@@ -92,6 +93,11 @@ func DecreasePercent(max, min float64) int32 {
 	return int32(math.Ceil(rate * 100))
 }
 
+func GetPercentum(data int32) float64 {
+	val := float64(data) / float64(100)
+	return Decimal(val)
+}
+
 func GetRate(max, min float64) float64 {
 	if max <= 0 || min <= 0 {
 		return 0
@@ -110,4 +116,14 @@ func FloatSlice2Str(values []float64, sep string) string {
 
 func TS2Date(ts int64) string {
 	return time.Unix(ts, 0).Format("2006-01-02 15:04:05")
+}
+
+func GetSecucode(secucode string) string {
+	codes := strings.Split(secucode, ".")
+	for _, code := range codes {
+		if _, err := strconv.ParseInt(code, 10, 64); err == nil {
+			return code
+		}
+	}
+	return ""
 }

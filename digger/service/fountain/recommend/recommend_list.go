@@ -3,8 +3,8 @@ package recommend
 import (
 	"net/http"
 
-	"git.ezbuy.me/ezbuy/corsair/digger/rpc/digger"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
+	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
 	log "github.com/Sirupsen/logrus"
 	ezdb "github.com/ezbuy/ezorm/db"
@@ -17,21 +17,21 @@ func GPRecommendList(in *gin.Context) {
 		"State":    ezdb.M{"$gte": 1},
 	}
 
-	resp := &digger.GPRecommendListResp{
-		Rows: make([]*digger.GPRecommend, 0),
+	resp := &trpc.GPRecommendListResp{
+		Rows: make([]*trpc.GPRecommend, 0),
 	}
 	results, err := orm.GPRecommendMgr.FindAll(query, "-HDecrease", "-MDecrease", "-TDecrease")
 	if err != nil {
 		log.Errorf("query recommend failed: %q", err)
 	}
 	for idx, result := range results {
-		resp.Rows = append(resp.Rows, &digger.GPRecommend{
+		resp.Rows = append(resp.Rows, &trpc.GPRecommend{
 			Id:         int32(idx + 1),
 			Secucode:   result.Secucode,
 			Name:       getName(result.Secucode),
-			HDecrease:  result.HDecrease,
-			MDecrease:  result.MDecrease,
-			TDecrease:  result.TDecrease,
+			HDecrease:  result.Decrease,
+			MDecrease:  0,
+			TDecrease:  0,
 			RMPrice:    result.RMPrice,
 			GDDecrease: getGDDecrease(result.Secucode),
 			UpdateDate: utils.TS2Date(result.UpdateDate),

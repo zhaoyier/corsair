@@ -134,11 +134,13 @@ GPRecommend:
       - Secucode  : string 
       - RMIndex:  int32 
       - RMType: int32
-      - HDecrease: int32    #半月
-      - MDecrease: int32    #月跌幅
-      - TDecrease: int32    #两月
+      - Decrease: int32    #二月内
+      - DecreaseTag: int32  
       - DecreaseDay: string 
       - GDDecrease: int32     #股东跌幅
+      - MaxPrice: float64
+      - MaxDay: int32
+      - PresentPrice: float64
       - RMPrice: string     
       - State: int32  #1准备,2开始, 3进行中,4结束,5放弃
       - Remark: map[string]string  #map[date]xxx

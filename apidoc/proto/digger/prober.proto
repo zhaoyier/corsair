@@ -36,3 +36,12 @@ enum RMState {
     RMStateOver = 4;
     RMStateAbandoned = 5;
 }
+
+enum FunctionType {
+    FunctionTypeUnknown = 0;
+    FunctionTypeCodeList = 1;
+    FunctionTypeShareholder = 2;
+    FunctionTypeLongLine = 3;
+    FunctionTypeShortLine = 4;
+    FunctionTypeRecommendedLong = 5;
+}
