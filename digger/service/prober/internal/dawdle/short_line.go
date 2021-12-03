@@ -7,6 +7,7 @@ import (
 	"sync"
 	"time"
 
+	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/job"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
 	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
@@ -19,11 +20,10 @@ var (
 )
 
 func GenShortLineTicker() {
-	tk := time.NewTicker(time.Minute * 10)
+	tk := time.NewTicker(time.Second * 10)
 	for range tk.C {
 		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeShortLine) {
 			GenShortLineData()
-
 		}
 	}
 }
@@ -50,7 +50,7 @@ func GenShortLineData() {
 		}
 	}
 	// 更新任务
-	utils.UpdateFunction(trpc.FunctionType_FunctionTypeShortLine)
+	job.UpdateJob(trpc.FunctionType_FunctionTypeShortLine)
 }
 
 // 最近60日数据
@@ -61,11 +61,13 @@ func getShortLineData(secucode string) error {
 		return err
 	}
 	data.DecreaseTag = getDecreaseValue(codes[1])
+	// log.Infof("==>>TODO 211: %+v|%+v", data.Decrease, data.DecreaseTag)
 	if data.Decrease < data.DecreaseTag {
 		return nil
 	}
 	data.RMPrice = calRecommendPrice(data)
 	data.RMType = int32(trpc.RMType_RmTypeShort)
+	data.GDDecrease = getGDDecrease(secucode)
 
 	if err := applyGPRecommend(data); err != nil {
 		log.Errorf("apply recommend failed: %s|%q", secucode, err)
@@ -76,6 +78,7 @@ func getShortLineData(secucode string) error {
 
 func getLastDecrease(data *orm.GPRecommend) error {
 	secucode := utils.GetSecucode(data.Secucode)
+	// log.Infof("==>>TODO 201: %+v|%+v", data.Secucode, secucode)
 	tm := time.Now().AddDate(0, -2, 0).Unix()
 	query := ezdb.M{
 		"Secucode":   secucode,
@@ -113,9 +116,12 @@ func getLastDecrease(data *orm.GPRecommend) error {
 
 func calRecommendPrice(data *orm.GPRecommend) string {
 	price := data.MaxPrice
+
 	tag := utils.Decimal(1 - utils.GetPercentum(data.DecreaseTag))
-	max, min := utils.Decimal(tag+0.05), utils.Decimal(tag-0.05)
-	return fmt.Sprintf("%.1f(1)-%.1f(2)-%.1f(3)", math.Floor(price*max), math.Ceil(price*tag), math.Floor(price*min))
+	// log.Infof("==>>TODO 311: %+v|%+v", price, tag)
+	max, per, min := utils.Decimal(tag+0.01), utils.Decimal(tag-0.02), utils.Decimal(tag-0.05)
+	// log.Infof("==>>TODO 312: %+v|%+v", max, min)
+	return fmt.Sprintf("%.1f(1)-%.1f(2)-%.1f(3)", math.Floor(price*max), math.Floor(price*per), math.Floor(price*min))
 }
 
 func getDecreaseValue(secucode string) int32 {
@@ -138,4 +144,16 @@ func getDecreaseValue(secucode string) int32 {
 		return GPShortDecrease - 3
 	}
 	return GPShortDecrease
+}
+
+func getGDDecrease(secucode string) string {
+	query := ezdb.M{
+		"Secucode": secucode,
+	}
+
+	result, err := orm.GDLongLineMgr.FindOne(query, "-CreateDate")
+	if err != nil {
+		return "unknown"
+	}
+	return result.GDReduceRatio
 }

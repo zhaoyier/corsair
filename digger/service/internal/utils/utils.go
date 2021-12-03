@@ -80,6 +80,12 @@ func GetGDReduceRatio(cells []float64, sep string) string {
 }
 
 func Decimal(value float64) float64 {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("recover...:", r)
+		}
+	}()
+
 	result, _ := decimal.NewFromFloat(value).Round(2).Float64()
 	return result
 }

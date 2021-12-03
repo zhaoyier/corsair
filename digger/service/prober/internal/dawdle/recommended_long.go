@@ -7,6 +7,7 @@ import (
 	"sync"
 	"time"
 
+	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/job"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
 	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
@@ -19,7 +20,7 @@ var (
 )
 
 func RecommendedLongTicker() {
-	tk := time.NewTicker(time.Minute * 10)
+	tk := time.NewTicker(time.Second * 10)
 	for range tk.C {
 		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeRecommendedLong) {
 			getRecommendedLongData()
@@ -43,7 +44,7 @@ func getRecommendedLongData() {
 		genLongLine(gdll)
 	}
 
-	utils.UpdateFunction(trpc.FunctionType_FunctionTypeRecommendedLong)
+	job.UpdateJob(trpc.FunctionType_FunctionTypeRecommendedLong)
 }
 
 func genLongLine(gdll *orm.GDLongLine) error {

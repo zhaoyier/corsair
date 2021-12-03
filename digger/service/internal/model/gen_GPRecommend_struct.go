@@ -14,7 +14,7 @@ type GPRecommend struct {
 	Decrease     int32             `bson:"Decrease" json:"Decrease"`
 	DecreaseTag  int32             `bson:"DecreaseTag" json:"DecreaseTag"`
 	DecreaseDay  string            `bson:"DecreaseDay" json:"DecreaseDay"`
-	GDDecrease   int32             `bson:"GDDecrease" json:"GDDecrease"`
+	GDDecrease   string            `bson:"GDDecrease" json:"GDDecrease"`
 	MaxPrice     float64           `bson:"MaxPrice" json:"MaxPrice"`
 	MaxDay       int32             `bson:"MaxDay" json:"MaxDay"`
 	PresentPrice float64           `bson:"PresentPrice" json:"PresentPrice"`

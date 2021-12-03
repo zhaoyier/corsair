@@ -5,6 +5,7 @@ import (
 	"sync"
 	"time"
 
+	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/job"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
 	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
@@ -18,7 +19,7 @@ var (
 )
 
 func GenLongLineTicker() {
-	tk := time.NewTicker(time.Minute * 10)
+	tk := time.NewTicker(time.Second * 10)
 	for range tk.C {
 		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeLongLine) {
 			GenShareholder()
@@ -52,7 +53,7 @@ func GenShareholder() error {
 	}
 
 	// 更新任务
-	utils.UpdateFunction(trpc.FunctionType_FunctionTypeLongLine)
+	job.UpdateJob(trpc.FunctionType_FunctionTypeLongLine)
 
 	return nil
 }
@@ -107,7 +108,7 @@ func getDawdleData(secucode string, since int64) error {
 // 记录数据库
 func applyLongLine(wv *WeightData) error {
 	// if wv.Date
-	log.Infof("==>>TODO 312:%+v|%+v|%+v", wv.Date[0], len(wv.Date), wv.Secucode)
+	// log.Infof("==>>TODO 312:%+v|%+v|%+v", wv.Date[0], len(wv.Date), wv.Secucode)
 	enddate := time.Unix(wv.Date[0], 0).Format("2006-01-02")
 	result, err := orm.GDLongLineMgr.FindOneBySecucodeEndDate(wv.Secucode, enddate)
 	// log.Infof("==>>TODO 313:%+v|%+v|%+v", nil, result, err)

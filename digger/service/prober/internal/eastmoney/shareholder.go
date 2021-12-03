@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/common/webapi"
+	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/job"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
 	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
@@ -23,10 +24,10 @@ var (
 )
 
 func GetShareholderTicker() {
-	tk := time.NewTicker(time.Minute * 10)
+	tk := time.NewTicker(time.Second * 10)
 	for range tk.C {
 		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeShareholder) {
-			GetShareholder()
+			time.Sleep(15 * time.Second)
 		}
 	}
 }
@@ -63,7 +64,7 @@ func GetShareholder() {
 		log.Infof("%s succeed", secucode.Secucode)
 	}
 
-	utils.UpdateFunction(trpc.FunctionType_FunctionTypeShareholder)
+	job.UpdateJob(trpc.FunctionType_FunctionTypeShareholder)
 }
 
 func applyShareholder(data []Holder) error {

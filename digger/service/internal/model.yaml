@@ -137,7 +137,7 @@ GPRecommend:
       - Decrease: int32    #二月内
       - DecreaseTag: int32  
       - DecreaseDay: string 
-      - GDDecrease: int32     #股东跌幅
+      - GDDecrease: string     #股东跌幅
       - MaxPrice: float64
       - MaxDay: int32
       - PresentPrice: float64

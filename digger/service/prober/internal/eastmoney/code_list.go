@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/common/webapi"
+	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/job"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
 	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
@@ -14,11 +15,10 @@ import (
 )
 
 func GetCodeListTicker() {
-	tk := time.NewTicker(time.Minute * 10)
+	tk := time.NewTicker(time.Second * 10)
 	for range tk.C {
 		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeCodeList) {
 			GetCodeList()
-
 		}
 	}
 }
@@ -51,7 +51,7 @@ func GetCodeList() {
 
 		inc++
 	}
-	utils.UpdateFunction(trpc.FunctionType_FunctionTypeCodeList)
+	job.UpdateJob(trpc.FunctionType_FunctionTypeCodeList)
 }
 
 func updateCodeList(req *StockList, col *mgo.Collection) error {
