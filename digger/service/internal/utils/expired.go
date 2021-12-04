@@ -9,7 +9,12 @@ import (
 
 func CheckFuncValid(typ trpc.FunctionType) bool {
 	nowHour := time.Now().Local().Hour()
+	weekday := time.Now().Local().Weekday()
 	createDate := time.Now().Format("2006-01-02")
+	if weekday == time.Saturday || weekday == time.Sunday {
+		return false
+	}
+
 	if nowHour < 17 {
 		return false
 	}
@@ -20,8 +25,3 @@ func CheckFuncValid(typ trpc.FunctionType) bool {
 	}
 	return int(typ)-len(result.Msg) == 1
 }
-
-// func UpdateFunction(typ trpc.FunctionType) {
-
-// 	job.UpdateJob(typ.String())
-// }
