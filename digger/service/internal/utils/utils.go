@@ -121,6 +121,10 @@ func FloatSlice2Str(values []float64, sep string) string {
 }
 
 func TS2Date(ts int64) string {
+	if ts == 0 {
+		return "unknown"
+	}
+
 	return time.Unix(ts, 0).Format("2006-01-02 15:04:05")
 }
 

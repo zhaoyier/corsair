@@ -91,26 +91,28 @@ func getLastDecrease(data *orm.GPRecommend) error {
 		return err
 	}
 
-	var createDate int64
+	var createDate, counter int64
 	for idx, result := range results {
 		if idx == 0 {
 			data.PresentPrice = math.Min(result.Closing, result.MinPrice)
 		}
 
 		if result.MaxPrice > data.MaxPrice {
-			data.MaxDay++
+			counter++
 			data.MaxPrice = result.MaxPrice
 			createDate = result.CreateDate
+			data.MaxDay = utils.TS2Date(result.CreateDate)
+
 		}
 	}
 	dateStr := time.Unix(createDate, 0).Format("2006-01-02")
-	if data.MaxDay == 1 {
+	if counter == 1 {
 		return fmt.Errorf("invalid data:%s", data.Secucode)
 	}
 	data.MaxPrice = utils.Decimal(data.MaxPrice)
 	data.PresentPrice = utils.Decimal(data.PresentPrice)
 	data.Decrease = utils.DecreasePercent(data.MaxPrice, data.PresentPrice)
-	data.DecreaseDay = fmt.Sprintf("%d&%s", data.MaxDay, dateStr)
+	data.DecreaseDay = fmt.Sprintf("%d&%s", counter, dateStr)
 	return nil
 }
 

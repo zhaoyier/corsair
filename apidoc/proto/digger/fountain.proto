@@ -42,7 +42,7 @@ message GPRecommend {
     string name = 3;
     int32 hDecrease = 4;
     double maxPrice = 5;    //最高价
-    int32 maxDay = 6;       //最高距离现在
+    string maxDay = 6;       //最高距离现在
     string rMPrice = 7;
     string gDDecrease = 8;
     string updateDate=10;

@@ -139,7 +139,7 @@ GPRecommend:
       - DecreaseDay: string 
       - GDDecrease: string     #股东跌幅
       - MaxPrice: float64
-      - MaxDay: int32
+      - MaxDay: string
       - PresentPrice: float64
       - RMPrice: string     
       - State: int32  #1准备,2开始, 3进行中,4结束,5放弃
