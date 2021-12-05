@@ -21,6 +21,17 @@ message WeightUnit  {
     bool subNew = 6;        //次新
 }
 
+// 权重规则
+message WeightRule { //权重规则
+	bool isNew              = 1;
+	WeightUnit price              =2;
+	WeightUnit focus              = 3;
+	WeightUnit totalNumRatio      = 4;
+	WeightUnit avgFreesharesRatio = 5;
+	double holdRatioTotal     = 6;
+	double freeholdRatioTotal = 7;
+}
+
 enum RMType {
     RmTypeUnknown = 0;
     RmTypeShort = 1;

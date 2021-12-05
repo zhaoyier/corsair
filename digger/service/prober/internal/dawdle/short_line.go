@@ -121,7 +121,7 @@ func calRecommendPrice(data *orm.GPRecommend) string {
 
 	tag := utils.Decimal(1 - utils.GetPercentum(data.DecreaseTag))
 	// log.Infof("==>>TODO 311: %+v|%+v", price, tag)
-	max, per, min := utils.Decimal(tag+0.01), utils.Decimal(tag-0.02), utils.Decimal(tag-0.05)
+	max, per, min := utils.Decimal(tag+0.02), utils.Decimal(tag-0.02), utils.Decimal(tag-0.05)
 	// log.Infof("==>>TODO 312: %+v|%+v", max, min)
 	return fmt.Sprintf("%.1f(1)-%.1f(2)-%.1f(3)", math.Floor(price*max), math.Floor(price*per), math.Floor(price*min))
 }
@@ -135,15 +135,15 @@ func getDecreaseValue(secucode string) int32 {
 		return GPShortDecrease
 	}
 	if result.Market > int64(math.Pow10(11)*2) {
-		return GPShortDecrease - 8
+		return GPShortDecrease - 10
 	} else if result.Market > int64(math.Pow10(11)) {
-		return GPShortDecrease - 6
+		return GPShortDecrease - 7
 	} else if result.Market > int64(math.Pow10(10)*5) {
 		return GPShortDecrease - 4
 	} else if result.Market > int64(math.Pow10(10)) {
-		return GPShortDecrease - 3
+		return GPShortDecrease
 	} else if result.Market > int64(math.Pow10(9)) {
-		return GPShortDecrease - 3
+		return GPShortDecrease
 	}
 	return GPShortDecrease
 }

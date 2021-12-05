@@ -34,6 +34,18 @@ func RecommendedLongOnce() {
 	})
 }
 
+func RecommendedLongTmp(secucode string) {
+	resutl, err := orm.GDLongLineMgr.FindOne(ezdb.M{
+		"Secucode": secucode,
+	}, "-CreateDate")
+	if err != nil {
+		log.Errorf("query long line failed: %s|%q", secucode, err)
+		return
+	}
+
+	genLongLine(resutl)
+}
+
 func getRecommendedLongData() {
 	sess, col := orm.GDLongLineMgr.GetCol()
 	defer sess.Close()
@@ -55,7 +67,7 @@ func genLongLine(gdll *orm.GDLongLine) error {
 		"CreateDate": ezdb.M{"$gte": tm},
 	}
 
-	if gdll.ValueIndex < 80 {
+	if gdll.ValueIndex < ValueIndexTag {
 		return fmt.Errorf("invalid value index: %s|%d", gdll.Secucode, gdll.ValueIndex)
 	}
 
@@ -76,8 +88,13 @@ func genLongLine(gdll *orm.GDLongLine) error {
 	}
 
 	data := getGPRecommend(gdll.Secucode)
+	data.GDDecrease = gdll.GDReduceRatio
 	data.Decrease = utils.DecreasePercent(max, current)
 	data.RMType = int32(trpc.RMType_RmTypeLong)
+	if err := getLastDecrease(data); err != nil {
+		log.Errorf("get last decrease failed: %s|%q", gdll.Secucode, err)
+		return err
+	}
 	if err := applyGPRecommend(data); err != nil {
 		log.Errorf("apply recommend failed: %s|%q", gdll.Secucode, err)
 		return err

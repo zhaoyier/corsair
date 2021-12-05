@@ -22,34 +22,34 @@ func GenLongLineTicker() {
 	tk := time.NewTicker(time.Second * 10)
 	for range tk.C {
 		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeLongLine) {
-			GenShareholder()
+			GenLongLine()
 		}
 	}
 }
 
 func GenLongLineOnce() {
 	genShareholderOnce.Do(func() {
-		GenShareholder()
+		GenLongLine()
 	})
 }
 
 // 临时测试
-func GenShareholderTmp(code string) error {
+func GenLongLineTmp(code string) error {
 	start := time.Now().AddDate(0, -9, 0).Unix()
-	getDawdleData(code, start)
+	getLongLineData(code, start)
 	return nil
 }
 
-func GenShareholder() error {
+func GenLongLine() error {
 
 	sess, col := orm.CNSecucodeMgr.GetCol()
 	defer sess.Close()
 
-	start := time.Now().AddDate(0, -9, 0).Unix()
+	start := time.Now().AddDate(0, -6, 0).Unix()
 	var secucode *orm.CNSecucode
 	iter := col.Find(ezdb.M{"Disabled": false}).Batch(100).Prefetch(0.25).Iter()
 	for iter.Next(&secucode) {
-		getDawdleData(secucode.Secucode, start)
+		getLongLineData(secucode.Secucode, start)
 	}
 
 	// 更新任务
@@ -58,7 +58,7 @@ func GenShareholder() error {
 	return nil
 }
 
-func getDawdleData(secucode string, since int64) error {
+func getLongLineData(secucode string, since int64) error {
 	wv := NewWeightData(secucode)
 	codes := strings.Split(secucode, ".")
 	if len(codes) < 2 {
@@ -67,9 +67,11 @@ func getDawdleData(secucode string, since int64) error {
 	}
 
 	dailyCode := codes[1]
-	query := ezdb.M{
+	query := ezdb.M{ //查询最近9个月的数据
 		"Secucode": secucode,
+		"EndDate":  ezdb.M{"$gte": time.Now().AddDate(0, -9, 0).Unix()},
 	}
+	// log.Infof("==>>TODO 501: %+v", query)
 	gdResults, err := orm.GDRenshuMgr.Find(query, 20, 0, "-EndDate")
 	if err != nil {
 		log.Errorf("query gd renshu failed: %s|%q", secucode, err)
@@ -86,7 +88,7 @@ func getDawdleData(secucode string, since int64) error {
 		log.Warningf("maybe is new filter: %s|%d", secucode, len(gdResults))
 		return nil
 	}
-
+	// log.Infof("==>>TODO 503: %+v", len(gdResults))
 	for _, r := range gdResults {
 		wv.Price = append(wv.Price, r.Price)
 		wv.Focus = append(wv.Focus, r.HoldFocus)
@@ -96,7 +98,7 @@ func getDawdleData(secucode string, since int64) error {
 	}
 	// log.Infof("==>>TODO 503: %+v", len(wv.Price))
 	// wv.GPDaily = dailyResult
-
+	// log.Infof("==>>TODO 504: %+v", len(gdResults))
 	if err := applyLongLine(wv); err != nil {
 		log.Errorf("apply recommend failed: %s|%q", secucode, err)
 		return nil
@@ -121,7 +123,7 @@ func applyLongLine(wv *WeightData) error {
 	}
 
 	valueIndex := wv.Cal().GetWeight()
-	if valueIndex < 50 {
+	if valueIndex < 80 {
 		log.Infof("value low failed: %s|%d", wv.Secucode, valueIndex)
 		return nil
 	}
