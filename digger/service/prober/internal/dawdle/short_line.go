@@ -136,14 +136,14 @@ func getDecreaseValue(secucode string) int32 {
 	}
 	if result.Market > int64(math.Pow10(11)*2) {
 		return GPShortDecrease - 10
-	} else if result.Market > int64(math.Pow10(11)) {
-		return GPShortDecrease - 7
 	} else if result.Market > int64(math.Pow10(10)*5) {
-		return GPShortDecrease - 4
+		return GPShortDecrease - 5
 	} else if result.Market > int64(math.Pow10(10)) {
 		return GPShortDecrease
 	} else if result.Market > int64(math.Pow10(9)) {
-		return GPShortDecrease
+		return GPShortDecrease + 1
+	} else if result.Market > int64(math.Pow10(8)) {
+		return GPShortDecrease + 5
 	}
 	return GPShortDecrease
 }
