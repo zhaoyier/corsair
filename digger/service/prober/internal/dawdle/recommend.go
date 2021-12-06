@@ -82,6 +82,7 @@ func getShortRecommendedData(data *orm.GPShortLine) error {
 	result.PDecrease = int32(decrease)
 	result.DecreaseTag = data.DecreaseTag
 	result.MaxPrice = data.MaxPrice
+	result.MaxPDay = data.MaxPDay
 	result.PresentPrice = data.PresentPrice
 	result.RMPrice = calRecommendPrice(result)
 	result.UpdateDate = time.Now().Unix()

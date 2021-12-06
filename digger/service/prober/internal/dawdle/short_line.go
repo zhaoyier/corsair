@@ -115,7 +115,7 @@ func getShortLineDecrease(data *orm.GPShortLine, days int) (int32, error) {
 
 		if result.MaxPrice > data.MaxPrice {
 			data.MaxPrice = result.MaxPrice
-			data.MaxDay = utils.TS2Date(result.CreateDate)
+			data.MaxPDay = utils.TS2Date(result.CreateDate)
 		}
 
 		if data.MinPrice == 0 || result.MinPrice < data.MinPrice {

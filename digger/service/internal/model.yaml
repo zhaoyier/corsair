@@ -105,7 +105,7 @@ GPShortLine:
       - MaxPrice: float64  #
       - MinPrice: float64  #
       - PresentPrice: float64
-      - MaxDay: string
+      - MaxPDay: string
       - Disabled: bool
       - Remark: string
       - CreateDate: datetime
@@ -149,7 +149,7 @@ GPRecommend:
       - DecreaseDay: string    #删除
       - GDDecrease: int32     #
       - MaxPrice: float64
-      - MaxDay: string
+      - MaxPDay: string
       - PresentPrice: float64
       - RMPrice: string     
       - State: int32  #1准备,2开始, 3进行中,4结束,5放弃

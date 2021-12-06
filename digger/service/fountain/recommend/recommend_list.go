@@ -32,7 +32,7 @@ func GPRecommendList(in *gin.Context) {
 			RMIndex:    result.RMIndex,
 			PDecrease:  result.PDecrease,
 			MaxPrice:   result.MaxPrice,
-			MaxDay:     result.MaxDay,
+			MaxPDay:    result.MaxPDay,
 			RMPrice:    result.RMPrice,
 			GDDecrease: getGDDecrease(result.Secucode),
 			UpdateDate: utils.TS2Date(result.UpdateDate),

@@ -17,7 +17,7 @@ type GPRecommend struct {
 	DecreaseDay  string            `bson:"DecreaseDay" json:"DecreaseDay"`
 	GDDecrease   int32             `bson:"GDDecrease" json:"GDDecrease"`
 	MaxPrice     float64           `bson:"MaxPrice" json:"MaxPrice"`
-	MaxDay       string            `bson:"MaxDay" json:"MaxDay"`
+	MaxPDay      string            `bson:"MaxPDay" json:"MaxPDay"`
 	PresentPrice float64           `bson:"PresentPrice" json:"PresentPrice"`
 	RMPrice      string            `bson:"RMPrice" json:"RMPrice"`
 	State        int32             `bson:"State" json:"State"`
@@ -40,7 +40,7 @@ const (
 	GPRecommendMgoFieldDecreaseDay  = "DecreaseDay"
 	GPRecommendMgoFieldGDDecrease   = "GDDecrease"
 	GPRecommendMgoFieldMaxPrice     = "MaxPrice"
-	GPRecommendMgoFieldMaxDay       = "MaxDay"
+	GPRecommendMgoFieldMaxPDay      = "MaxPDay"
 	GPRecommendMgoFieldPresentPrice = "PresentPrice"
 	GPRecommendMgoFieldRMPrice      = "RMPrice"
 	GPRecommendMgoFieldState        = "State"

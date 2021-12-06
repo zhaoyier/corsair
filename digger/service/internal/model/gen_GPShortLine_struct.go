@@ -16,7 +16,7 @@ type GPShortLine struct {
 	MaxPrice     float64       `bson:"MaxPrice" json:"MaxPrice"`
 	MinPrice     float64       `bson:"MinPrice" json:"MinPrice"`
 	PresentPrice float64       `bson:"PresentPrice" json:"PresentPrice"`
-	MaxDay       string        `bson:"MaxDay" json:"MaxDay"`
+	MaxPDay      string        `bson:"MaxPDay" json:"MaxPDay"`
 	Disabled     bool          `bson:"Disabled" json:"Disabled"`
 	Remark       string        `bson:"Remark" json:"Remark"`
 	CreateDate   int64         `bson:"CreateDate" json:"CreateDate"`
@@ -34,7 +34,7 @@ const (
 	GPShortLineMgoFieldMaxPrice     = "MaxPrice"
 	GPShortLineMgoFieldMinPrice     = "MinPrice"
 	GPShortLineMgoFieldPresentPrice = "PresentPrice"
-	GPShortLineMgoFieldMaxDay       = "MaxDay"
+	GPShortLineMgoFieldMaxPDay      = "MaxPDay"
 	GPShortLineMgoFieldDisabled     = "Disabled"
 	GPShortLineMgoFieldRemark       = "Remark"
 	GPShortLineMgoFieldCreateDate   = "CreateDate"
