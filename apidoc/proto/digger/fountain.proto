@@ -40,12 +40,13 @@ message GPRecommend {
     int32 id = 1;
     string secucode = 2;
     string name = 3;
-    int32 hDecrease = 4;
-    double maxPrice = 5;    //最高价
-    string maxDay = 6;       //最高距离现在
-    string rMPrice = 7;
-    string gDDecrease = 8;
-    string updateDate=10;
+    int32 rMIndex = 4;
+    int32 pDecrease = 5;
+    double maxPrice = 6;    //最高价
+    string maxDay = 10;       //最高距离现在
+    string rMPrice = 11;
+    int32 gDDecrease = 12;
+    string updateDate=13;
 }
 
 message GPRecommendListResp {

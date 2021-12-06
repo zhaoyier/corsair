@@ -20,8 +20,6 @@ func startRoute(router *gin.Engine) {
 		time.Sleep(time.Second)
 		c.String(http.StatusOK, "Welcome Gin Server")
 	})
-	//
-	// router.GET("/api/digger.Fountain/GetLongLineList", recommend.GDHoldValueIndexList)
 	// 推荐列表
 	router.GET("/api/digger.Fountain/GPRecommendList", recommend.GPRecommendList)
 }

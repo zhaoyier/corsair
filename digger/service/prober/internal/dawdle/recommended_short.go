@@ -1,5 +1,0 @@
-package dawdle
-
-func RecommendedShortTicker() {
-
-}

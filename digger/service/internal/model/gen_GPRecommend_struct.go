@@ -9,12 +9,13 @@ var _ time.Time
 type GPRecommend struct {
 	ID           bson.ObjectId     `json:"id" bson:"_id,omitempty"`
 	Secucode     string            `bson:"Secucode" json:"Secucode"`
+	Name         string            `bson:"Name" json:"Name"`
 	RMIndex      int32             `bson:"RMIndex" json:"RMIndex"`
 	RMType       int32             `bson:"RMType" json:"RMType"`
-	Decrease     int32             `bson:"Decrease" json:"Decrease"`
+	PDecrease    int32             `bson:"PDecrease" json:"PDecrease"`
 	DecreaseTag  int32             `bson:"DecreaseTag" json:"DecreaseTag"`
 	DecreaseDay  string            `bson:"DecreaseDay" json:"DecreaseDay"`
-	GDDecrease   string            `bson:"GDDecrease" json:"GDDecrease"`
+	GDDecrease   int32             `bson:"GDDecrease" json:"GDDecrease"`
 	MaxPrice     float64           `bson:"MaxPrice" json:"MaxPrice"`
 	MaxDay       string            `bson:"MaxDay" json:"MaxDay"`
 	PresentPrice float64           `bson:"PresentPrice" json:"PresentPrice"`
@@ -31,9 +32,10 @@ type GPRecommend struct {
 const (
 	GPRecommendMgoFieldID           = "_id"
 	GPRecommendMgoFieldSecucode     = "Secucode"
+	GPRecommendMgoFieldName         = "Name"
 	GPRecommendMgoFieldRMIndex      = "RMIndex"
 	GPRecommendMgoFieldRMType       = "RMType"
-	GPRecommendMgoFieldDecrease     = "Decrease"
+	GPRecommendMgoFieldPDecrease    = "PDecrease"
 	GPRecommendMgoFieldDecreaseTag  = "DecreaseTag"
 	GPRecommendMgoFieldDecreaseDay  = "DecreaseDay"
 	GPRecommendMgoFieldGDDecrease   = "GDDecrease"

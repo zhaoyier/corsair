@@ -7,10 +7,10 @@ import "time"
 var _ time.Time
 
 type Job struct {
-	ID         bson.ObjectId `json:"id" bson:"_id,omitempty"`
-	Msg        []string      `bson:"Msg" json:"Msg"`
-	CreateDate string        `bson:"CreateDate" json:"CreateDate"`
-	UpdateDate int64         `bson:"UpdateDate" json:"UpdateDate"`
+	ID         bson.ObjectId     `json:"id" bson:"_id,omitempty"`
+	Msg        map[string]string `bson:"Msg" json:"Msg"`
+	CreateDate string            `bson:"CreateDate" json:"CreateDate"`
+	UpdateDate int64             `bson:"UpdateDate" json:"UpdateDate"`
 	isNew      bool
 }
 

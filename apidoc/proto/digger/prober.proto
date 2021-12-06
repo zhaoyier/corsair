@@ -54,5 +54,5 @@ enum FunctionType {
     FunctionTypeShareholder = 2;
     FunctionTypeLongLine = 3;
     FunctionTypeShortLine = 4;
-    FunctionTypeRecommendedLong = 5;
+    FunctionTypeRecommend = 5;
 }

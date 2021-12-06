@@ -1,7 +1,6 @@
 package dawdle
 
 import (
-	"fmt"
 	"math"
 	"sync"
 	"time"
@@ -72,7 +71,7 @@ func getShortLineData(secucode string) error {
 	result.TDecrease, _ = getShortLineDecrease(result, -60)
 	result.UpdateDate = time.Now().Unix()
 	decreaseTag := result.DecreaseTag - 10
-	log.Infof("==>>TODO 231: %+v|%+v", result, decreaseTag)
+	// log.Infof("==>>TODO 231: %+v|%+v", result, decreaseTag)
 	if result.MDecrease < decreaseTag && result.TDecrease < decreaseTag {
 		log.Errorf("invalid decreaseTag: %s|%d|%d", secucode, result.MDecrease, result.TDecrease)
 		return nil
@@ -128,16 +127,6 @@ func getShortLineDecrease(data *orm.GPShortLine, days int) (int32, error) {
 	return utils.DecreasePercent(data.MaxPrice, data.PresentPrice), nil
 }
 
-func calRecommendPrice(data *orm.GPRecommend) string {
-	price := data.MaxPrice
-
-	tag := utils.Decimal(1 - utils.GetPercentum(data.DecreaseTag))
-	log.Infof("==>>TODO 311: %+v|%+v", price, tag)
-	max, per, min := utils.Decimal(tag+0.03), utils.Decimal(tag), utils.Decimal(tag-0.05)
-	log.Infof("==>>TODO 312: %+v|%+v|%+v", max, per, min)
-	return fmt.Sprintf("%.1f(1)-%.1f(2)-%.1f(3)", math.Floor(price*max), math.Floor(price*per), math.Floor(price*min))
-}
-
 func getDecreaseValue(secucode string) int32 {
 	query := ezdb.M{
 		"Secucode": secucode,
@@ -157,18 +146,6 @@ func getDecreaseValue(secucode string) int32 {
 	} else {
 		return GPShortDecrease + 5
 	}
-}
-
-func getGDDecrease(secucode string) string {
-	query := ezdb.M{
-		"Secucode": secucode,
-	}
-
-	result, err := orm.GDLongLineMgr.FindOne(query, "-CreateDate")
-	if err != nil {
-		return "unknown"
-	}
-	return result.GDReduceRatio
 }
 
 func disabledShortLine(secucode string) error {

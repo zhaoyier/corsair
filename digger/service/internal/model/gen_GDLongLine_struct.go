@@ -14,7 +14,7 @@ type GDLongLine struct {
 	CumulantPrice string        `bson:"CumulantPrice" json:"CumulantPrice"`
 	CumulantFocus string        `bson:"CumulantFocus" json:"CumulantFocus"`
 	CumulantDate  string        `bson:"CumulantDate" json:"CumulantDate"`
-	GDReduceRatio string        `bson:"GDReduceRatio" json:"GDReduceRatio"`
+	GDReduceRatio int32         `bson:"GDReduceRatio" json:"GDReduceRatio"`
 	Disabled      bool          `bson:"Disabled" json:"Disabled"`
 	Remark        string        `bson:"Remark" json:"Remark"`
 	EndDate       string        `bson:"EndDate" json:"EndDate"`

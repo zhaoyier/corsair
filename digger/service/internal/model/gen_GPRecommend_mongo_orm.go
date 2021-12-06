@@ -28,6 +28,15 @@ func initGPRecommendIndex() {
 	defer session.Close()
 
 	if err := collection.EnsureIndex(mgo.Index{
+		Key:        []string{"Secucode", "Disabled"},
+		Unique:     true,
+		Background: true,
+		Sparse:     true,
+	}); err != nil {
+		panic("ensureIndex digger.GPRecommend SecucodeDisabled error:" + err.Error())
+	}
+
+	if err := collection.EnsureIndex(mgo.Index{
 		Key:        []string{"Secucode", "State"},
 		Background: true,
 		Sparse:     true,
@@ -41,15 +50,6 @@ func initGPRecommendIndex() {
 		Sparse:     true,
 	}); err != nil {
 		panic("ensureIndex digger.GPRecommend CreateDate error:" + err.Error())
-	}
-
-	if err := collection.EnsureIndex(mgo.Index{
-		Key:        []string{"Secucode", "Disabled"},
-		Unique:     true,
-		Background: true,
-		Sparse:     true,
-	}); err != nil {
-		panic("ensureIndex digger.GPRecommend SecucodeDisabled error:" + err.Error())
 	}
 
 }
@@ -180,25 +180,6 @@ func (o *_GPRecommendMgr) NQuery(query interface{}, limit, offset int, sortField
 
 	return session, q
 }
-func (o *_GPRecommendMgr) FindBySecucodeState(Secucode string, State int32, limit int, offset int, sortFields ...string) (result []*GPRecommend, err error) {
-	query := db.M{
-		"Secucode": Secucode,
-		"State":    State,
-	}
-	session, q := GPRecommendMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
-}
-func (o *_GPRecommendMgr) FindByCreateDate(CreateDate int64, limit int, offset int, sortFields ...string) (result []*GPRecommend, err error) {
-	query := db.M{
-		"CreateDate": CreateDate,
-	}
-	session, q := GPRecommendMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
-}
 func (o *_GPRecommendMgr) FindOneBySecucodeDisabled(Secucode string, Disabled bool) (result *GPRecommend, err error) {
 	query := db.M{
 		"Secucode": Secucode,
@@ -230,6 +211,25 @@ func (o *_GPRecommendMgr) RemoveBySecucodeDisabled(Secucode string, Disabled boo
 		"Disabled": Disabled,
 	}
 	return col.Remove(query)
+}
+func (o *_GPRecommendMgr) FindBySecucodeState(Secucode string, State int32, limit int, offset int, sortFields ...string) (result []*GPRecommend, err error) {
+	query := db.M{
+		"Secucode": Secucode,
+		"State":    State,
+	}
+	session, q := GPRecommendMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
+}
+func (o *_GPRecommendMgr) FindByCreateDate(CreateDate int64, limit int, offset int, sortFields ...string) (result []*GPRecommend, err error) {
+	query := db.M{
+		"CreateDate": CreateDate,
+	}
+	session, q := GPRecommendMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
 }
 
 func (o *_GPRecommendMgr) Find(query interface{}, limit int, offset int, sortFields ...string) (result []*GPRecommend, err error) {

@@ -28,7 +28,7 @@ const (
 	cumulantRatio   int     = 3
 	cumulantPrice   int     = 5
 	priceDiff       float64 = 1.25
-	dateDiff        int64   = 30 * 86400
+	dateDiff        int64   = 60 * 86400
 	accum           float64 = 15
 	GPLongDecrease  int32   = 30
 	GPShortDecrease int32   = 35

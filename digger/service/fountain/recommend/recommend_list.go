@@ -20,7 +20,7 @@ func GPRecommendList(in *gin.Context) {
 	resp := &trpc.GPRecommendListResp{
 		Rows: make([]*trpc.GPRecommend, 0),
 	}
-	results, err := orm.GPRecommendMgr.FindAll(query, "-HDecrease", "-MDecrease", "-TDecrease")
+	results, err := orm.GPRecommendMgr.FindAll(query, "-RMIndex", "-CreateDate")
 	if err != nil {
 		log.Errorf("query recommend failed: %q", err)
 	}
@@ -29,7 +29,8 @@ func GPRecommendList(in *gin.Context) {
 			Id:         int32(idx + 1),
 			Secucode:   result.Secucode,
 			Name:       getName(result.Secucode),
-			HDecrease:  result.Decrease,
+			RMIndex:    result.RMIndex,
+			PDecrease:  result.PDecrease,
 			MaxPrice:   result.MaxPrice,
 			MaxDay:     result.MaxDay,
 			RMPrice:    result.RMPrice,
@@ -48,13 +49,13 @@ func getName(secucode string) string {
 	return result.Name
 }
 
-func getGDDecrease(secucode string) string {
+func getGDDecrease(secucode string) int32 {
 	query := ezdb.M{
 		"Secucode": secucode,
 	}
 	result, err := orm.GDLongLineMgr.FindOne(query, "-CreateDate")
 	if err != nil {
-		return ""
+		return 0
 	}
 	return result.GDReduceRatio
 }

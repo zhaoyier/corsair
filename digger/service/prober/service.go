@@ -6,9 +6,6 @@ import (
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/prober/internal/dawdle"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/prober/internal/eastmoney"
-
-	// "git.ezbuy.me/ezbuy/corsair/digger/service/prober/internal/sina"
-
 	"github.com/ezbuy/ezorm/db"
 )
 
@@ -24,15 +21,12 @@ func Start() {
 	go eastmoney.GetShareholderTicker()
 	go dawdle.GenLongLineTicker()
 	go dawdle.GenShortLineTicker()
-	go dawdle.GenRecommendedTicker()
+	go dawdle.GenRecommendTicker()
 	// go dawdle.GenRecommendOnce()
 	// go eastmoney.GetCodeListOnce()
 	// go eastmoney.GetShareholderOnce()
 	// go dawdle.GenLongLineOnce()
 	// go dawdle.GenShortLineOnce()
-	// go sina.GetDailyDataTicker()
-	// go sina.GetDailyDataOnce()
-	// sina.GetDailyDataTmp("SZ.300897")
 	// dawdle.RecommendedLongTmp("SZ.300614")
 	// dawdle.GenLongLineTmp("SZ.300614")
 	// dawdle.GenShortLineTmp("SZ.002923")

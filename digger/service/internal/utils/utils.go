@@ -66,17 +66,18 @@ func GetDateStr(cells []int64, sep string) string {
 }
 
 // 最近
-func GetGDReduceRatio(cells []float64, sep string) string {
+func GetGDReduceRatio(cells []float64) int32 {
 	var counter int32
 	var sum float64
 	for _, cell := range cells {
-		if cell > 0 {
+		if cell > 5 {
 			break
 		}
 		counter++
 		sum += cell
 	}
-	return fmt.Sprintf("%d%s%.1f", counter, sep, sum)
+
+	return int32(math.Ceil(sum))
 }
 
 func Decimal(value float64) float64 {

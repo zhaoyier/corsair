@@ -85,7 +85,7 @@ GDLongLine:
       - CumulantPrice: string #价格梯度
       - CumulantFocus: string #集中度梯度
       - CumulantDate: string  #日期梯度
-      - GDReduceRatio: string    #最近三次股东减少比例
+      - GDReduceRatio: int32    #最近三次股东减少比例
       - Disabled: bool
       - Remark: string
       - EndDate: string        #截止日期
@@ -141,12 +141,13 @@ GPRecommend:
     dbname: digger
     fields:
       - Secucode  : string 
+      - Name: string
       - RMIndex:  int32 
       - RMType: int32
-      - Decrease: int32    #二月内
+      - PDecrease: int32    #二月内
       - DecreaseTag: int32  
       - DecreaseDay: string    #删除
-      - GDDecrease: string     #
+      - GDDecrease: int32     #
       - MaxPrice: float64
       - MaxDay: string
       - PresentPrice: float64
@@ -164,7 +165,7 @@ Job:
     db: mongo
     dbname: digger
     fields:
-      - Msg: list<string>
+      - Msg: map[string]string
       - CreateDate: string  #年月日
       - UpdateDate: datetime
     uniques: [[CreateDate]] 

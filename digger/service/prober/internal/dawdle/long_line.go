@@ -137,7 +137,7 @@ func applyLongLine(wv *WeightData) error {
 	result.CumulantPrice = utils.FloatSlice2Str(wv.Price, "<-")
 	result.CumulantFocus = utils.GetFocusStr(wv.Focus, "<-")
 	result.CumulantDate = utils.GetDateStr(wv.Date, "<-")
-	result.GDReduceRatio = utils.GetGDReduceRatio(wv.TotalNumRatio, "&")
+	result.GDReduceRatio = utils.GetGDReduceRatio(wv.TotalNumRatio)
 	result.CreateDate = time.Now().Unix()
 	log.Infof("long line data:%+v|%+v", result.Name, result.ValueIndex)
 	if result.ValueIndex <= 50 {

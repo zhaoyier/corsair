@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"time"
 
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
@@ -23,5 +24,14 @@ func CheckFuncValid(typ trpc.FunctionType) bool {
 	if err != nil {
 		return true
 	}
-	return int(typ)-len(result.Msg) == 1
+	if _, ok := result.Msg[typ.String()]; ok {
+		return false
+	}
+
+	flag := int(typ)-len(result.Msg) == 1
+	result.Msg[typ.String()] = fmt.Sprintf("%s", TS2Date(time.Now().Unix()))
+
+	go result.Save()
+
+	return flag
 }
