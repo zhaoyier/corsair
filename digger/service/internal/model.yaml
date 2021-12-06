@@ -31,6 +31,7 @@ GDRenshu:
     - UpdateDate: datetime
   uniques: [[Secucode, EndDate]]
   indexes: [[Secucode],[SecurityCode], [EndDate], [HolderTotalNum]]
+  
 
 GDNiusan:
   db: mongo
@@ -92,6 +93,26 @@ GDLongLine:
     uniques: [[Secucode,EndDate]]
     indexes: [[ValueIndex],[EndDate],[Disabled],[CreateDate]]
 
+GPShortLine:
+    db: mongo
+    dbname: digger
+    fields:
+      - Secucode: string
+      - Name: string            #名称
+      - MDecrease: int32 #
+      - TDecrease: int32 #
+      - DecreaseTag: int32
+      - MaxPrice: float64  #
+      - MinPrice: float64  #
+      - PresentPrice: float64
+      - MaxDay: string
+      - Disabled: bool
+      - Remark: string
+      - CreateDate: datetime
+      - UpdateDate: datetime
+    uniques: [[Secucode,CreateDate]]
+    indexes: [[Secucode],[Disabled],[CreateDate]]
+
 GPDaily:
     db: mongo
     dbname: digger
@@ -115,18 +136,6 @@ GPDaily:
     uniques: [[Secucode,CreateDate]]
     indexes: [[Name],[CreateDate],[UpdateDate]]
 
-GPShortLine:
-    db: mongo
-    dbname: digger
-    fields:
-      - Secucode  : string 
-      - PriceDiff: int32    #差价
-      - Decrease: int32     #跌幅
-      - CreateDate: int64  #年月日
-      - UpdateDate: datetime
-    uniques: [[Secucode,CreateDate]]
-    indexes: [[Secucode],[UpdateDate]]
-
 GPRecommend:
     db: mongo
     dbname: digger
@@ -136,8 +145,8 @@ GPRecommend:
       - RMType: int32
       - Decrease: int32    #二月内
       - DecreaseTag: int32  
-      - DecreaseDay: string 
-      - GDDecrease: string     #股东跌幅
+      - DecreaseDay: string    #删除
+      - GDDecrease: string     #
       - MaxPrice: float64
       - MaxDay: string
       - PresentPrice: float64

@@ -3,7 +3,6 @@ package dawdle
 import (
 	"fmt"
 	"math"
-	"strings"
 	"sync"
 	"time"
 
@@ -13,6 +12,7 @@ import (
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
 	log "github.com/Sirupsen/logrus"
 	ezdb "github.com/ezbuy/ezorm/db"
+	mgo "gopkg.in/mgo.v2"
 )
 
 var (
@@ -53,33 +53,47 @@ func GenShortLineData() {
 	job.UpdateJob(trpc.FunctionType_FunctionTypeShortLine)
 }
 
-// 最近60日数据
+//
 func getShortLineData(secucode string) error {
-	codes := strings.Split(secucode, ".")
-	data := getGPRecommend(secucode)
-	if err := getLastDecrease(data); err != nil {
+	datets := utils.GetZeroTS()
+	code := utils.GetSecucode(secucode)
+	result, err := orm.GPShortLineMgr.FindOneBySecucodeCreateDate(secucode, datets)
+	if err != nil && err != mgo.ErrNotFound {
 		return err
 	}
-	data.DecreaseTag = getDecreaseValue(codes[1])
-	// log.Infof("==>>TODO 211: %+v|%+v", data.Decrease, data.DecreaseTag)
-	if data.Decrease < data.DecreaseTag {
+	if result == nil {
+		result = orm.GPShortLineMgr.NewGPShortLine()
+		result.Secucode = secucode
+		result.CreateDate = datets
+	}
+
+	result.DecreaseTag = getDecreaseValue(code)
+	result.MDecrease, _ = getShortLineDecrease(result, -30)
+	result.TDecrease, _ = getShortLineDecrease(result, -60)
+	result.UpdateDate = time.Now().Unix()
+	decreaseTag := result.DecreaseTag - 10
+	log.Infof("==>>TODO 231: %+v|%+v", result, decreaseTag)
+	if result.MDecrease < decreaseTag && result.TDecrease < decreaseTag {
+		log.Errorf("invalid decreaseTag: %s|%d|%d", secucode, result.MDecrease, result.TDecrease)
 		return nil
 	}
-	data.RMPrice = calRecommendPrice(data)
-	data.RMType = int32(trpc.RMType_RmTypeShort)
-	data.GDDecrease = getGDDecrease(secucode)
 
-	if err := applyGPRecommend(data); err != nil {
-		log.Errorf("apply recommend failed: %s|%q", secucode, err)
+	if _, err := result.Save(); err != nil {
+		log.Errorf("apply short line failed: %s|%q", secucode, err)
+		return err
+	}
+
+	if err := disabledShortLine(secucode); err != nil {
+		log.Errorf("disabled short line failed: %s|%q", secucode, err)
 		return err
 	}
 	return nil
 }
 
-func getLastDecrease(data *orm.GPRecommend) error {
+func getShortLineDecrease(data *orm.GPShortLine, days int) (int32, error) {
 	secucode := utils.GetSecucode(data.Secucode)
 	// log.Infof("==>>TODO 201: %+v|%+v", data.Secucode, secucode)
-	tm := time.Now().AddDate(0, -2, 0).Unix()
+	tm := time.Now().AddDate(0, 0, days).Unix()
 	query := ezdb.M{
 		"Secucode":   secucode,
 		"CreateDate": ezdb.M{"$gte": tm},
@@ -88,41 +102,39 @@ func getLastDecrease(data *orm.GPRecommend) error {
 	results, err := orm.GPDailyMgr.FindAll(query, "-CreateDate")
 	if err != nil {
 		log.Errorf("query daily failed: %s|%q", secucode, err)
-		return err
+		return 0, err
 	}
 
-	var createDate, counter int64
 	for idx, result := range results {
 		if idx == 0 {
 			data.PresentPrice = math.Min(result.Closing, result.MinPrice)
 		}
 
-		if result.MaxPrice > data.MaxPrice {
-			counter++
-			data.MaxPrice = result.MaxPrice
-			createDate = result.CreateDate
-			data.MaxDay = utils.TS2Date(result.CreateDate)
+		if data.Name == "" {
+			data.Name = result.Name
+		}
 
+		if result.MaxPrice > data.MaxPrice {
+			data.MaxPrice = result.MaxPrice
+			data.MaxDay = utils.TS2Date(result.CreateDate)
+		}
+
+		if data.MinPrice == 0 || result.MinPrice < data.MinPrice {
+			data.MinPrice = result.MinPrice
 		}
 	}
-	dateStr := time.Unix(createDate, 0).Format("2006-01-02")
-	if counter == 1 {
-		return fmt.Errorf("invalid data:%s", data.Secucode)
-	}
+
 	data.MaxPrice = utils.Decimal(data.MaxPrice)
-	data.PresentPrice = utils.Decimal(data.PresentPrice)
-	data.Decrease = utils.DecreasePercent(data.MaxPrice, data.PresentPrice)
-	data.DecreaseDay = fmt.Sprintf("%d&%s", counter, dateStr)
-	return nil
+	return utils.DecreasePercent(data.MaxPrice, data.PresentPrice), nil
 }
 
 func calRecommendPrice(data *orm.GPRecommend) string {
 	price := data.MaxPrice
 
 	tag := utils.Decimal(1 - utils.GetPercentum(data.DecreaseTag))
-	// log.Infof("==>>TODO 311: %+v|%+v", price, tag)
-	max, per, min := utils.Decimal(tag+0.02), utils.Decimal(tag-0.02), utils.Decimal(tag-0.05)
-	// log.Infof("==>>TODO 312: %+v|%+v", max, min)
+	log.Infof("==>>TODO 311: %+v|%+v", price, tag)
+	max, per, min := utils.Decimal(tag+0.03), utils.Decimal(tag), utils.Decimal(tag-0.05)
+	log.Infof("==>>TODO 312: %+v|%+v|%+v", max, per, min)
 	return fmt.Sprintf("%.1f(1)-%.1f(2)-%.1f(3)", math.Floor(price*max), math.Floor(price*per), math.Floor(price*min))
 }
 
@@ -134,18 +146,17 @@ func getDecreaseValue(secucode string) int32 {
 	if err != nil {
 		return GPShortDecrease
 	}
-	if result.Market > int64(math.Pow10(11)*2) {
+	if result.Traded > int64(math.Pow10(11)*2) {
 		return GPShortDecrease - 10
-	} else if result.Market > int64(math.Pow10(10)*5) {
+	} else if result.Traded > int64(math.Pow10(10)*5) {
 		return GPShortDecrease - 5
-	} else if result.Market > int64(math.Pow10(10)) {
+	} else if result.Traded > int64(math.Pow10(10)) {
 		return GPShortDecrease
-	} else if result.Market > int64(math.Pow10(9)) {
-		return GPShortDecrease + 1
-	} else if result.Market > int64(math.Pow10(7)) {
-		return GPShortDecrease + 10
+	} else if result.Traded > int64(math.Pow10(9)) {
+		return GPShortDecrease
+	} else {
+		return GPShortDecrease + 5
 	}
-	return GPShortDecrease
 }
 
 func getGDDecrease(secucode string) string {
@@ -158,4 +169,28 @@ func getGDDecrease(secucode string) string {
 		return "unknown"
 	}
 	return result.GDReduceRatio
+}
+
+func disabledShortLine(secucode string) error {
+	query := ezdb.M{
+		"Secucode":   secucode,
+		"CreateDate": ezdb.M{"$lt": utils.GetZeroTS()},
+		"Disabled":   true,
+	}
+
+	results, err := orm.GPShortLineMgr.FindAll(query)
+	if err == mgo.ErrNotFound {
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	for _, result := range results {
+		result.Disabled = true
+		result.UpdateDate = time.Now().Unix()
+		if _, err := result.Save(); err != nil {
+			return err
+		}
+	}
+	return nil
 }

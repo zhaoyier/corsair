@@ -126,3 +126,43 @@ func getGPRecommend(secucode string) *orm.GPRecommend {
 	}
 	return result
 }
+
+func getLastDecrease(data *orm.GPRecommend) error {
+	secucode := utils.GetSecucode(data.Secucode)
+	// log.Infof("==>>TODO 201: %+v|%+v", data.Secucode, secucode)
+	tm := time.Now().AddDate(0, -2, 0).Unix()
+	query := ezdb.M{
+		"Secucode":   secucode,
+		"CreateDate": ezdb.M{"$gte": tm},
+	}
+
+	results, err := orm.GPDailyMgr.FindAll(query, "-CreateDate")
+	if err != nil {
+		log.Errorf("query daily failed: %s|%q", secucode, err)
+		return err
+	}
+
+	var createDate, counter int64
+	for idx, result := range results {
+		if idx == 0 {
+			data.PresentPrice = math.Min(result.Closing, result.MinPrice)
+		}
+
+		if result.MaxPrice > data.MaxPrice {
+			counter++
+			data.MaxPrice = result.MaxPrice
+			createDate = result.CreateDate
+			data.MaxDay = utils.TS2Date(result.CreateDate)
+
+		}
+	}
+	dateStr := time.Unix(createDate, 0).Format("2006-01-02")
+	if counter == 1 {
+		return fmt.Errorf("invalid data:%s", data.Secucode)
+	}
+	data.MaxPrice = utils.Decimal(data.MaxPrice)
+	data.PresentPrice = utils.Decimal(data.PresentPrice)
+	data.Decrease = utils.DecreasePercent(data.MaxPrice, data.PresentPrice)
+	data.DecreaseDay = fmt.Sprintf("%d&%s", counter, dateStr)
+	return nil
+}

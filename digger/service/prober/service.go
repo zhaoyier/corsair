@@ -24,8 +24,8 @@ func Start() {
 	go eastmoney.GetShareholderTicker()
 	go dawdle.GenLongLineTicker()
 	go dawdle.GenShortLineTicker()
-	// go dawdle.RecommendedLongTicker()
-	// go dawdle.RecommendedLongOnce()
+	go dawdle.GenRecommendedTicker()
+	// go dawdle.GenRecommendOnce()
 	// go eastmoney.GetCodeListOnce()
 	// go eastmoney.GetShareholderOnce()
 	// go dawdle.GenLongLineOnce()
@@ -35,7 +35,7 @@ func Start() {
 	// sina.GetDailyDataTmp("SZ.300897")
 	// dawdle.RecommendedLongTmp("SZ.300614")
 	// dawdle.GenLongLineTmp("SZ.300614")
-	dawdle.GenShortLineTmp("SZ.300614")
+	// dawdle.GenShortLineTmp("SZ.002923")
 	// utils.Decimal("ddd")
 
 	for range tk.C {
