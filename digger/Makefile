@@ -2,7 +2,7 @@ pub:
 	rm -rf service/internal/rpc/*
 	go generate && go build
 	mv digger /home/gopath/bin/
-	cp web/hold_recom.html /data/www/index.html
+	cp web/recommend_list.html /data/www/index.html
 	supervisorctl restart all
 	supervisorctl status
 

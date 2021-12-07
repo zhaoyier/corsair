@@ -14,8 +14,7 @@ import (
 )
 
 func GetCodeListTicker() {
-	// GetCodeList()
-
+	GetCodeList()
 	job.UpdateJob(trpc.FunctionType_FunctionTypeCodeList)
 }
 

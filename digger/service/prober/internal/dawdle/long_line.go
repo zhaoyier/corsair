@@ -20,9 +20,7 @@ var (
 
 func GenLongLineTicker() {
 	GenLongLine()
-
 	job.UpdateJob(trpc.FunctionType_FunctionTypeLongLine)
-
 }
 
 func GenLongLineOnce() {

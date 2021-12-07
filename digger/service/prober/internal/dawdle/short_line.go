@@ -131,14 +131,12 @@ func getDecreaseValue(secucode string) int32 {
 	if err != nil {
 		return GPShortDecrease
 	}
-	if result.Traded > int64(math.Pow10(11)*2) {
-		return GPShortDecrease - 10
-	} else if result.Traded > int64(math.Pow10(10)*5) {
+	if result.Traded > int64(math.Pow10(10)*5) {
 		return GPShortDecrease - 5
 	} else if result.Traded > int64(math.Pow10(10)) {
 		return GPShortDecrease
 	} else if result.Traded > int64(math.Pow10(9)) {
-		return GPShortDecrease
+		return GPShortDecrease + 2
 	} else {
 		return GPShortDecrease + 5
 	}

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
+	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/prober/internal/dawdle"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/prober/internal/eastmoney"
@@ -14,7 +15,7 @@ import (
 )
 
 func Start() {
-	tk := time.NewTicker(time.Hour * 1)
+	tk := time.NewTicker(time.Minute * 10)
 
 	// go dawdle.GenRecommendOnce()
 	// go eastmoney.GetCodeListOnce()
@@ -26,11 +27,19 @@ func Start() {
 	// dawdle.GenShortLineTmp("SZ.002923")
 
 	for range tk.C {
-		if utils.CheckFuncValid() {
+		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeCodeList) {
 			eastmoney.GetCodeListTicker()
+		}
+		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeShareholder) {
 			eastmoney.GetShareholderTicker()
+		}
+		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeLongLine) {
 			dawdle.GenLongLineTicker()
+		}
+		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeShortLine) {
 			dawdle.GenShortLineTicker()
+		}
+		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeRecommend) {
 			dawdle.GenRecommendTicker()
 		}
 	}

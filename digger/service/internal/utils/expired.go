@@ -4,13 +4,14 @@ import (
 	"strings"
 	"time"
 
+	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/job"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
 	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
 	log "github.com/Sirupsen/logrus"
 	"gopkg.in/mgo.v2"
 )
 
-func CheckFuncValid() bool {
+func CheckFuncValid(typ trpc.FunctionType) bool {
 	nowHour := time.Now().Local().Hour()
 	weekday := time.Now().Local().Weekday()
 	createDate := time.Now().Format("2006-01-02")
@@ -18,7 +19,7 @@ func CheckFuncValid() bool {
 		return false
 	}
 
-	if nowHour < 10 { //TODO 17
+	if nowHour < 17 { //TODO 17
 		return false
 	}
 
@@ -27,8 +28,18 @@ func CheckFuncValid() bool {
 		return false
 	}
 
-	if result != nil && len(result.Msg) >= int(trpc.FunctionType_FunctionTypeRecommend) {
+	if result == nil {
+		result = orm.JobMgr.MustFindOneByCreateDate(createDate)
+	}
+
+	if len(result.Msg) >= int(trpc.FunctionType_FunctionTypeRecommend) {
 		return false
+	}
+
+	if _, ok := result.Msg[typ.String()]; ok {
+		return false
+	} else {
+		job.UpdateJob(trpc.FunctionType_FunctionTypeCodeList)
 	}
 
 	return true
