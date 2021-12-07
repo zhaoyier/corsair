@@ -8,19 +8,15 @@ import (
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/job"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
 	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
-	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
 	log "github.com/Sirupsen/logrus"
 	ezdb "github.com/ezbuy/ezorm/db"
 	mgo "gopkg.in/mgo.v2"
 )
 
 func GetCodeListTicker() {
-	tk := time.NewTicker(time.Second * 10)
-	for range tk.C {
-		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeCodeList) {
-			GetCodeList()
-		}
-	}
+	// GetCodeList()
+
+	job.UpdateJob(trpc.FunctionType_FunctionTypeCodeList)
 }
 
 func GetCodeListOnce() {
@@ -45,13 +41,13 @@ func GetCodeList() {
 			continue
 		}
 
-		if err := updateCodeList(resp, col); err != nil {
+		if err := updateCodeList(resp, col); err != nil && mgo.IsDup(err) {
 			log.Errorf("update code list failed: %+v\n", err)
+			return
 		}
 
 		inc++
 	}
-	job.UpdateJob(trpc.FunctionType_FunctionTypeCodeList)
 }
 
 func updateCodeList(req *StockList, col *mgo.Collection) error {

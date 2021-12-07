@@ -19,12 +19,10 @@ var (
 )
 
 func GenShortLineTicker() {
-	tk := time.NewTicker(time.Second * 10)
-	for range tk.C {
-		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeShortLine) {
-			GenShortLineData()
-		}
-	}
+	GenShortLineData()
+
+	// 更新任务
+	job.UpdateJob(trpc.FunctionType_FunctionTypeShortLine)
 }
 
 func GenShortLineOnce() {
@@ -48,8 +46,6 @@ func GenShortLineData() {
 			log.Infof("gen short line failed: %s|%q", secucode.Secucode, err)
 		}
 	}
-	// 更新任务
-	job.UpdateJob(trpc.FunctionType_FunctionTypeShortLine)
 }
 
 //

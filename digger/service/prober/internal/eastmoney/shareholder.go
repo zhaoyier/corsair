@@ -24,12 +24,8 @@ var (
 )
 
 func GetShareholderTicker() {
-	tk := time.NewTicker(time.Second * 10)
-	for range tk.C {
-		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeShareholder) {
-			time.Sleep(15 * time.Second)
-		}
-	}
+	GetShareholder()
+	job.UpdateJob(trpc.FunctionType_FunctionTypeShareholder)
 }
 
 func GetShareholderOnce() {
@@ -52,19 +48,18 @@ func GetShareholder() {
 			continue
 		}
 
-		if err := applyShareholder(shareholder.Gdrs); err != nil {
+		if err := applyShareholder(shareholder.Gdrs); err != nil && mgo.IsDup(err) {
 			log.Errorf("apply share holder failed: %s|%q", secucode.Secucode, err)
+			return
 		}
 
-		if err := applyGDsdlt(shareholder.Sdltgd); err != nil {
+		if err := applyGDsdlt(shareholder.Sdltgd); err != nil && mgo.IsDup(err) {
 			log.Errorf("apply share holder failed: %s|%q", secucode.Secucode, err)
-			continue
+			return
 		}
 
 		log.Infof("%s succeed", secucode.Secucode)
 	}
-
-	job.UpdateJob(trpc.FunctionType_FunctionTypeShareholder)
 }
 
 func applyShareholder(data []Holder) error {

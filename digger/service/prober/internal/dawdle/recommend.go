@@ -20,12 +20,9 @@ var (
 )
 
 func GenRecommendTicker() {
-	tk := time.NewTicker(time.Second * 10)
-	for range tk.C {
-		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeRecommend) {
-			genRecommendData()
-		}
-	}
+	genRecommendData()
+	// 更新任务
+	job.UpdateJob(trpc.FunctionType_FunctionTypeRecommend)
 }
 
 func GenRecommendOnce() {
@@ -43,9 +40,6 @@ func genRecommendData() error {
 	for iter.Next(&data) {
 		getShortRecommendedData(data)
 	}
-
-	// 更新任务
-	job.UpdateJob(trpc.FunctionType_FunctionTypeRecommend)
 
 	return nil
 }
@@ -77,7 +71,6 @@ func getShortRecommendedData(data *orm.GPShortLine) error {
 	}
 
 	result.Name = data.Name
-
 	result.RMType = int32(trpc.RMType_RmTypeShort)
 	result.PDecrease = int32(decrease)
 	result.DecreaseTag = data.DecreaseTag

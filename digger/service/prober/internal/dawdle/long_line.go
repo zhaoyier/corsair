@@ -19,12 +19,10 @@ var (
 )
 
 func GenLongLineTicker() {
-	tk := time.NewTicker(time.Second * 10)
-	for range tk.C {
-		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeLongLine) {
-			GenLongLine()
-		}
-	}
+	GenLongLine()
+
+	job.UpdateJob(trpc.FunctionType_FunctionTypeLongLine)
+
 }
 
 func GenLongLineOnce() {
@@ -51,9 +49,6 @@ func GenLongLine() error {
 	for iter.Next(&secucode) {
 		getLongLineData(secucode.Secucode, start)
 	}
-
-	// 更新任务
-	job.UpdateJob(trpc.FunctionType_FunctionTypeLongLine)
 
 	return nil
 }
