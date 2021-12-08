@@ -332,7 +332,7 @@ func (wv *WeightData) CalPriceDiff() {
 func (wv *WeightData) GetWeight() int32 {
 	wv.weightOnce.Do(func() {
 		wr, weight := wv.wr, float64(0)
-		// log.Infof("==>>TODO 450: %+v|%+v|%+v", wv.Focus, wv.GPDaily.Closing, wv.Price[0])
+		// log.Infof("==>>TODO 450: %+v", wv)
 		// log.Infof("==>>TODO 451: %+v|%+v|%+v|%+v|%+v|%+v|%+v", wv.Secucode, wr.Price.Value, wr.Focus, wr.TotalNumRatio.Value, wr.AvgFreesharesRatio.Value, wr.HoldRatioTotal, wr.FreeholdRatioTotal)
 		// 判断与当前的差价率
 		if wv.Price[0] <= 0 || utils.GetRate(wv.GPDaily.Closing, wv.Price[0]) > 0.25 {
@@ -348,9 +348,10 @@ func (wv *WeightData) GetWeight() int32 {
 			return
 		}
 
-		// log.Infof("==>>TODO 458: %+v|%+v|%+v|%+v|%+v|%+v", wr.Price, wr.Focus, wr.TotalNumRatio.Value, wr.AvgFreesharesRatio.Value, wr.HoldRatioTotal, wr.FreeholdRatioTotal)
+		log.Infof("==>>TODO 458: %+v|%+v|%+v|%+v|%+v|%+v", wr.Price, wr.Focus, wr.TotalNumRatio.Value, wr.AvgFreesharesRatio.Value, wr.HoldRatioTotal, wr.FreeholdRatioTotal)
 		weight = wr.Price.Value + wr.Focus.Value + wr.TotalNumRatio.Value + wr.HoldRatioTotal + wr.FreeholdRatioTotal
 		wv.Weight = int32(weight)
+		// log.Infof("==>>TODO 459: %+v", args ...interface{})
 		// wv.Weight, _ = strconv.ParseFloat(fmt.Sprintf("%.1f", weight), 64)
 		log.Infof("cal weight: %+v|%+v", wv.Secucode, wv.Weight)
 	})

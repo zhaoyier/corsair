@@ -20,12 +20,13 @@ func GPRecommendList(in *gin.Context) {
 	resp := &trpc.GPRecommendListResp{
 		Rows: make([]*trpc.GPRecommend, 0),
 	}
-	results, err := orm.GPRecommendMgr.FindAll(query, "-pDecrease")
+
+	results, err := orm.GPRecommendMgr.FindAll(query, "-PDecrease")
 	if err != nil {
 		log.Errorf("query recommend failed: %q", err)
 	}
 	for idx, result := range results {
-		log.Infof("==>>TODO 321: %+v", result.Name)
+		// log.Infof("==>>TODO 321: %+v", result.Name)
 		resp.Rows = append(resp.Rows, &trpc.GPRecommend{
 			Id:         int32(idx + 1),
 			Secucode:   result.Secucode,
@@ -33,7 +34,7 @@ func GPRecommendList(in *gin.Context) {
 			RMIndex:    result.RMIndex,
 			PDecrease:  result.PDecrease,
 			MaxPrice:   result.MaxPrice,
-			MaxPDay:    result.MaxPDay,
+			MaxPDay:    utils.TS2Date(result.MaxPDay),
 			RMPrice:    result.RMPrice,
 			GDDecrease: getGDDecrease(result.Secucode),
 			UpdateDate: utils.TS2Date(result.UpdateDate),

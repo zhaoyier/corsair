@@ -31,12 +31,21 @@ func GenRecommendOnce() {
 	})
 }
 
+func GenRecommendTmp(secucode string) {
+	result, err := orm.GPShortLineMgr.FindOne(ezdb.M{"Secucode": secucode}, "-CreateDate")
+	if err != nil {
+		log.Errorf("query short line failed: %s|%q", secucode, err)
+		return
+	}
+	getShortRecommendedData(result)
+}
+
 func genRecommendData() error {
 	sess, col := orm.GPShortLineMgr.GetCol()
 	defer sess.Close()
 
 	var data *orm.GPShortLine
-	iter := col.Find(ezdb.M{"Disabled": false}).Batch(100).Prefetch(0.25).Iter()
+	iter := col.Find(ezdb.M{}).Batch(100).Prefetch(0.25).Iter()
 	for iter.Next(&data) {
 		getShortRecommendedData(data)
 	}
@@ -80,6 +89,9 @@ func getShortRecommendedData(data *orm.GPShortLine) error {
 	result.RMPrice = calRecommendPrice(result)
 	result.UpdateDate = time.Now().Unix()
 	result.RMIndex = getRecommendIndex(result)
+	result.Disabled = data.Disabled
+
+	log.Infof("==>>335:%+v", result, data)
 
 	if _, err := result.Save(); err != nil {
 		log.Errorf("save recommend failed: %s|%q", data.Secucode, err)

@@ -33,6 +33,7 @@ func GenShortLineOnce() {
 
 func GenShortLineTmp(secucode string) {
 	getShortLineData(secucode)
+	disabledShortLine(secucode)
 }
 
 func GenShortLineData() {
@@ -45,6 +46,10 @@ func GenShortLineData() {
 		if err := getShortLineData(secucode.Secucode); err != nil {
 			log.Infof("gen short line failed: %s|%q", secucode.Secucode, err)
 		}
+
+		if err := disabledShortLine(secucode.Secucode); err != nil {
+			log.Errorf("disabled short line failed: %s|%q", secucode, err)
+		}
 	}
 }
 
@@ -52,11 +57,14 @@ func GenShortLineData() {
 func getShortLineData(secucode string) error {
 	datets := utils.GetZeroTS()
 	code := utils.GetSecucode(secucode)
+	// log.Infof("==>>TODO 231: %+v|%+v", secucode, datets)
 	result, err := orm.GPShortLineMgr.FindOneBySecucodeCreateDate(secucode, datets)
 	if err != nil && err != mgo.ErrNotFound {
 		return err
 	}
 	if result == nil {
+		// log.Infof("==>>TODO 232: %+v|%+v", secucode, datets)
+
 		result = orm.GPShortLineMgr.NewGPShortLine()
 		result.Secucode = secucode
 		result.CreateDate = datets
@@ -67,7 +75,7 @@ func getShortLineData(secucode string) error {
 	result.TDecrease, _ = getShortLineDecrease(result, -60)
 	result.UpdateDate = time.Now().Unix()
 	decreaseTag := result.DecreaseTag - 10
-	// log.Infof("==>>TODO 231: %+v|%+v", result, decreaseTag)
+	// log.Infof("==>>TODO 235: %+v|%+v", result, decreaseTag)
 	if result.MDecrease < decreaseTag && result.TDecrease < decreaseTag {
 		log.Errorf("invalid decreaseTag: %s|%d|%d", secucode, result.MDecrease, result.TDecrease)
 		return nil
@@ -77,17 +85,12 @@ func getShortLineData(secucode string) error {
 		log.Errorf("apply short line failed: %s|%q", secucode, err)
 		return err
 	}
-
-	if err := disabledShortLine(secucode); err != nil {
-		log.Errorf("disabled short line failed: %s|%q", secucode, err)
-		return err
-	}
 	return nil
 }
 
 func getShortLineDecrease(data *orm.GPShortLine, days int) (int32, error) {
 	secucode := utils.GetSecucode(data.Secucode)
-	// log.Infof("==>>TODO 201: %+v|%+v", data.Secucode, secucode)
+	// log.Infof("==>>TODO 251: %+v|%+v", data, secucode)
 	tm := time.Now().AddDate(0, 0, days).Unix()
 	query := ezdb.M{
 		"Secucode":   secucode,
@@ -101,6 +104,7 @@ func getShortLineDecrease(data *orm.GPShortLine, days int) (int32, error) {
 	}
 
 	for idx, result := range results {
+		// log.Infof("==>>TODO 213: %+v", result)
 		if idx == 0 {
 			data.PresentPrice = math.Min(result.Closing, result.MinPrice)
 		}
@@ -111,14 +115,14 @@ func getShortLineDecrease(data *orm.GPShortLine, days int) (int32, error) {
 
 		if result.MaxPrice > data.MaxPrice {
 			data.MaxPrice = result.MaxPrice
-			data.MaxPDay = utils.TS2Date(result.CreateDate)
+			data.MaxPDay = result.CreateDate
 		}
 
 		if data.MinPrice == 0 || result.MinPrice < data.MinPrice {
 			data.MinPrice = result.MinPrice
 		}
 	}
-
+	// log.Infof("==>>TODO 258: %+v", data)
 	data.MaxPrice = utils.Decimal(data.MaxPrice)
 	return utils.DecreasePercent(data.MaxPrice, data.PresentPrice), nil
 }
@@ -146,10 +150,11 @@ func disabledShortLine(secucode string) error {
 	query := ezdb.M{
 		"Secucode":   secucode,
 		"CreateDate": ezdb.M{"$lt": utils.GetZeroTS()},
-		"Disabled":   true,
+		"Disabled":   false,
 	}
 
 	results, err := orm.GPShortLineMgr.FindAll(query)
+	// log.Infof("==>>TODO 242: %+v|%+v", err, len(results))
 	if err == mgo.ErrNotFound {
 		return nil
 	}
