@@ -4,10 +4,10 @@ import (
 	"strings"
 	"time"
 
-	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/job"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
 	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
 	log "github.com/Sirupsen/logrus"
+	ezdb "github.com/ezbuy/ezorm/db"
 	"gopkg.in/mgo.v2"
 )
 
@@ -32,66 +32,41 @@ func CheckFuncValid(typ trpc.FunctionType) bool {
 		result = orm.JobMgr.MustFindOneByCreateDate(createDate)
 	}
 
-	if len(result.Msg) >= int(trpc.FunctionType_FunctionTypeRecommend) {
-		return false
+	for key, val := range result.Msg {
+		if key == typ.String() {
+			return false
+		}
+
+		if !strings.Contains(val, "&") {
+			return false
+		}
 	}
 
-	if _, ok := result.Msg[typ.String()]; ok {
-		return false
-	} else {
-		job.UpdateJob(trpc.FunctionType_FunctionTypeCodeList)
-	}
+	updateJob(typ, result)
 
 	return true
 }
 
-func CheckFuncValid2(typ trpc.FunctionType) bool {
+func updateJob(typ trpc.FunctionType, result *orm.Job) {
+	sess, col := orm.JobMgr.GetCol()
+	defer sess.Close()
 
-	nowHour := time.Now().Local().Hour()
-	weekday := time.Now().Local().Weekday()
-	createDate := time.Now().Format("2006-01-02")
-	if weekday == time.Saturday || weekday == time.Sunday {
-		return false
+	if len(result.Msg) == 0 {
+		result.Msg = make(map[string]string)
 	}
 
-	if nowHour > 17 { //TODO
-		return false
+	result.Msg[typ.String()] = TS2Date(time.Now().Unix())
+	query := ezdb.M{"CreateDate": result.CreateDate}
+	update := ezdb.M{
+		"$set": ezdb.M{
+			"Msg":        result.Msg,
+			"UpdateDate": time.Now().Unix(),
+		},
 	}
 
-	result, err := orm.JobMgr.FindOne(createDate)
-	log.Infof("==>>TODO 201: %+v", typ.String())
-	if err != nil {
-		return typ == trpc.FunctionType_FunctionTypeCodeList
+	if err := col.Update(query, update); err != nil {
+		log.Errorf("update job failed: %q", err)
 	}
-
-	log.Infof("==>>TODO 203: %+v", typ.String())
-	if _, ok := result.Msg[typ.String()]; ok { //重复的
-		return false
-	}
-
-	var max int32
-	for key := range result.Msg {
-		val := getFunctionNum(key)
-		if max < val {
-			max = val
-		}
-	}
-
-	if max == 0 && typ != trpc.FunctionType_FunctionTypeCodeList { //不是第一个
-		return false
-	}
-
-	diff := int32(typ) - max
-	if diff != 1 {
-		return false
-	}
-
-	mtp := trpc.FunctionType(max)
-	if diff == 1 && !strings.Contains(result.Msg[mtp.String()], "-") {
-		return false
-	}
-
-	return true
 }
 
 func getFunctionNum(typ string) int32 {

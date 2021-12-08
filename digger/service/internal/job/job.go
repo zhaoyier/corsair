@@ -28,7 +28,7 @@ func UpdateJob(typ trpc.FunctionType) {
 	if !ok {
 		result.Msg[typ.String()] = utils.TS2Date(time.Now().Unix())
 	} else {
-		result.Msg[typ.String()] = fmt.Sprintf("%s-%s", val, utils.TS2Date(time.Now().Unix()))
+		result.Msg[typ.String()] = fmt.Sprintf("%s&%s", val, utils.TS2Date(time.Now().Unix()))
 	}
 
 	change := mgo.Change{
@@ -44,24 +44,4 @@ func UpdateJob(typ trpc.FunctionType) {
 	}
 
 	col.Find(query).Apply(change, nil)
-
-	// result, err := orm.JobMgr.FindOne(createDate)
-	// if err != nil {
-	// 	result = orm.JobMgr.NewJob()
-	// 	result.CreateDate = createDate
-	// 	result.Msg = make(map[string]string)
-	// }
-
-	// val, ok := result.Msg[typ.String()]
-	// if !ok {
-	// 	result.Msg[typ.String()] = fmt.Sprintf("%s-%s", typ.String(), utils.TS2Date(time.Now().Unix()))
-	// } else {
-	// 	result.Msg[typ.String()] = fmt.Sprintf("%s-%s", val, utils.TS2Date(time.Now().Unix()))
-	// }
-
-	// result.UpdateDate = time.Now().Unix()
-	// log.Infof("==>>TODO 332: %+v", result.Msg)
-	// if _, err := result.Save(); err != nil {
-	// 	log.Errorf("save job failed: %s|%q", createDate, err)
-	// }
 }
