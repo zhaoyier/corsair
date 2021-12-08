@@ -20,7 +20,7 @@ func GPRecommendList(in *gin.Context) {
 	resp := &trpc.GPRecommendListResp{
 		Rows: make([]*trpc.GPRecommend, 0),
 	}
-	results, err := orm.GPRecommendMgr.FindAll(query, "-pDecrease", "-rMIndex")
+	results, err := orm.GPRecommendMgr.FindAll(query, "-pDecrease")
 	if err != nil {
 		log.Errorf("query recommend failed: %q", err)
 	}
