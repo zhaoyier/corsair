@@ -25,7 +25,7 @@ func GPRecommendList(in *gin.Context) {
 		log.Errorf("query recommend failed: %q", err)
 	}
 	for idx, result := range results {
-		log.Infof("==>>TODO 321: %+v")
+		log.Infof("==>>TODO 321: %+v", result.Name)
 		resp.Rows = append(resp.Rows, &trpc.GPRecommend{
 			Id:         int32(idx + 1),
 			Secucode:   result.Secucode,
