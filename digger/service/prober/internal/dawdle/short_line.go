@@ -138,11 +138,11 @@ func getDecreaseValue(secucode string) int32 {
 	var counter int
 	result, sdecrease := results[0], GPShortDecrease
 
-	if result.Traded > int64(math.Pow10(10)*5) {
+	if result.Traded > int64(math.Pow10(10)*5) { //>= 500
 		sdecrease = GPShortDecrease - 5
-	} else if result.Traded > int64(math.Pow10(10)) {
+	} else if result.Traded > int64(math.Pow10(10)) { // >= 100
 		sdecrease = GPShortDecrease
-	} else if result.Traded > int64(math.Pow10(9)) {
+	} else if result.Traded > int64(math.Pow10(9)) { // >= 10
 		sdecrease = GPShortDecrease + 2
 	} else {
 		sdecrease = GPShortDecrease + 5
@@ -154,7 +154,7 @@ func getDecreaseValue(secucode string) int32 {
 		}
 	}
 	if counter >= 2 {
-		sdecrease += 10
+		sdecrease += 8
 	}
 
 	return sdecrease
