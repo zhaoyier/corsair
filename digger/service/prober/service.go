@@ -15,13 +15,13 @@ import (
 )
 
 func Start() {
-	tk := time.NewTicker(time.Minute * 10)
+	tk := time.NewTicker(time.Minute * 100)
 
 	// go eastmoney.GetCodeListOnce()
 	// go eastmoney.GetShareholderOnce()
 	// go dawdle.GenLongLineOnce()
 	// go dawdle.GenShortLineOnce()
-	// go dawdle.GenRecommendOnce()
+	go dawdle.GenRecommendOnce()
 
 	// dawdle.GenRecommendTmp("SH.603213")
 	// dawdle.GenLongLineTmp("SH.603213")

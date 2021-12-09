@@ -54,14 +54,6 @@ func genRecommendData() error {
 }
 
 func getShortRecommendedData(data *orm.GPShortLine) error {
-	query := ezdb.M{
-		"Secucode": data.Secucode,
-	}
-
-	gdrenshu, err := orm.GDLongLineMgr.FindOne(query, "-CreateDate")
-	if err != nil && err != mgo.ErrNotFound {
-		return err
-	}
 
 	result := getGPRecommend(data.Secucode)
 	decrease := math.Max(float64(data.MDecrease), float64(data.TDecrease))
@@ -75,9 +67,6 @@ func getShortRecommendedData(data *orm.GPShortLine) error {
 		result.State = int32(trpc.RMState_RMStateUnknown)
 		return nil
 	}
-	if gdrenshu != nil {
-		result.GDDecrease = gdrenshu.GDReduceRatio
-	}
 
 	result.Name = data.Name
 	result.RMType = int32(trpc.RMType_RmTypeShort)
@@ -90,8 +79,7 @@ func getShortRecommendedData(data *orm.GPShortLine) error {
 	result.UpdateDate = time.Now().Unix()
 	result.RMIndex = getRecommendIndex(result)
 	result.Disabled = data.Disabled
-
-	log.Infof("==>>335:%+v", result, data)
+	result.GDDecrease = getGDDecrease(data.Secucode)
 
 	if _, err := result.Save(); err != nil {
 		log.Errorf("save recommend failed: %s|%q", data.Secucode, err)
@@ -140,5 +128,58 @@ func getGPRecommend(secucode string) *orm.GPRecommend {
 		result.Secucode = secucode
 		result.CreateDate = time.Now().Unix()
 	}
+
 	return result
+}
+
+func disabledRecommend(secucode string) {
+	query := ezdb.M{
+		"Secucode": secucode,
+	}
+
+	update := ezdb.M{
+		"$set": ezdb.M{
+			"Disabled":   true,
+			"UpdateDate": time.Now().Unix(),
+		},
+	}
+
+	sess, col := orm.GPRecommendMgr.GetCol()
+	defer sess.Close()
+
+	if err := col.Update(query, update); err != nil {
+		log.Errorf("update recommend failed: %q", err)
+	}
+}
+
+func getGDDecrease(secucode string) int32 {
+	query := ezdb.M{
+		"Secucode": secucode,
+	}
+
+	gdrenshu, err := orm.GDLongLineMgr.FindOne(query, "-CreateDate")
+	if err != nil && err != mgo.ErrNotFound {
+		log.Errorf("get long line failed: %s|%q", secucode, err)
+		return 0
+	}
+	if gdrenshu != nil {
+		return gdrenshu.GDReduceRatio
+	}
+
+	results, err := orm.GDRenshuMgr.Find(query, 0, 2, "-EndDate")
+	if err != nil {
+		log.Errorf("get gd renshu failed: %s|%q", secucode, err)
+		return 0
+	}
+
+	for _, result := range results {
+		return int32(result.TotalNumRatio)
+	}
+
+	r1, r2 := results[0], results[1]
+	if r1.EndDate-r2.EndDate > 90*86400 {
+		return int32(r1.TotalNumRatio)
+	}
+
+	return int32(r1.TotalNumRatio + r2.TotalNumRatio)
 }

@@ -138,7 +138,7 @@ func applyLongLine(wv *WeightData) error {
 	}
 
 	if _, err := result.Save(); err != nil {
-		log.Errorf("save recommend failed: %s|%q", wv.Secucode, err)
+		log.Errorf("save long line failed: %s|%q", wv.Secucode, err)
 		return err
 	}
 

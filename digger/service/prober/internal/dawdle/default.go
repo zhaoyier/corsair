@@ -31,7 +31,7 @@ const (
 	dateDiff        int64   = 60 * 86400
 	accum           float64 = 15
 	GPLongDecrease  int32   = 30
-	GPShortDecrease int32   = 35
+	GPShortDecrease int32   = 40
 	ValueIndexTag   int32   = 80
 )
 
@@ -348,7 +348,7 @@ func (wv *WeightData) GetWeight() int32 {
 			return
 		}
 
-		log.Infof("==>>TODO 458: %+v|%+v|%+v|%+v|%+v|%+v", wr.Price, wr.Focus, wr.TotalNumRatio.Value, wr.AvgFreesharesRatio.Value, wr.HoldRatioTotal, wr.FreeholdRatioTotal)
+		// log.Infof("==>>TODO 458: %+v|%+v|%+v|%+v|%+v|%+v", wr.Price, wr.Focus, wr.TotalNumRatio.Value, wr.AvgFreesharesRatio.Value, wr.HoldRatioTotal, wr.FreeholdRatioTotal)
 		weight = wr.Price.Value + wr.Focus.Value + wr.TotalNumRatio.Value + wr.HoldRatioTotal + wr.FreeholdRatioTotal
 		wv.Weight = int32(weight)
 		// log.Infof("==>>TODO 459: %+v", args ...interface{})
