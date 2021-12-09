@@ -64,7 +64,6 @@ func getShortLineData(secucode string) error {
 	}
 	if result == nil {
 		// log.Infof("==>>TODO 232: %+v|%+v", secucode, datets)
-
 		result = orm.GPShortLineMgr.NewGPShortLine()
 		result.Secucode = secucode
 		result.CreateDate = datets
@@ -131,19 +130,34 @@ func getDecreaseValue(secucode string) int32 {
 	query := ezdb.M{
 		"Secucode": secucode,
 	}
-	result, err := orm.GPDailyMgr.FindOne(query, "-CreateDate")
+	results, err := orm.GPDailyMgr.Find(query, 2, 0, "-CreateDate")
 	if err != nil {
 		return GPShortDecrease
 	}
+
+	var counter int
+	result, sdecrease := results[0], GPShortDecrease
+
 	if result.Traded > int64(math.Pow10(10)*5) {
-		return GPShortDecrease - 5
+		sdecrease = GPShortDecrease - 5
 	} else if result.Traded > int64(math.Pow10(10)) {
-		return GPShortDecrease
+		sdecrease = GPShortDecrease
 	} else if result.Traded > int64(math.Pow10(9)) {
-		return GPShortDecrease + 2
+		sdecrease = GPShortDecrease + 2
 	} else {
-		return GPShortDecrease + 5
+		sdecrease = GPShortDecrease + 5
 	}
+
+	for idx, result := range results {
+		if result.Rise <= -9.8 && counter >= idx {
+			counter++
+		}
+	}
+	if counter >= 2 {
+		sdecrease += 10
+	}
+
+	return sdecrease
 }
 
 func disabledShortLine(secucode string) error {

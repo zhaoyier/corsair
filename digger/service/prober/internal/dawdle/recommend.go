@@ -45,8 +45,9 @@ func genRecommendData() error {
 	defer sess.Close()
 
 	var data *orm.GPShortLine
-	iter := col.Find(ezdb.M{}).Batch(100).Prefetch(0.25).Iter()
+	iter := col.Find(ezdb.M{"Disabled": false}).Batch(100).Prefetch(0.25).Iter()
 	for iter.Next(&data) {
+		// log.Infof("==>>TODO 101:%+v", data)
 		getShortRecommendedData(data)
 	}
 
@@ -122,12 +123,18 @@ func calRecommendPrice(data *orm.GPRecommend) string {
 }
 
 func getGPRecommend(secucode string) *orm.GPRecommend {
-	result, err := orm.GPRecommendMgr.FindOneBySecucodeDisabled(secucode, false)
-	if err != nil || result == nil {
-		result = orm.GPRecommendMgr.NewGPRecommend()
-		result.Secucode = secucode
-		result.CreateDate = time.Now().Unix()
-	}
+	// result, err := orm.GPRecommendMgr.FindOneBySecucodeDisabled(secucode, false)
+	// if err != nil || result == nil {
+	// 	result = orm.GPRecommendMgr.NewGPRecommend()
+	// 	result.Secucode = secucode
+	// 	result.CreateDate = time.Now().Unix()
+	// }
+
+	go disabledRecommend(secucode)
+
+	result := orm.GPRecommendMgr.NewGPRecommend()
+	result.Secucode = secucode
+	result.CreateDate = time.Now().Unix()
 
 	return result
 }
@@ -147,7 +154,7 @@ func disabledRecommend(secucode string) {
 	sess, col := orm.GPRecommendMgr.GetCol()
 	defer sess.Close()
 
-	if err := col.Update(query, update); err != nil {
+	if _, err := col.UpdateAll(query, update); err != nil {
 		log.Errorf("update recommend failed: %q", err)
 	}
 }
@@ -166,7 +173,7 @@ func getGDDecrease(secucode string) int32 {
 		return gdrenshu.GDReduceRatio
 	}
 
-	results, err := orm.GDRenshuMgr.Find(query, 0, 2, "-EndDate")
+	results, err := orm.GDRenshuMgr.Find(query, 2, 0, "-EndDate")
 	if err != nil {
 		log.Errorf("get gd renshu failed: %s|%q", secucode, err)
 		return 0
