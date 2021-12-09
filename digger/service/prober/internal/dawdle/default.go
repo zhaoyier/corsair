@@ -31,7 +31,7 @@ const (
 	dateDiff        int64   = 60 * 86400
 	accum           float64 = 15
 	GPLongDecrease  int32   = 30
-	GPShortDecrease int32   = 40
+	GPShortDecrease int32   = 36
 	ValueIndexTag   int32   = 80
 )
 
