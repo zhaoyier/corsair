@@ -31,6 +31,9 @@ func GPRecommendList(in *gin.Context) {
 	if err != nil {
 		log.Errorf("query recommend failed: %q", err)
 	}
+
+	resp.Total = int32(orm.GPRecommendMgr.Count(query))
+
 	for idx, result := range results {
 		resp.Rows = append(resp.Rows, &trpc.GPRecommend{
 			Id:         int32(idx + 1),
