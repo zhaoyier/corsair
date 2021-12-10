@@ -42,11 +42,12 @@ message GPRecommend {
     string name = 3;
     int32 rMIndex = 4;
     int32 pDecrease = 5;
-    double maxPrice = 6;    //最高价
+    double maxPrice = 6;        //最高价
     string maxPDay = 10;       //最高距离现在
     string rMPrice = 11;
     int32 gDDecrease = 12;
-    string updateDate=13;
+    string state = 13;          //状态
+    string updateDate=14;
 }
 
 message GPRecommendListResp {

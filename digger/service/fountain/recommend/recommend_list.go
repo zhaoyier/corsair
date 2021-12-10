@@ -2,6 +2,7 @@ package recommend
 
 import (
 	"net/http"
+	"strconv"
 
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
 	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
@@ -12,21 +13,25 @@ import (
 )
 
 func GPRecommendList(in *gin.Context) {
-	query := ezdb.M{
-		"Disabled": false,
-		"State":    ezdb.M{"$gte": 1},
-	}
-
+	limit, _ := strconv.Atoi(in.Query("limit"))
+	offset, _ := strconv.Atoi(in.Query("offset"))
 	resp := &trpc.GPRecommendListResp{
 		Rows: make([]*trpc.GPRecommend, 0),
 	}
 
-	results, err := orm.GPRecommendMgr.FindAll(query, "-PDecrease")
+	query := ezdb.M{
+		"Disabled": false,
+	}
+
+	if limit <= 0 {
+		limit = 10
+	}
+
+	results, err := orm.GPRecommendMgr.Find(query, limit, offset, "-PDecrease", "-State", "GDDecrease")
 	if err != nil {
 		log.Errorf("query recommend failed: %q", err)
 	}
 	for idx, result := range results {
-		// log.Infof("==>>TODO 321: %+v", result.Name)
 		resp.Rows = append(resp.Rows, &trpc.GPRecommend{
 			Id:         int32(idx + 1),
 			Secucode:   result.Secucode,
@@ -37,6 +42,7 @@ func GPRecommendList(in *gin.Context) {
 			MaxPDay:    utils.TS2Date(result.MaxPDay),
 			RMPrice:    result.RMPrice,
 			GDDecrease: result.GDDecrease,
+			State:      getState(result.State),
 			UpdateDate: utils.TS2Date(result.UpdateDate),
 		})
 	}
@@ -60,4 +66,20 @@ func getGDDecrease(secucode string) int32 {
 		return 0
 	}
 	return result.GDReduceRatio
+}
+
+func getState(state int32) string {
+	switch state {
+	case 1:
+		return "准备"
+	case 2:
+		return "开始"
+	case 3:
+		return "进行中"
+	case 4:
+		return "结束"
+	default:
+		return "准备"
+	}
+
 }

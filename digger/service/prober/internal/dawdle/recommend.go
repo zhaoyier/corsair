@@ -47,7 +47,7 @@ func genRecommendData() error {
 	var data *orm.GPShortLine
 	iter := col.Find(ezdb.M{"Disabled": false}).Batch(100).Prefetch(0.25).Iter()
 	for iter.Next(&data) {
-		// log.Infof("==>>TODO 101:%+v", data)
+		log.Infof("==>>TODO 101:%+v", data.Name)
 		getShortRecommendedData(data)
 	}
 
@@ -55,7 +55,6 @@ func genRecommendData() error {
 }
 
 func getShortRecommendedData(data *orm.GPShortLine) error {
-
 	result := getGPRecommend(data.Secucode)
 	decrease := math.Max(float64(data.MDecrease), float64(data.TDecrease))
 	if decrease >= float64(data.DecreaseTag)+5 {
@@ -66,7 +65,6 @@ func getShortRecommendedData(data *orm.GPShortLine) error {
 		result.State = int32(trpc.RMState_RMStatePrepared)
 	} else {
 		result.State = int32(trpc.RMState_RMStateUnknown)
-		return nil
 	}
 
 	result.Name = data.Name
@@ -123,18 +121,12 @@ func calRecommendPrice(data *orm.GPRecommend) string {
 }
 
 func getGPRecommend(secucode string) *orm.GPRecommend {
-	// result, err := orm.GPRecommendMgr.FindOneBySecucodeDisabled(secucode, false)
-	// if err != nil || result == nil {
-	// 	result = orm.GPRecommendMgr.NewGPRecommend()
-	// 	result.Secucode = secucode
-	// 	result.CreateDate = time.Now().Unix()
-	// }
-
-	go disabledRecommend(secucode)
-
-	result := orm.GPRecommendMgr.NewGPRecommend()
-	result.Secucode = secucode
-	result.CreateDate = time.Now().Unix()
+	result, err := orm.GPRecommendMgr.FindOneBySecucodeDisabled(secucode, false)
+	if err != nil || result == nil {
+		result = orm.GPRecommendMgr.NewGPRecommend()
+		result.Secucode = secucode
+		result.CreateDate = time.Now().Unix()
+	}
 
 	return result
 }
