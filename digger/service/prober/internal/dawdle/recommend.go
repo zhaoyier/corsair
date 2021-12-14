@@ -166,13 +166,13 @@ func getGDDecrease(secucode string) int32 {
 	}
 
 	results, err := orm.GDRenshuMgr.Find(query, 2, 0, "-EndDate")
-	if err != nil {
+	if err != nil || len(results) == 0 {
 		log.Errorf("get gd renshu failed: %s|%q", secucode, err)
 		return 0
 	}
 
-	for _, result := range results {
-		return int32(result.TotalNumRatio)
+	if len(results) == 1 {
+		return int32(results[0].TotalNumRatio)
 	}
 
 	r1, r2 := results[0], results[1]

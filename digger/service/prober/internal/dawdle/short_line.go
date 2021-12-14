@@ -105,7 +105,7 @@ func getShortLineDecrease(data *orm.GPShortLine, days int) (int32, error) {
 	for idx, result := range results {
 		// log.Infof("==>>TODO 213: %+v", result)
 		if idx == 0 {
-			data.PresentPrice = math.Min(result.Closing, result.MinPrice)
+			data.PresentPrice = result.Closing
 		}
 
 		if data.Name == "" {
@@ -135,7 +135,6 @@ func getDecreaseValue(secucode string) int32 {
 		return GPShortDecrease
 	}
 
-	var counter int
 	result, sdecrease := results[0], GPShortDecrease
 
 	if result.Traded > int64(math.Pow10(10)*5) { //>= 500
@@ -145,16 +144,7 @@ func getDecreaseValue(secucode string) int32 {
 	} else if result.Traded > int64(math.Pow10(9)) { // >= 10
 		sdecrease = GPShortDecrease + 2
 	} else {
-		sdecrease = GPShortDecrease + 5
-	}
-
-	for idx, result := range results {
-		if result.Rise <= -9.8 && counter >= idx {
-			counter++
-		}
-	}
-	if counter >= 2 {
-		sdecrease += 8
+		sdecrease = GPShortDecrease + 3
 	}
 
 	return sdecrease
