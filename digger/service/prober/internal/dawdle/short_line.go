@@ -102,10 +102,12 @@ func getShortLineDecrease(data *orm.GPShortLine, days int) (int32, error) {
 		return 0, err
 	}
 
+	var minPrice float64
 	for idx, result := range results {
 		// log.Infof("==>>TODO 213: %+v", result)
 		if idx == 0 {
 			data.PresentPrice = result.Closing
+			minPrice = result.MinPrice
 		}
 
 		if data.Name == "" {
@@ -123,7 +125,7 @@ func getShortLineDecrease(data *orm.GPShortLine, days int) (int32, error) {
 	}
 	// log.Infof("==>>TODO 258: %+v", data)
 	data.MaxPrice = utils.Decimal(data.MaxPrice)
-	return utils.DecreasePercent(data.MaxPrice, data.PresentPrice), nil
+	return utils.DecreasePercent(data.MaxPrice, minPrice), nil
 }
 
 func getDecreaseValue(secucode string) int32 {
