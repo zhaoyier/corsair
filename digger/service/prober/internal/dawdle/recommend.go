@@ -56,6 +56,7 @@ func genRecommendData() error {
 
 func getShortRecommendedData(data *orm.GPShortLine) error {
 	result := getGPRecommend(data.Secucode)
+	data.DecreaseTag = getDecreaseTag(data.Secucode, data.DecreaseTag)
 	decrease := math.Max(float64(data.MDecrease), float64(data.TDecrease))
 	if decrease >= float64(data.DecreaseTag)+5 {
 		result.State = int32(trpc.RMState_RMStateInProgress)
@@ -115,9 +116,9 @@ func calRecommendPrice(data *orm.GPRecommend) string {
 
 	tag := utils.Decimal(1 - utils.GetPercentum(data.DecreaseTag))
 	// log.Infof("==>>TODO 311: %+v|%+v", price, tag)
-	max, per, min := utils.Decimal(tag+0.03), utils.Decimal(tag), utils.Decimal(tag-0.05)
+	max, per, min := utils.Decimal(tag+0.03), utils.Decimal(tag-0.01), utils.Decimal(tag-0.05)
 	// log.Infof("==>>TODO 312: %+v|%+v|%+v", max, per, min)
-	return fmt.Sprintf("%.1f(1)-%.1f(2)-%.1f(3)", math.Floor(price*max), math.Floor(price*per), math.Floor(price*min))
+	return fmt.Sprintf("%.1f(1)-%.1f(2)-%.1f(3)", price*max, price*per, price*min)
 }
 
 func getGPRecommend(secucode string) *orm.GPRecommend {
@@ -181,4 +182,12 @@ func getGDDecrease(secucode string) int32 {
 	}
 
 	return int32(r1.TotalNumRatio + r2.TotalNumRatio)
+}
+
+func getDecreaseTag(secucode string, tag int32) int32 {
+	result, err := orm.GPDelayMgr.FindOneBySecucodeDisabled(secucode, false)
+	if err != nil {
+		return tag
+	}
+	return result.DecreaseTag
 }

@@ -169,3 +169,18 @@ Job:
       - CreateDate: string  #年月日
       - UpdateDate: datetime
     uniques: [[CreateDate]] 
+
+#延迟配置
+GPDelay:
+  db: mongo
+  dbname: digger
+  fields:
+    - Secucode: string 
+    - Name: string
+    - Disabled: bool
+    - DecreaseTag: int32
+    - EffectiveDate: string
+    - CreateDate: datetime  
+    - UpdateDate: datetime
+  uniques: [[Secucode,Disabled]]
+  indexes: [[Secucode],[Name]]

@@ -15,17 +15,22 @@ import (
 )
 
 func Start() {
-	tk := time.NewTicker(time.Minute * 100)
+	tk := time.NewTicker(time.Minute * 10)
 
 	// go eastmoney.GetCodeListOnce()
 	// go eastmoney.GetShareholderOnce()
 	// go dawdle.GenLongLineOnce()
 	// go dawdle.GenShortLineOnce()
-	// go dawdle.GenRecommendOnce()
+	go dawdle.GenRecommendOnce()
 
 	// dawdle.GenRecommendTmp("SH.603213")
 	// dawdle.GenLongLineTmp("SH.603213")
 	// dawdle.GenShortLineTmp("SZ.002923")
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+	tk.Stop()
 
 	for range tk.C {
 		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeCodeList) {
@@ -45,10 +50,6 @@ func Start() {
 		}
 	}
 
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-	<-quit
-	tk.Stop()
 }
 
 func init() {
