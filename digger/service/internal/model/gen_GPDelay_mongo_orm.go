@@ -28,15 +28,6 @@ func initGPDelayIndex() {
 	defer session.Close()
 
 	if err := collection.EnsureIndex(mgo.Index{
-		Key:        []string{"Secucode", "Disabled"},
-		Unique:     true,
-		Background: true,
-		Sparse:     true,
-	}); err != nil {
-		panic("ensureIndex digger.GPDelay SecucodeDisabled error:" + err.Error())
-	}
-
-	if err := collection.EnsureIndex(mgo.Index{
 		Key:        []string{"Secucode"},
 		Background: true,
 		Sparse:     true,
@@ -50,6 +41,15 @@ func initGPDelayIndex() {
 		Sparse:     true,
 	}); err != nil {
 		panic("ensureIndex digger.GPDelay Name error:" + err.Error())
+	}
+
+	if err := collection.EnsureIndex(mgo.Index{
+		Key:        []string{"Secucode", "Disabled"},
+		Unique:     true,
+		Background: true,
+		Sparse:     true,
+	}); err != nil {
+		panic("ensureIndex digger.GPDelay SecucodeDisabled error:" + err.Error())
 	}
 
 }
@@ -180,6 +180,24 @@ func (o *_GPDelayMgr) NQuery(query interface{}, limit, offset int, sortFields []
 
 	return session, q
 }
+func (o *_GPDelayMgr) FindBySecucode(Secucode string, limit int, offset int, sortFields ...string) (result []*GPDelay, err error) {
+	query := db.M{
+		"Secucode": Secucode,
+	}
+	session, q := GPDelayMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
+}
+func (o *_GPDelayMgr) FindByName(Name string, limit int, offset int, sortFields ...string) (result []*GPDelay, err error) {
+	query := db.M{
+		"Name": Name,
+	}
+	session, q := GPDelayMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
+}
 func (o *_GPDelayMgr) FindOneBySecucodeDisabled(Secucode string, Disabled bool) (result *GPDelay, err error) {
 	query := db.M{
 		"Secucode": Secucode,
@@ -211,24 +229,6 @@ func (o *_GPDelayMgr) RemoveBySecucodeDisabled(Secucode string, Disabled bool) (
 		"Disabled": Disabled,
 	}
 	return col.Remove(query)
-}
-func (o *_GPDelayMgr) FindBySecucode(Secucode string, limit int, offset int, sortFields ...string) (result []*GPDelay, err error) {
-	query := db.M{
-		"Secucode": Secucode,
-	}
-	session, q := GPDelayMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
-}
-func (o *_GPDelayMgr) FindByName(Name string, limit int, offset int, sortFields ...string) (result []*GPDelay, err error) {
-	query := db.M{
-		"Name": Name,
-	}
-	session, q := GPDelayMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
 }
 
 func (o *_GPDelayMgr) Find(query interface{}, limit int, offset int, sortFields ...string) (result []*GPDelay, err error) {

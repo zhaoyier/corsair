@@ -21,16 +21,11 @@ func Start() {
 	// go eastmoney.GetShareholderOnce()
 	// go dawdle.GenLongLineOnce()
 	// go dawdle.GenShortLineOnce()
-	// go dawdle.GenRecommendOnce()
+	go dawdle.GenRecommendOnce()
 
 	// dawdle.GenRecommendTmp("SH.603213")
 	// dawdle.GenLongLineTmp("SH.603213")
 	// dawdle.GenShortLineTmp("SZ.002923")
-
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-	<-quit
-	tk.Stop()
 
 	for range tk.C {
 		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeCodeList) {
@@ -49,6 +44,13 @@ func Start() {
 			dawdle.GenRecommendTicker()
 		}
 	}
+
+	go func(tk *time.Ticker) {
+		quit := make(chan os.Signal, 1)
+		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+		<-quit
+		tk.Stop()
+	}(tk)
 
 }
 
