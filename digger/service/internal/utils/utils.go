@@ -138,3 +138,11 @@ func GetSecucode(secucode string) string {
 	}
 	return ""
 }
+
+func String2Float64(data string) float64 {
+	result, err := strconv.ParseFloat(data, 64)
+	if err != nil {
+		return 0
+	}
+	return result
+}

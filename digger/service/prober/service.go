@@ -25,7 +25,7 @@ func Start() {
 
 	// dawdle.GenRecommendTmp("SH.603213")
 	// dawdle.GenLongLineTmp("SH.603213")
-	// dawdle.GenShortLineTmp("SZ.002923")
+	// dawdle.GenShortLineTmp("SZ.301138")
 
 	for range tk.C {
 		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeCodeList) {
@@ -43,6 +43,8 @@ func Start() {
 		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeRecommend) {
 			dawdle.GenRecommendTicker()
 		}
+
+		dawdle.UpdatePresentPrice()
 	}
 
 	go func(tk *time.Ticker) {

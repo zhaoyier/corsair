@@ -67,8 +67,15 @@ func updateCodeList(req *StockList, col *mgo.Collection) error {
 		case "603":
 		case "688":
 			exchange = "SH"
+		case "835":
+		case "836":
+			exchange = "BJ"
 		default:
 			exchange = "SZ"
+		}
+
+		if exchange == "BJ" {
+			continue
 		}
 
 		if err := applyCNSecucode(val.Secucode, exchange, val.Name, col); err != nil {
@@ -77,7 +84,6 @@ func updateCodeList(req *StockList, col *mgo.Collection) error {
 		if err := applyGPDaily(val, exchange); err != nil {
 			log.Errorf("apply failed: %+v|%+v\n", val, err)
 		}
-
 	}
 
 	return nil

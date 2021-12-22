@@ -8,6 +8,7 @@ import (
 	// log "github.com/Sirupsen/logrus"
 )
 
+// data[3] current p
 func GetSinaDayDetail(code string) ([]string, error) {
 	url := fmt.Sprintf("http://hq.sinajs.cn/list=%s", strings.ToLower(code))
 	method := "GET"

@@ -48,9 +48,16 @@ message GPRecommend {
     int32 gDDecrease = 12;
     string state = 13;          //状态
     string updateDate=14;
+    double presentPrice = 15;
 }
 
 message GPRecommendListResp {
     repeated GPRecommend rows = 1;
     int32 total = 2;
+}
+
+message RecommendSort {
+    int32 idx = 1;
+    string secucode = 2;
+    int32 ratio = 3;
 }

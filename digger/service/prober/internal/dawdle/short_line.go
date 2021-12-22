@@ -118,9 +118,10 @@ func getShortLineDecrease(data *orm.GPShortLine, days int) (int32, error) {
 			data.MaxPrice = result.MaxPrice
 			data.MaxPDay = result.CreateDate
 		}
-
-		if data.MinPrice == 0 || result.MinPrice < data.MinPrice {
+		// log.Infof("==>>TODO 256: %+v|%+v", data.MinPrice, result.MinPrice)
+		if data.MinPrice == 0 || (result.MinPrice != 0 && result.MinPrice < data.MinPrice) {
 			data.MinPrice = result.MinPrice
+			// log.Infof("==>>TODO 257: %+v|%+v", data.MinPrice, result.MinPrice)
 		}
 	}
 	// log.Infof("==>>TODO 258: %+v", data)

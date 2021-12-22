@@ -2,7 +2,9 @@ package recommend
 
 import (
 	"net/http"
+	"sort"
 	"strconv"
+	"strings"
 
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
 	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
@@ -36,19 +38,23 @@ func GPRecommendList(in *gin.Context) {
 
 	for idx, result := range results {
 		resp.Rows = append(resp.Rows, &trpc.GPRecommend{
-			Id:         int32(idx + 1),
-			Secucode:   result.Secucode,
-			Name:       result.Name, //getName(result.Secucode),
-			RMIndex:    result.RMIndex,
-			PDecrease:  result.PDecrease,
-			MaxPrice:   result.MaxPrice,
-			MaxPDay:    utils.TS2Date(result.MaxPDay),
-			RMPrice:    result.RMPrice,
-			GDDecrease: result.GDDecrease,
-			State:      getState(result.State),
-			UpdateDate: utils.TS2Date(result.UpdateDate),
+			Id:           int32(idx + 1),
+			Secucode:     result.Secucode,
+			Name:         result.Name, //getName(result.Secucode),
+			RMIndex:      result.RMIndex,
+			PDecrease:    result.PDecrease,
+			MaxPrice:     result.MaxPrice,
+			MaxPDay:      utils.TS2Date(result.MaxPDay),
+			RMPrice:      result.RMPrice,
+			GDDecrease:   result.GDDecrease,
+			State:        getState(result.State),
+			UpdateDate:   utils.TS2Date(result.UpdateDate),
+			PresentPrice: result.PresentPrice,
 		})
 	}
+
+	resp.Rows = sortRecommend(resp.Rows)
+
 	in.JSON(http.StatusOK, resp)
 }
 
@@ -84,5 +90,34 @@ func getState(state int32) string {
 	default:
 		return "准备"
 	}
+}
 
+func sortRecommend(rows []*trpc.GPRecommend) []*trpc.GPRecommend {
+	list := make([]*trpc.GPRecommend, 0, len(rows))
+	results := make([]*trpc.RecommendSort, 0, len(rows))
+
+	for idx, row := range rows {
+		results = append(results, &trpc.RecommendSort{
+			Idx:      int32(idx),
+			Secucode: row.Secucode,
+			Ratio:    getRMPriceRation(row.RMPrice, row.PresentPrice),
+		})
+	}
+	sort.Slice(results, func(i, j int) bool {
+		return results[i].Ratio < results[j].Ratio
+	})
+
+	for _, result := range results {
+		list = append(list, rows[result.Idx])
+	}
+	return list
+}
+
+func getRMPriceRation(price string, present float64) int32 {
+	results := strings.Split(price, "(")
+	rmPrice := utils.String2Float64(results[0])
+	if rmPrice == 0 {
+		return 100
+	}
+	return int32(((present - rmPrice) / rmPrice) * 100)
 }
