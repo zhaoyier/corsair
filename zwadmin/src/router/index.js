@@ -73,6 +73,18 @@ export const constantRoutes = [
         name: 'Tree',
         component: () => import('@/views/tree/index'),
         meta: { title: 'Tree', icon: 'tree' }
+      },
+      {
+        path: 'stock/recommend',
+        name: '推荐列表',
+        component: () => import('@/views/stock/recommend/index'),
+        meta: { title: '推荐列表', icon: 'tree' }
+      },
+      {
+        path: 'stock/shareholder',
+        name: '股东列表',
+        component: () => import('@/views/stock/shareholder/index'),
+        meta: { title: '股东列表', icon: 'tree' }
       }
     ]
   },
