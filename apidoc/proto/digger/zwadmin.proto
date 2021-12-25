@@ -1,0 +1,92 @@
+syntax = "proto3";
+ 
+option go_package="./;digger";
+package digger;
+
+service ZWAdmin {
+    rpc UserLogin(UserLoginReq) returns(UserLoginResp);
+    rpc UserInfo(UserInfoReq) returns(UserInfoResp);
+    rpc UserLogout(UserLogoutReq) returns(UserLogoutResp);
+    rpc GetRecommendList(GetRecommendListReq) returns(GetRecommendListResp);
+}
+
+
+message GetRecommendListReq {
+
+}
+
+message RecommendData {
+    int32 id = 1;
+    string secucode = 2;
+    string name = 3;
+    int32 rMIndex = 4;
+    int32 pDecrease = 5;
+    double maxPrice = 6;        //最高价
+    string maxPDay = 10;       //最高距离现在
+    string rMPrice = 11;
+    int32 gDDecrease = 12;
+    string state = 13;          //状态
+    string updateDate=14;
+    double presentPrice = 15;
+}
+
+message GetRecommendListResp {
+    repeated RecommendData rows = 1;
+    int32 total = 2;
+}
+
+
+
+// type MyJsonName struct {
+// 	Code int64 `json:"code"`
+// 	Data struct {
+// 		Items []struct {
+// 			Author      string `json:"author"`
+// 			DisplayTime string `json:"display_time"`
+// 			ID          string `json:"id"`
+// 			Pageviews   int64  `json:"pageviews"`
+// 			Status      string `json:"status"`
+// 			Title       string `json:"title"`
+// 		} `json:"items"`
+// 		Total int64 `json:"total"`
+// 	} `json:"data"`
+// }
+
+
+message UserLogoutReq {
+
+}
+
+message UserLogoutResp {
+    int32 code = 1;
+}
+
+message UserInfoData {
+    string avatar = 1;
+    string introduction = 2;
+    string name = 3;
+    repeated string roles = 4;
+}
+
+message UserInfoReq {
+    
+}
+
+message UserInfoResp {
+    int32 code = 1;
+    UserInfoData data = 2;
+}
+
+message UserLoginReq {
+    string username = 1;
+    string password = 2;
+}
+
+message LoginData {
+    string token = 1;
+}
+
+message UserLoginResp {
+    int32 code = 1;
+    LoginData data = 2;
+}

@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	admin "git.ezbuy.me/ezbuy/corsair/digger/service/fountain/internal/zwadmin"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/fountain/recommend"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
 	"github.com/ezbuy/ezorm/db"
@@ -22,4 +23,21 @@ func startRoute(router *gin.Engine) {
 	})
 	// 推荐列表
 	router.GET("/api/digger.Fountain/GPRecommendList", recommend.GPRecommendList)
+	// user := router.Group("/api/user")
+	// user.POST("/login", admin.Login)
+	// user.POST("/logout", admin.Logout)
+	// user.GET("/info", admin.UserInfo)
+
+	userGroup := router.Group("/api/user")
+	{
+		userGroup.POST("/login", admin.Login)
+		userGroup.POST("/logout", admin.Logout)
+		userGroup.GET("/info", admin.UserInfo)
+	}
+	stockGroup := router.Group("/api/stock")
+	{
+		stockGroup.POST("/GetRecommendList", recommend.GPRecommendList)
+	}
+
+	// /api/user/info
 }
