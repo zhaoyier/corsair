@@ -58,6 +58,53 @@ func GPRecommendList(in *gin.Context) {
 	in.JSON(http.StatusOK, resp)
 }
 
+func GetRecommend(in *gin.Context) {
+	limit, _ := strconv.Atoi(in.Query("limit"))
+	offset, _ := strconv.Atoi(in.Query("offset"))
+	resp := &trpc.GetRecommendResp{
+		Code: 20000,
+		Data: &trpc.RecommendData{
+			Items: make([]*trpc.RecommendItem, 0),
+		},
+	}
+
+	query := ezdb.M{
+		"Disabled": false,
+	}
+
+	if limit <= 0 {
+		limit = 10
+	}
+
+	results, err := orm.GPRecommendMgr.Find(query, limit, offset, "-PDecrease", "-State", "GDDecrease")
+	if err != nil {
+		log.Errorf("query recommend failed: %q", err)
+	}
+
+	resp.Data.Total = int32(orm.GPRecommendMgr.Count(query))
+
+	for idx, result := range results {
+		resp.Data.Items = append(resp.Data.Items, &trpc.RecommendItem{
+			Id:           int32(idx + 1),
+			Secucode:     result.Secucode,
+			Name:         result.Name, //getName(result.Secucode),
+			RMIndex:      result.RMIndex,
+			PDecrease:    result.PDecrease,
+			MaxPrice:     result.MaxPrice,
+			MaxPDay:      utils.TS2Date(result.MaxPDay),
+			RMPrice:      result.RMPrice,
+			GDDecrease:   result.GDDecrease,
+			State:        getState(result.State),
+			UpdateDate:   utils.TS2Date(result.UpdateDate),
+			PresentPrice: result.PresentPrice,
+		})
+	}
+
+	resp.Data.Items = sortRecommend2(resp.Data.Items)
+
+	in.JSON(http.StatusOK, resp)
+}
+
 func getName(secucode string) string {
 	result, err := orm.CNSecucodeMgr.FindOneBySecucode(secucode)
 	if err != nil {
@@ -94,6 +141,27 @@ func getState(state int32) string {
 
 func sortRecommend(rows []*trpc.GPRecommend) []*trpc.GPRecommend {
 	list := make([]*trpc.GPRecommend, 0, len(rows))
+	results := make([]*trpc.RecommendSort, 0, len(rows))
+
+	for idx, row := range rows {
+		results = append(results, &trpc.RecommendSort{
+			Idx:      int32(idx),
+			Secucode: row.Secucode,
+			Ratio:    getRMPriceRation(row.RMPrice, row.PresentPrice),
+		})
+	}
+	sort.Slice(results, func(i, j int) bool {
+		return results[i].Ratio < results[j].Ratio
+	})
+
+	for _, result := range results {
+		list = append(list, rows[result.Idx])
+	}
+	return list
+}
+
+func sortRecommend2(rows []*trpc.RecommendItem) []*trpc.RecommendItem {
+	list := make([]*trpc.RecommendItem, 0, len(rows))
 	results := make([]*trpc.RecommendSort, 0, len(rows))
 
 	for idx, row := range rows {

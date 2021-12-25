@@ -28,20 +28,20 @@ func initCNSecucodeIndex() {
 	defer session.Close()
 
 	if err := collection.EnsureIndex(mgo.Index{
-		Key:        []string{"Name"},
-		Background: true,
-		Sparse:     true,
-	}); err != nil {
-		panic("ensureIndex digger.CNSecucode Name error:" + err.Error())
-	}
-
-	if err := collection.EnsureIndex(mgo.Index{
 		Key:        []string{"Secucode"},
 		Unique:     true,
 		Background: true,
 		Sparse:     true,
 	}); err != nil {
 		panic("ensureIndex digger.CNSecucode Secucode error:" + err.Error())
+	}
+
+	if err := collection.EnsureIndex(mgo.Index{
+		Key:        []string{"Name"},
+		Background: true,
+		Sparse:     true,
+	}); err != nil {
+		panic("ensureIndex digger.CNSecucode Name error:" + err.Error())
 	}
 
 }
@@ -172,15 +172,6 @@ func (o *_CNSecucodeMgr) NQuery(query interface{}, limit, offset int, sortFields
 
 	return session, q
 }
-func (o *_CNSecucodeMgr) FindByName(Name string, limit int, offset int, sortFields ...string) (result []*CNSecucode, err error) {
-	query := db.M{
-		"Name": Name,
-	}
-	session, q := CNSecucodeMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
-}
 func (o *_CNSecucodeMgr) FindOneBySecucode(Secucode string) (result *CNSecucode, err error) {
 	query := db.M{
 		"Secucode": Secucode,
@@ -209,6 +200,15 @@ func (o *_CNSecucodeMgr) RemoveBySecucode(Secucode string) (err error) {
 		"Secucode": Secucode,
 	}
 	return col.Remove(query)
+}
+func (o *_CNSecucodeMgr) FindByName(Name string, limit int, offset int, sortFields ...string) (result []*CNSecucode, err error) {
+	query := db.M{
+		"Name": Name,
+	}
+	session, q := CNSecucodeMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
 }
 
 func (o *_CNSecucodeMgr) Find(query interface{}, limit int, offset int, sortFields ...string) (result []*CNSecucode, err error) {

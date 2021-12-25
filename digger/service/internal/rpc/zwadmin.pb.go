@@ -34,39 +34,57 @@ var _ = strings.TrimPrefix
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
-type GPRecommendListReq struct {
+type GetRecommendReq struct {
+	//
+	Limit int32 `protobuf:"varint,1,opt,name=limit,proto3" json:"limit"`
+	//
+	Offset int32 `protobuf:"varint,2,opt,name=offset,proto3" json:"offset"`
 }
 
-func (m *GPRecommendListReq) Validate() error {
+func (m *GetRecommendReq) Validate() error {
 	return nil
 }
 
-func (m *GPRecommendListReq) Reset()         { *m = GPRecommendListReq{} }
-func (m *GPRecommendListReq) String() string { return proto.CompactTextString(m) }
-func (*GPRecommendListReq) ProtoMessage()    {}
-func (*GPRecommendListReq) Descriptor() ([]byte, []int) {
+func (m *GetRecommendReq) Reset()         { *m = GetRecommendReq{} }
+func (m *GetRecommendReq) String() string { return proto.CompactTextString(m) }
+func (*GetRecommendReq) ProtoMessage()    {}
+func (*GetRecommendReq) Descriptor() ([]byte, []int) {
 	return fileDescriptor_2a29ab15f05ba3dc, []int{0}
 }
 
-func (m *GPRecommendListReq) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GPRecommendListReq.Unmarshal(m, b)
+func (m *GetRecommendReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetRecommendReq.Unmarshal(m, b)
 }
-func (m *GPRecommendListReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GPRecommendListReq.Marshal(b, m, deterministic)
+func (m *GetRecommendReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetRecommendReq.Marshal(b, m, deterministic)
 }
-func (m *GPRecommendListReq) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GPRecommendListReq.Merge(m, src)
+func (m *GetRecommendReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetRecommendReq.Merge(m, src)
 }
-func (m *GPRecommendListReq) XXX_Size() int {
-	return xxx_messageInfo_GPRecommendListReq.Size(m)
+func (m *GetRecommendReq) XXX_Size() int {
+	return xxx_messageInfo_GetRecommendReq.Size(m)
 }
-func (m *GPRecommendListReq) XXX_DiscardUnknown() {
-	xxx_messageInfo_GPRecommendListReq.DiscardUnknown(m)
+func (m *GetRecommendReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetRecommendReq.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_GPRecommendListReq proto.InternalMessageInfo
+var xxx_messageInfo_GetRecommendReq proto.InternalMessageInfo
 
-type GPRecommend struct {
+func (m *GetRecommendReq) GetLimit() int32 {
+	if m != nil {
+		return m.Limit
+	}
+	return 0
+}
+
+func (m *GetRecommendReq) GetOffset() int32 {
+	if m != nil {
+		return m.Offset
+	}
+	return 0
+}
+
+type RecommendItem struct {
 	//
 	Id int32 `protobuf:"varint,1,opt,name=id,proto3" json:"id"`
 	//
@@ -93,167 +111,217 @@ type GPRecommend struct {
 	PresentPrice float64 `protobuf:"fixed64,15,opt,name=presentPrice,proto3" json:"presentPrice"`
 }
 
-func (m *GPRecommend) Validate() error {
+func (m *RecommendItem) Validate() error {
 	return nil
 }
 
-func (m *GPRecommend) Reset()         { *m = GPRecommend{} }
-func (m *GPRecommend) String() string { return proto.CompactTextString(m) }
-func (*GPRecommend) ProtoMessage()    {}
-func (*GPRecommend) Descriptor() ([]byte, []int) {
+func (m *RecommendItem) Reset()         { *m = RecommendItem{} }
+func (m *RecommendItem) String() string { return proto.CompactTextString(m) }
+func (*RecommendItem) ProtoMessage()    {}
+func (*RecommendItem) Descriptor() ([]byte, []int) {
 	return fileDescriptor_2a29ab15f05ba3dc, []int{1}
 }
 
-func (m *GPRecommend) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GPRecommend.Unmarshal(m, b)
+func (m *RecommendItem) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RecommendItem.Unmarshal(m, b)
 }
-func (m *GPRecommend) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GPRecommend.Marshal(b, m, deterministic)
+func (m *RecommendItem) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RecommendItem.Marshal(b, m, deterministic)
 }
-func (m *GPRecommend) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GPRecommend.Merge(m, src)
+func (m *RecommendItem) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RecommendItem.Merge(m, src)
 }
-func (m *GPRecommend) XXX_Size() int {
-	return xxx_messageInfo_GPRecommend.Size(m)
+func (m *RecommendItem) XXX_Size() int {
+	return xxx_messageInfo_RecommendItem.Size(m)
 }
-func (m *GPRecommend) XXX_DiscardUnknown() {
-	xxx_messageInfo_GPRecommend.DiscardUnknown(m)
+func (m *RecommendItem) XXX_DiscardUnknown() {
+	xxx_messageInfo_RecommendItem.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_GPRecommend proto.InternalMessageInfo
+var xxx_messageInfo_RecommendItem proto.InternalMessageInfo
 
-func (m *GPRecommend) GetId() int32 {
+func (m *RecommendItem) GetId() int32 {
 	if m != nil {
 		return m.Id
 	}
 	return 0
 }
 
-func (m *GPRecommend) GetSecucode() string {
+func (m *RecommendItem) GetSecucode() string {
 	if m != nil {
 		return m.Secucode
 	}
 	return ""
 }
 
-func (m *GPRecommend) GetName() string {
+func (m *RecommendItem) GetName() string {
 	if m != nil {
 		return m.Name
 	}
 	return ""
 }
 
-func (m *GPRecommend) GetRMIndex() int32 {
+func (m *RecommendItem) GetRMIndex() int32 {
 	if m != nil {
 		return m.RMIndex
 	}
 	return 0
 }
 
-func (m *GPRecommend) GetPDecrease() int32 {
+func (m *RecommendItem) GetPDecrease() int32 {
 	if m != nil {
 		return m.PDecrease
 	}
 	return 0
 }
 
-func (m *GPRecommend) GetMaxPrice() float64 {
+func (m *RecommendItem) GetMaxPrice() float64 {
 	if m != nil {
 		return m.MaxPrice
 	}
 	return 0
 }
 
-func (m *GPRecommend) GetMaxPDay() string {
+func (m *RecommendItem) GetMaxPDay() string {
 	if m != nil {
 		return m.MaxPDay
 	}
 	return ""
 }
 
-func (m *GPRecommend) GetRMPrice() string {
+func (m *RecommendItem) GetRMPrice() string {
 	if m != nil {
 		return m.RMPrice
 	}
 	return ""
 }
 
-func (m *GPRecommend) GetGDDecrease() int32 {
+func (m *RecommendItem) GetGDDecrease() int32 {
 	if m != nil {
 		return m.GDDecrease
 	}
 	return 0
 }
 
-func (m *GPRecommend) GetState() string {
+func (m *RecommendItem) GetState() string {
 	if m != nil {
 		return m.State
 	}
 	return ""
 }
 
-func (m *GPRecommend) GetUpdateDate() string {
+func (m *RecommendItem) GetUpdateDate() string {
 	if m != nil {
 		return m.UpdateDate
 	}
 	return ""
 }
 
-func (m *GPRecommend) GetPresentPrice() float64 {
+func (m *RecommendItem) GetPresentPrice() float64 {
 	if m != nil {
 		return m.PresentPrice
 	}
 	return 0
 }
 
-type GPRecommendListResp struct {
+type RecommendData struct {
 	//
-	Rows []*GPRecommend `protobuf:"bytes,1,rep,name=rows,proto3" json:"rows"`
+	Total int32 `protobuf:"varint,1,opt,name=total,proto3" json:"total"`
 	//
-	Total int32 `protobuf:"varint,2,opt,name=total,proto3" json:"total"`
+	Items []*RecommendItem `protobuf:"bytes,2,rep,name=items,proto3" json:"items"`
 }
 
-func (m *GPRecommendListResp) Validate() error {
+func (m *RecommendData) Validate() error {
 	return nil
 }
 
-func (m *GPRecommendListResp) Reset()         { *m = GPRecommendListResp{} }
-func (m *GPRecommendListResp) String() string { return proto.CompactTextString(m) }
-func (*GPRecommendListResp) ProtoMessage()    {}
-func (*GPRecommendListResp) Descriptor() ([]byte, []int) {
+func (m *RecommendData) Reset()         { *m = RecommendData{} }
+func (m *RecommendData) String() string { return proto.CompactTextString(m) }
+func (*RecommendData) ProtoMessage()    {}
+func (*RecommendData) Descriptor() ([]byte, []int) {
 	return fileDescriptor_2a29ab15f05ba3dc, []int{2}
 }
 
-func (m *GPRecommendListResp) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GPRecommendListResp.Unmarshal(m, b)
+func (m *RecommendData) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RecommendData.Unmarshal(m, b)
 }
-func (m *GPRecommendListResp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GPRecommendListResp.Marshal(b, m, deterministic)
+func (m *RecommendData) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RecommendData.Marshal(b, m, deterministic)
 }
-func (m *GPRecommendListResp) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GPRecommendListResp.Merge(m, src)
+func (m *RecommendData) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RecommendData.Merge(m, src)
 }
-func (m *GPRecommendListResp) XXX_Size() int {
-	return xxx_messageInfo_GPRecommendListResp.Size(m)
+func (m *RecommendData) XXX_Size() int {
+	return xxx_messageInfo_RecommendData.Size(m)
 }
-func (m *GPRecommendListResp) XXX_DiscardUnknown() {
-	xxx_messageInfo_GPRecommendListResp.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_GPRecommendListResp proto.InternalMessageInfo
-
-func (m *GPRecommendListResp) GetRows() []*GPRecommend {
-	if m != nil {
-		return m.Rows
-	}
-	return nil
+func (m *RecommendData) XXX_DiscardUnknown() {
+	xxx_messageInfo_RecommendData.DiscardUnknown(m)
 }
 
-func (m *GPRecommendListResp) GetTotal() int32 {
+var xxx_messageInfo_RecommendData proto.InternalMessageInfo
+
+func (m *RecommendData) GetTotal() int32 {
 	if m != nil {
 		return m.Total
 	}
 	return 0
+}
+
+func (m *RecommendData) GetItems() []*RecommendItem {
+	if m != nil {
+		return m.Items
+	}
+	return nil
+}
+
+type GetRecommendResp struct {
+	//
+	Code int32 `protobuf:"varint,1,opt,name=code,proto3" json:"code"`
+	//
+	Data *RecommendData `protobuf:"bytes,2,opt,name=data,proto3" json:"data"`
+}
+
+func (m *GetRecommendResp) Validate() error {
+	return nil
+}
+
+func (m *GetRecommendResp) Reset()         { *m = GetRecommendResp{} }
+func (m *GetRecommendResp) String() string { return proto.CompactTextString(m) }
+func (*GetRecommendResp) ProtoMessage()    {}
+func (*GetRecommendResp) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2a29ab15f05ba3dc, []int{3}
+}
+
+func (m *GetRecommendResp) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetRecommendResp.Unmarshal(m, b)
+}
+func (m *GetRecommendResp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetRecommendResp.Marshal(b, m, deterministic)
+}
+func (m *GetRecommendResp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetRecommendResp.Merge(m, src)
+}
+func (m *GetRecommendResp) XXX_Size() int {
+	return xxx_messageInfo_GetRecommendResp.Size(m)
+}
+func (m *GetRecommendResp) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetRecommendResp.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetRecommendResp proto.InternalMessageInfo
+
+func (m *GetRecommendResp) GetCode() int32 {
+	if m != nil {
+		return m.Code
+	}
+	return 0
+}
+
+func (m *GetRecommendResp) GetData() *RecommendData {
+	if m != nil {
+		return m.Data
+	}
+	return nil
 }
 
 type UserLogoutReq struct {
@@ -267,7 +335,7 @@ func (m *UserLogoutReq) Reset()         { *m = UserLogoutReq{} }
 func (m *UserLogoutReq) String() string { return proto.CompactTextString(m) }
 func (*UserLogoutReq) ProtoMessage()    {}
 func (*UserLogoutReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{3}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{4}
 }
 
 func (m *UserLogoutReq) XXX_Unmarshal(b []byte) error {
@@ -301,7 +369,7 @@ func (m *UserLogoutResp) Reset()         { *m = UserLogoutResp{} }
 func (m *UserLogoutResp) String() string { return proto.CompactTextString(m) }
 func (*UserLogoutResp) ProtoMessage()    {}
 func (*UserLogoutResp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{4}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{5}
 }
 
 func (m *UserLogoutResp) XXX_Unmarshal(b []byte) error {
@@ -348,7 +416,7 @@ func (m *UserInfoData) Reset()         { *m = UserInfoData{} }
 func (m *UserInfoData) String() string { return proto.CompactTextString(m) }
 func (*UserInfoData) ProtoMessage()    {}
 func (*UserInfoData) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{5}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{6}
 }
 
 func (m *UserInfoData) XXX_Unmarshal(b []byte) error {
@@ -408,7 +476,7 @@ func (m *UserInfoReq) Reset()         { *m = UserInfoReq{} }
 func (m *UserInfoReq) String() string { return proto.CompactTextString(m) }
 func (*UserInfoReq) ProtoMessage()    {}
 func (*UserInfoReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{6}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{7}
 }
 
 func (m *UserInfoReq) XXX_Unmarshal(b []byte) error {
@@ -444,7 +512,7 @@ func (m *UserInfoResp) Reset()         { *m = UserInfoResp{} }
 func (m *UserInfoResp) String() string { return proto.CompactTextString(m) }
 func (*UserInfoResp) ProtoMessage()    {}
 func (*UserInfoResp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{7}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{8}
 }
 
 func (m *UserInfoResp) XXX_Unmarshal(b []byte) error {
@@ -494,7 +562,7 @@ func (m *UserLoginReq) Reset()         { *m = UserLoginReq{} }
 func (m *UserLoginReq) String() string { return proto.CompactTextString(m) }
 func (*UserLoginReq) ProtoMessage()    {}
 func (*UserLoginReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{8}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{9}
 }
 
 func (m *UserLoginReq) XXX_Unmarshal(b []byte) error {
@@ -542,7 +610,7 @@ func (m *LoginData) Reset()         { *m = LoginData{} }
 func (m *LoginData) String() string { return proto.CompactTextString(m) }
 func (*LoginData) ProtoMessage()    {}
 func (*LoginData) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{9}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{10}
 }
 
 func (m *LoginData) XXX_Unmarshal(b []byte) error {
@@ -585,7 +653,7 @@ func (m *UserLoginResp) Reset()         { *m = UserLoginResp{} }
 func (m *UserLoginResp) String() string { return proto.CompactTextString(m) }
 func (*UserLoginResp) ProtoMessage()    {}
 func (*UserLoginResp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{10}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{11}
 }
 
 func (m *UserLoginResp) XXX_Unmarshal(b []byte) error {
@@ -621,9 +689,10 @@ func (m *UserLoginResp) GetData() *LoginData {
 }
 
 func init() {
-	proto.RegisterType((*GPRecommendListReq)(nil), "digger.GPRecommendListReq")
-	proto.RegisterType((*GPRecommend)(nil), "digger.GPRecommend")
-	proto.RegisterType((*GPRecommendListResp)(nil), "digger.GPRecommendListResp")
+	proto.RegisterType((*GetRecommendReq)(nil), "digger.GetRecommendReq")
+	proto.RegisterType((*RecommendItem)(nil), "digger.RecommendItem")
+	proto.RegisterType((*RecommendData)(nil), "digger.RecommendData")
+	proto.RegisterType((*GetRecommendResp)(nil), "digger.GetRecommendResp")
 	proto.RegisterType((*UserLogoutReq)(nil), "digger.UserLogoutReq")
 	proto.RegisterType((*UserLogoutResp)(nil), "digger.UserLogoutResp")
 	proto.RegisterType((*UserInfoData)(nil), "digger.UserInfoData")
@@ -637,43 +706,45 @@ func init() {
 func init() { proto.RegisterFile("digger/zwadmin.proto", fileDescriptor_2a29ab15f05ba3dc) }
 
 var fileDescriptor_2a29ab15f05ba3dc = []byte{
-	// 563 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x04, 0x03, 0x02, 0x01, 0x02, 0xff, 0x74, 0x54, 0x4f, 0x6b, 0xdb, 0x4e,
-	0x10, 0x45, 0x8e, 0xed, 0x44, 0x23, 0xff, 0xe1, 0x37, 0xd6, 0x2f, 0x08, 0xb7, 0x14, 0x57, 0xb4,
-	0xd4, 0x27, 0x07, 0x5c, 0x0a, 0x85, 0x9c, 0x5a, 0x4c, 0x4b, 0x82, 0x0b, 0x41, 0xb4, 0x14, 0x72,
-	0xdb, 0x4a, 0x5b, 0x23, 0x1a, 0x6b, 0x37, 0xbb, 0xeb, 0x3a, 0xed, 0xb5, 0x1f, 0xb0, 0x5f, 0xa9,
-	0xec, 0xac, 0x25, 0xcb, 0x8e, 0x7d, 0xdb, 0xf7, 0x66, 0x76, 0xe6, 0xed, 0x9b, 0x91, 0x20, 0xcc,
-	0xf2, 0xc5, 0x82, 0xab, 0x8b, 0xdf, 0x6b, 0x96, 0x2d, 0xf3, 0x62, 0x22, 0x95, 0x30, 0x02, 0xdb,
-	0x8e, 0x8d, 0x43, 0xc0, 0x8f, 0x37, 0x09, 0x4f, 0xc5, 0x72, 0xc9, 0x8b, 0x6c, 0x9e, 0x6b, 0x93,
-	0xf0, 0xfb, 0xf8, 0x6f, 0x03, 0x82, 0x1a, 0x8d, 0x3d, 0x68, 0xe4, 0x59, 0xe4, 0x8d, 0xbc, 0x71,
-	0x2b, 0x69, 0xe4, 0x19, 0x0e, 0xe1, 0x4c, 0xf3, 0x74, 0x95, 0x8a, 0x8c, 0x47, 0x8d, 0x91, 0x37,
-	0xf6, 0x93, 0x0a, 0x23, 0x42, 0xb3, 0x60, 0x4b, 0x1e, 0x9d, 0x10, 0x4f, 0x67, 0x8c, 0xe0, 0x54,
-	0x7d, 0xba, 0x2a, 0x32, 0xfe, 0x10, 0x35, 0xa9, 0x48, 0x09, 0xf1, 0x29, 0xf8, 0x72, 0xc6, 0x53,
-	0xc5, 0x99, 0xe6, 0x51, 0x8b, 0x62, 0x5b, 0xc2, 0xf6, 0x59, 0xb2, 0x87, 0x1b, 0x95, 0xa7, 0x3c,
-	0x6a, 0x8f, 0xbc, 0xb1, 0x97, 0x54, 0xd8, 0xd6, 0xb4, 0xe7, 0x19, 0xfb, 0x15, 0x01, 0xb5, 0x2a,
-	0xa1, 0xeb, 0xe6, 0x2e, 0x05, 0x2e, 0xb2, 0x81, 0xf8, 0x0c, 0x60, 0x31, 0xab, 0xda, 0x75, 0xa8,
-	0x5d, 0x8d, 0xc1, 0x10, 0x5a, 0xda, 0x30, 0xc3, 0xa3, 0x2e, 0xdd, 0x73, 0xc0, 0xde, 0x5a, 0xc9,
-	0x8c, 0x19, 0x3e, 0xb3, 0xa1, 0x1e, 0x85, 0x6a, 0x0c, 0xc6, 0xd0, 0x91, 0x8a, 0x6b, 0x5e, 0x18,
-	0xd7, 0xb4, 0x4f, 0x4a, 0x77, 0xb8, 0xf8, 0x33, 0x0c, 0x1e, 0xf9, 0xac, 0x25, 0xbe, 0x82, 0xa6,
-	0x12, 0x6b, 0x1d, 0x79, 0xa3, 0x93, 0x71, 0x30, 0x1d, 0x4c, 0xdc, 0x54, 0x26, 0xb5, 0xd4, 0x84,
-	0x12, 0xac, 0x32, 0x23, 0x0c, 0xbb, 0x23, 0xbb, 0x5b, 0x89, 0x03, 0x71, 0x1f, 0xba, 0x5f, 0x34,
-	0x57, 0x73, 0xb1, 0x10, 0x2b, 0x1a, 0xdc, 0x0b, 0xe8, 0xd5, 0x09, 0x2d, 0xed, 0x38, 0x68, 0x4c,
-	0x6e, 0x78, 0x74, 0x8e, 0x0d, 0x74, 0x6c, 0xd6, 0x55, 0xf1, 0x5d, 0xcc, 0x98, 0x61, 0x78, 0x0e,
-	0x6d, 0xf6, 0x93, 0x19, 0xa6, 0x28, 0xcb, 0x4f, 0x36, 0xc8, 0x3e, 0x2c, 0x2f, 0x8c, 0x12, 0xd9,
-	0x2a, 0x35, 0xb9, 0x28, 0x36, 0xa3, 0xde, 0xe1, 0x0e, 0x8e, 0x3b, 0x84, 0x96, 0x12, 0x77, 0x5c,
-	0x47, 0xcd, 0xd1, 0x89, 0xb5, 0x91, 0x40, 0xdc, 0x85, 0xa0, 0xec, 0x6a, 0xa5, 0xce, 0xb7, 0x22,
-	0x8e, 0x09, 0xc5, 0x31, 0x34, 0x33, 0x66, 0x18, 0x35, 0x0e, 0xa6, 0x61, 0x69, 0x4f, 0x5d, 0x7c,
-	0x42, 0x19, 0xf1, 0x07, 0x57, 0x6d, 0x2e, 0x16, 0x79, 0x91, 0xf0, 0x7b, 0xbb, 0x39, 0x2b, 0xcd,
-	0x15, 0x49, 0x73, 0x8f, 0xaa, 0xb0, 0x8d, 0x49, 0xa6, 0xf5, 0x5a, 0xa8, 0xac, 0xdc, 0xde, 0x12,
-	0xc7, 0xcf, 0xc1, 0xa7, 0x1a, 0xe4, 0x0b, 0x99, 0xfe, 0x83, 0x17, 0x9b, 0x0a, 0x0e, 0xc4, 0xd7,
-	0x95, 0xe9, 0xb6, 0xd5, 0x11, 0xe5, 0x2f, 0x77, 0x94, 0xff, 0x57, 0x2a, 0xaf, 0x6a, 0x3b, 0xd9,
-	0xd3, 0x3f, 0x0d, 0x38, 0xbd, 0xfd, 0xfa, 0xce, 0x7e, 0x98, 0xf8, 0x16, 0xfc, 0xaa, 0x2e, 0xee,
-	0xbc, 0xb5, 0x7c, 0xd5, 0xf0, 0xff, 0x03, 0xac, 0x96, 0xf8, 0x06, 0xce, 0x4a, 0x4b, 0x70, 0xb0,
-	0x6f, 0x92, 0xbd, 0x17, 0x3e, 0x26, 0xb5, 0xc4, 0x4b, 0x80, 0xed, 0xb2, 0xe0, 0x7e, 0x6d, 0xb7,
-	0x51, 0xc3, 0xf3, 0x43, 0xb4, 0x96, 0x78, 0x0d, 0xfd, 0xbd, 0x85, 0xc6, 0xe1, 0x81, 0xf5, 0xdd,
-	0xfc, 0x51, 0x86, 0x4f, 0x8e, 0xc6, 0xb4, 0x7c, 0x1f, 0xdc, 0xfa, 0x93, 0x8b, 0x4b, 0x97, 0xf0,
-	0xad, 0x4d, 0x3f, 0xa8, 0xd7, 0xff, 0x02, 0x00, 0x00, 0xff, 0xff, 0xac, 0x7a, 0xb0, 0xa9, 0xb8,
-	0x04, 0x00, 0x00,
+	// 595 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x04, 0x03, 0x02, 0x01, 0x02, 0xff, 0x74, 0x54, 0x6f, 0x8b, 0xd3, 0x4e,
+	0x10, 0xa6, 0xbd, 0xb6, 0xd7, 0x4c, 0xff, 0xfd, 0x7e, 0x6b, 0xaf, 0x2e, 0x45, 0xa4, 0x06, 0x85,
+	0x8a, 0xd0, 0x83, 0x13, 0x41, 0xb8, 0x17, 0x72, 0x52, 0x94, 0x4a, 0x05, 0x0d, 0x88, 0x70, 0xef,
+	0xd6, 0x64, 0x5a, 0x82, 0x4d, 0x36, 0xb7, 0xbb, 0xf5, 0x4e, 0xbf, 0xa5, 0x5f, 0xc7, 0x57, 0xb2,
+	0xbb, 0xd9, 0x34, 0xa9, 0xb9, 0x77, 0x79, 0x9e, 0xd9, 0x99, 0x79, 0xf6, 0x99, 0xc9, 0xc2, 0x38,
+	0x8a, 0xb7, 0x5b, 0x14, 0xe7, 0xbf, 0x6e, 0x59, 0x94, 0xc4, 0xe9, 0x22, 0x13, 0x5c, 0x71, 0xd2,
+	0xb1, 0xac, 0xff, 0x06, 0x46, 0xef, 0x51, 0x05, 0x18, 0xf2, 0x24, 0xc1, 0x34, 0x0a, 0xf0, 0x86,
+	0x8c, 0xa1, 0xbd, 0x8b, 0x93, 0x58, 0xd1, 0xc6, 0xac, 0x31, 0x6f, 0x07, 0x16, 0x90, 0x09, 0x74,
+	0xf8, 0x66, 0x23, 0x51, 0xd1, 0xa6, 0xa1, 0x73, 0xe4, 0xff, 0x6e, 0xc2, 0xa0, 0x48, 0x5f, 0x29,
+	0x4c, 0xc8, 0x10, 0x9a, 0x71, 0x94, 0x27, 0x37, 0xe3, 0x88, 0x4c, 0xa1, 0x2b, 0x31, 0xdc, 0x87,
+	0x3c, 0x42, 0x93, 0xeb, 0x05, 0x05, 0x26, 0x04, 0x5a, 0x29, 0x4b, 0x90, 0x9e, 0x18, 0xde, 0x7c,
+	0x13, 0x0a, 0xa7, 0xe2, 0xe3, 0x2a, 0x8d, 0xf0, 0x8e, 0xb6, 0x4c, 0x11, 0x07, 0xc9, 0x23, 0xf0,
+	0xb2, 0x25, 0x86, 0x02, 0x99, 0x44, 0xda, 0x36, 0xb1, 0x03, 0xa1, 0xfb, 0x24, 0xec, 0xee, 0x93,
+	0x88, 0x43, 0xa4, 0x9d, 0x59, 0x63, 0xde, 0x08, 0x0a, 0xac, 0x6b, 0xea, 0xef, 0x25, 0xfb, 0x49,
+	0xc1, 0xb4, 0x72, 0xd0, 0x76, 0xb3, 0x49, 0x3d, 0x1b, 0xc9, 0x21, 0x79, 0x0c, 0xb0, 0x5d, 0x16,
+	0xed, 0xfa, 0xa6, 0x5d, 0x89, 0xd1, 0x3e, 0x49, 0xc5, 0x14, 0xd2, 0x81, 0xc9, 0xb3, 0x40, 0x67,
+	0xed, 0xb3, 0x88, 0x29, 0x5c, 0xea, 0xd0, 0xd0, 0x84, 0x4a, 0x0c, 0xf1, 0xa1, 0x9f, 0x09, 0x94,
+	0x98, 0x2a, 0xdb, 0x74, 0x64, 0x94, 0x56, 0x38, 0x3f, 0x28, 0x59, 0xba, 0x64, 0x8a, 0xe9, 0x56,
+	0x8a, 0x2b, 0xb6, 0x73, 0x23, 0x31, 0x80, 0xbc, 0x80, 0x76, 0xac, 0x30, 0x91, 0xb4, 0x39, 0x3b,
+	0x99, 0xf7, 0x2e, 0xce, 0x16, 0x76, 0xa6, 0x8b, 0xca, 0x38, 0x02, 0x7b, 0xc6, 0xff, 0x0c, 0xff,
+	0x55, 0x07, 0x2d, 0x33, 0xed, 0xbe, 0x99, 0x8a, 0xad, 0x6a, 0xbe, 0xc9, 0x73, 0x68, 0x45, 0x4c,
+	0x31, 0x33, 0xa9, 0xba, 0x9a, 0x5a, 0x4f, 0x60, 0x8e, 0xf8, 0x23, 0x18, 0x7c, 0x91, 0x28, 0xd6,
+	0x7c, 0xcb, 0xf7, 0x2a, 0xc0, 0x1b, 0xff, 0x29, 0x0c, 0xcb, 0x44, 0x7d, 0x07, 0x5f, 0x41, 0x5f,
+	0x9f, 0x5a, 0xa5, 0x1b, 0x6e, 0x2e, 0x37, 0x81, 0x0e, 0xfb, 0xc1, 0x14, 0x13, 0xe6, 0x94, 0x17,
+	0xe4, 0x48, 0x3b, 0x15, 0xa7, 0x4a, 0xf0, 0x68, 0x1f, 0xaa, 0x98, 0xa7, 0xf9, 0xee, 0x54, 0xb8,
+	0xda, 0xfd, 0x19, 0x43, 0x5b, 0xf0, 0x1d, 0x4a, 0xda, 0x9a, 0x9d, 0xe8, 0xb9, 0x18, 0xe0, 0x0f,
+	0xa0, 0xe7, 0xba, 0x6a, 0xa9, 0xeb, 0x83, 0x88, 0x7b, 0xad, 0x98, 0x57, 0xac, 0x18, 0x3b, 0x2b,
+	0xca, 0xe2, 0x73, 0x27, 0xde, 0xd9, 0x6a, 0x6b, 0xbe, 0x8d, 0x53, 0xfd, 0x0b, 0x4d, 0xa1, 0xbb,
+	0x97, 0x28, 0x8c, 0x34, 0x7b, 0xa9, 0x02, 0xeb, 0x58, 0xc6, 0xa4, 0xbc, 0xe5, 0x22, 0x72, 0xbf,
+	0x83, 0xc3, 0xfe, 0x13, 0xf0, 0x4c, 0x8d, 0xc3, 0xd0, 0xbf, 0x63, 0x9a, 0x57, 0xb0, 0xc0, 0xff,
+	0x50, 0x98, 0xae, 0x5b, 0xdd, 0xa3, 0xfc, 0x59, 0x45, 0xf9, 0xff, 0x4e, 0x79, 0x51, 0xdb, 0xca,
+	0xbe, 0xf8, 0xd3, 0x80, 0xd3, 0xeb, 0xaf, 0x57, 0xfa, 0x59, 0x20, 0xaf, 0xc1, 0x2b, 0xea, 0x92,
+	0xca, 0x5d, 0xdd, 0xad, 0xa6, 0x67, 0x35, 0xac, 0xcc, 0xc8, 0x2b, 0xe8, 0x3a, 0x4b, 0xc8, 0x83,
+	0x63, 0x93, 0x74, 0xde, 0xf8, 0x5f, 0x52, 0x66, 0xe4, 0x12, 0xe0, 0xb0, 0x2c, 0xe4, 0xb8, 0xb6,
+	0xdd, 0xa8, 0xe9, 0xa4, 0x8e, 0x96, 0x19, 0xb9, 0x82, 0x7e, 0x79, 0x9b, 0xc9, 0x43, 0x77, 0xee,
+	0xe8, 0x31, 0x9b, 0xd2, 0xfa, 0x80, 0xcc, 0xde, 0xf6, 0xae, 0xbd, 0xc5, 0xf9, 0xa5, 0x8d, 0x7e,
+	0xeb, 0x98, 0x57, 0xf1, 0xe5, 0xdf, 0x00, 0x00, 0x00, 0xff, 0xff, 0x91, 0x2b, 0xe0, 0xc6, 0x2d,
+	0x05, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -692,7 +763,7 @@ var ServiceMethodZWAdmin = []string{
 	"UserLogin",
 	"UserInfo",
 	"UserLogout",
-	"GPRecommendList",
+	"GetRecommend",
 }
 
 // Client API for ZWAdmin service
@@ -704,7 +775,7 @@ type ZWAdminClient interface {
 	UserLogin(ctx context.T, in *UserLoginReq, opts ...grpc1.CallOption) (*UserLoginResp, error)
 	UserInfo(ctx context.T, in *UserInfoReq, opts ...grpc1.CallOption) (*UserInfoResp, error)
 	UserLogout(ctx context.T, in *UserLogoutReq, opts ...grpc1.CallOption) (*UserLogoutResp, error)
-	GPRecommendList(ctx context.T, in *GPRecommendListReq, opts ...grpc1.CallOption) (*GPRecommendListResp, error)
+	GetRecommend(ctx context.T, in *GetRecommendReq, opts ...grpc1.CallOption) (*GetRecommendResp, error)
 }
 
 type zWAdminClient struct {
@@ -766,9 +837,9 @@ func (c *zWAdminClient) UserLogout(ctx context.T, in *UserLogoutReq, opts ...grp
 	return out, nil
 }
 
-func (c *zWAdminClient) GPRecommendList(ctx context.T, in *GPRecommendListReq, opts ...grpc1.CallOption) (*GPRecommendListResp, error) {
-	out := new(GPRecommendListResp)
-	err := c.cc.Invoke(ctx, "/digger.ZWAdmin/GPRecommendList", in, out, opts...)
+func (c *zWAdminClient) GetRecommend(ctx context.T, in *GetRecommendReq, opts ...grpc1.CallOption) (*GetRecommendResp, error) {
+	out := new(GetRecommendResp)
+	err := c.cc.Invoke(ctx, "/digger.ZWAdmin/GetRecommend", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -780,7 +851,7 @@ type ZWAdminServer interface {
 	UserLogin(context.T, *UserLoginReq) (*UserLoginResp, error)
 	UserInfo(context.T, *UserInfoReq) (*UserInfoResp, error)
 	UserLogout(context.T, *UserLogoutReq) (*UserLogoutResp, error)
-	GPRecommendList(context.T, *GPRecommendListReq) (*GPRecommendListResp, error)
+	GetRecommend(context.T, *GetRecommendReq) (*GetRecommendResp, error)
 }
 
 func RegisterZWAdminGrpc(s ZWAdminGrpcRegister) {
@@ -806,8 +877,8 @@ func (*UnimplementedZWAdminServer) UserInfo(ctx context1.Context, req *UserInfoR
 func (*UnimplementedZWAdminServer) UserLogout(ctx context1.Context, req *UserLogoutReq) (*UserLogoutResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserLogout not implemented")
 }
-func (*UnimplementedZWAdminServer) GPRecommendList(ctx context1.Context, req *GPRecommendListReq) (*GPRecommendListResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GPRecommendList not implemented")
+func (*UnimplementedZWAdminServer) GetRecommend(ctx context1.Context, req *GetRecommendReq) (*GetRecommendResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRecommend not implemented")
 }
 
 func RegisterZWAdminServer(s *grpc1.Server, srv ZWAdminServer) {
@@ -849,7 +920,7 @@ func RegisterZWAdminWebApiImpl(s mservice.WebApiRegister, impl ZWAdminServer) {
 	s.WebApiRegister("/api/digger.ZWAdmin/UserLogin", wrap.UserLogin)
 	s.WebApiRegister("/api/digger.ZWAdmin/UserInfo", wrap.UserInfo)
 	s.WebApiRegister("/api/digger.ZWAdmin/UserLogout", wrap.UserLogout)
-	s.WebApiRegister("/api/digger.ZWAdmin/GPRecommendList", wrap.GPRecommendList)
+	s.WebApiRegister("/api/digger.ZWAdmin/GetRecommend", wrap.GetRecommend)
 }
 
 func RegisterZWAdminWebapiEx(s ZWAdminWebApiRegister) {
@@ -858,7 +929,7 @@ func RegisterZWAdminWebapiEx(s ZWAdminWebApiRegister) {
 	s.WebApiRegisterMethod("digger.ZWAdmin", "UserLogin", wrap.UserLogin)
 	s.WebApiRegisterMethod("digger.ZWAdmin", "UserInfo", wrap.UserInfo)
 	s.WebApiRegisterMethod("digger.ZWAdmin", "UserLogout", wrap.UserLogout)
-	s.WebApiRegisterMethod("digger.ZWAdmin", "GPRecommendList", wrap.GPRecommendList)
+	s.WebApiRegisterMethod("digger.ZWAdmin", "GetRecommend", wrap.GetRecommend)
 }
 
 type ZWAdminWebapi struct {
@@ -896,13 +967,13 @@ func (s *ZWAdminWebapi) UserLogout(ctx *context.T, w http.ResponseWriter, req *h
 	s.register.WebApiHandleResp(ctx, w, resp, err)
 }
 
-func (s *ZWAdminWebapi) GPRecommendList(ctx *context.T, w http.ResponseWriter, req *http.Request) {
-	params := new(GPRecommendListReq)
+func (s *ZWAdminWebapi) GetRecommend(ctx *context.T, w http.ResponseWriter, req *http.Request) {
+	params := new(GetRecommendReq)
 	if err := s.register.WebApiDecode(ctx, req, params); err != nil {
 		s.register.WebApiHandleResp(ctx, w, nil, err)
 		return
 	}
-	resp, err := s.server.GPRecommendList(*ctx, params)
+	resp, err := s.server.GetRecommend(*ctx, params)
 	s.register.WebApiHandleResp(ctx, w, resp, err)
 }
 
@@ -985,8 +1056,8 @@ func _ZWAdmin_UserLogout_Handler(srv interface{}, ctx context1.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ZWAdmin_GPRecommendList_Handler(srv interface{}, ctx context1.Context, dec func(interface{}) error, interceptor grpc1.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GPRecommendListReq)
+func _ZWAdmin_GetRecommend_Handler(srv interface{}, ctx context1.Context, dec func(interface{}) error, interceptor grpc1.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRecommendReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -994,14 +1065,14 @@ func _ZWAdmin_GPRecommendList_Handler(srv interface{}, ctx context1.Context, dec
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ZWAdminServer).GPRecommendList(context.From(ctx), in)
+		return srv.(ZWAdminServer).GetRecommend(context.From(ctx), in)
 	}
 	info := &grpc1.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/digger.ZWAdmin/GPRecommendList",
+		FullMethod: "/digger.ZWAdmin/GetRecommend",
 	}
 	handler := func(ctx context1.Context, req interface{}) (interface{}, error) {
-		return srv.(ZWAdminServer).GPRecommendList(context.From(ctx), req.(*GPRecommendListReq))
+		return srv.(ZWAdminServer).GetRecommend(context.From(ctx), req.(*GetRecommendReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1023,8 +1094,8 @@ var _ZWAdmin_serviceDesc = grpc1.ServiceDesc{
 			Handler:    _ZWAdmin_UserLogout_Handler,
 		},
 		{
-			MethodName: "GPRecommendList",
-			Handler:    _ZWAdmin_GPRecommendList_Handler,
+			MethodName: "GetRecommend",
+			Handler:    _ZWAdmin_GetRecommend_Handler,
 		},
 	},
 	Streams:  []grpc1.StreamDesc{},
@@ -1032,10 +1103,10 @@ var _ZWAdmin_serviceDesc = grpc1.ServiceDesc{
 }
 
 var OptionZWAdmin = ezcommon.GenOption([]byte{
-	// 74 bytes of Option
+	// 71 bytes of Option
 	0x0a, 0x0e, 0x64, 0x69, 0x67, 0x67, 0x65, 0x72, 0x2e, 0x5a, 0x57, 0x41, 0x64, 0x6d, 0x69, 0x6e,
 	0x1a, 0x0b, 0x0a, 0x09, 0x55, 0x73, 0x65, 0x72, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x1a, 0x0a, 0x0a,
 	0x08, 0x55, 0x73, 0x65, 0x72, 0x49, 0x6e, 0x66, 0x6f, 0x1a, 0x0c, 0x0a, 0x0a, 0x55, 0x73, 0x65,
-	0x72, 0x4c, 0x6f, 0x67, 0x6f, 0x75, 0x74, 0x1a, 0x11, 0x0a, 0x0f, 0x47, 0x50, 0x52, 0x65, 0x63,
-	0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x64, 0x4c, 0x69, 0x73, 0x74,
+	0x72, 0x4c, 0x6f, 0x67, 0x6f, 0x75, 0x74, 0x1a, 0x0e, 0x0a, 0x0c, 0x47, 0x65, 0x74, 0x52, 0x65,
+	0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x64,
 })
