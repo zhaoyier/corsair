@@ -21,8 +21,9 @@ message UpdateRecommendResp {
 }
 
 message GetRecommendReq {
-    int32 limit = 1;
-    int32 offset = 2;
+    int32 pDecrease = 1;
+    int32 limit = 10;
+    int32 offset = 11;
 }
 
 message RecommendItem {

@@ -3,7 +3,7 @@
   <div class="app-container">
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item label="跌幅">
-        <el-input v-model="formInline.decrease" placeholder=0></el-input>
+        <el-input v-model.number="formInline.decrease" placeholder=0></el-input>
       </el-form-item>
       <el-form-item label="活动区域">
         <el-select v-model="formInline.region" placeholder="活动区域">
@@ -28,13 +28,25 @@
     <el-table-column prop="presentPrice" label="当前价" width="120"> </el-table-column>
     <el-table-column prop="gDDecrease" label="股东人数" width="120"> </el-table-column>
     <el-table-column prop="updateDate" label="更新时间" width="120"> </el-table-column>
-    <el-table-column fixed="right" label="操作" width="120">
+    <el-table-column fixed="right" label="操作" width="220">
       <template slot-scope="scope">
         <el-button
           @click.native.prevent="modifyRow(scope.$index, tableData)"
           type="text"
           size="small">
           修改
+        </el-button>
+        <el-button
+          @click.native.prevent="lineChartDate(scope.$index, tableData)"
+          type="text"
+          size="small">
+          日线
+        </el-button>
+        <el-button
+          @click.native.prevent="lineChartContour(scope.$index, tableData)"
+          type="text"
+          size="small">
+          周线
         </el-button>
       </template>
     </el-table-column>
@@ -52,18 +64,7 @@
     </div>
   </div>
   <div>
-    <el-dialog title="修改推荐" :visible.sync="dialogFormVisible">
-      <!-- <el-form :model="modifyForm">
-        <el-form-item label="跌幅修正" :label-width="formLabelWidth">
-          <el-input v-model="modifyForm.decrease" autocomplete="off"></el-input>
-          <el-input v-model.number="modifyForm.decrease"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="cancelDialog">取 消</el-button>
-        <el-button type="primary" @click="confirmDialog">确 定</el-button>
-      </div> -->
-
+    <el-dialog title="修改推荐" :visible.sync="modifyDialogVisible">
       <el-form :model="modifyForm" ref="modifyForm" label-width="100px" class="demo-ruleForm">
       <el-form-item
         label="跌幅修正"
@@ -79,6 +80,11 @@
         <el-button type="primary" @click="confirmDialog('modifyForm')">提交</el-button>
       </el-form-item>
     </el-form>
+    </el-dialog>
+  </div>
+  <div>
+    <el-dialog title="K线查询" :visible.sync="lineChartForm.lineChartVisible">
+      <el-image :src="lineChartForm.lineChartSrc"></el-image>
     </el-dialog>
   </div>
   </div>
@@ -100,17 +106,23 @@ export default {
   },
   data() {
     return {
+      
       listLoading: true,
-      dialogFormVisible: false,
+      modifyDialogVisible: false,
       formInline: {
         user: '',
         region: '',
+        decrease: 0,
       },
       modifyForm: {
         name: '',
         region: '',
         secucode: '',
         priceDecrease: 0,
+      },
+      lineChartForm:{
+        lineChartVisible: false,
+        lineChartSrc: '',
       },
       formLabelWidth: '120px',
       tableData: [],
@@ -130,11 +142,11 @@ export default {
        var req = {
         limit: this.pageInfo.pageSize,
         offset: (this.pageInfo.pageNum-1)*this.pageInfo.pageSize,
+        pDecrease:this.formInline.decrease,
       }
       getRecommendList(req).then(response => {
         console.log("===>>TODO 111: ", response)
 
-        // this.tableData = response.rows
         this.tableData = response.data.items
         this.pageInfo.total = response.data.total
         this.listLoading = false
@@ -142,19 +154,30 @@ export default {
       console.log("===>>TODO 211: ", this.tableData)
     },
     modifyRow(index, rows) {
-     
-      // rows.splice(index, 1);
       var data = rows[index]
-       console.log("==>>TODO 301: ", "301", data)
-      this.dialogFormVisible = !this.dialogFormVisible
+      this.modifyDialogVisible = !this.modifyDialogVisible
       this.modifyForm.secucode = data.secucode
       this.modifyForm.priceDecrease = data.pDecrease
       this.modifyForm.name = data.name
     },
+    lineChartDate(index, rows) {//日线图
+      console.log("==>>TODO 3141: ", rows[index])
+      var data = rows[index]
+      var secucode = data.secucode.split('.').join("").toLowerCase()
+      console.log("==>>TODO 3142: ", secucode)
+      this.lineChartForm.lineChartVisible = !this.lineChartForm.lineChartVisible
+      this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/daily/n/'+secucode+'.gif'
+    },
+    lineChartContour(index, rows) {
+      console.log("==>>TODO 3141: ", rows[index])
+      var data = rows[index]
+      var secucode = data.secucode.split('.').join("").toLowerCase()
+      console.log("==>>TODO 3142: ", secucode)
+      this.lineChartForm.lineChartVisible = !this.lineChartForm.lineChartVisible
+      this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/weekly/n/'+secucode+'.gif'
+    },
     cancelDialog(index, rows) {
-      console.log("==>>TODO 302: ", "302")
-      // rows.splice(index, 1);
-      this.dialogFormVisible = !this.dialogFormVisible
+      this.modifyDialogVisible = !this.modifyDialogVisible
     },
     confirmDialog(formName) {
       console.log("==>>TODO 3031: ", this.modifyForm)
@@ -170,18 +193,17 @@ export default {
 
       updateRecommend(req).then(response=>{
         console.log("==>>TODO 3036: ", "ok")
-        this.dialogFormVisible = !this.dialogFormVisible
+        this.modifyDialogVisible = !this.modifyDialogVisible
       })
       this.fetchData()
     },
     onSubmit() {
       console.log('submit!', this.formInline.user, this.formInline.region);
-      getRecommendList().then(response => {
-        console.log("===>>TODO 112: ", response)
-
-        this.tableData = response.data.items
-        this.listLoading = false
-      })
+      // var req = {
+      //   limit: this.pageInfo.pageSize,
+      //   offset: (this.pageInfo.pageNum-1)*this.pageInfo.pageSize,
+      // }
+      this.fetchData()
       console.log("===>>TODO 212: ", this.tableData)
     },
     handleCurrentChange(val) {
@@ -192,14 +214,7 @@ export default {
         limit: this.pageInfo.pageSize,
         offset: (this.pageInfo.pageNum-1)*this.pageInfo.pageSize,
       }
-
-       getRecommendList(req).then(response => {
-        console.log("===>>TODO 112: ", response)
-
-        this.tableData = response.data.items
-        this.listLoading = false
-      })
-      
+      this.fetchData()
     },
     handleSizeChange(val) {
       console.log("===>>TODO 214: ", val)

@@ -62,8 +62,6 @@ func GPRecommendList(in *gin.Context) {
 }
 
 func GetRecommend(in *gin.Context) {
-	// limit, _ := strconv.Atoi(in.Query("limit"))
-	// offset, _ := strconv.Atoi(in.Query("offset"))
 	var req trpc.GetRecommendReq
 	resp := &trpc.GetRecommendResp{
 		Code: 21000,
@@ -79,6 +77,10 @@ func GetRecommend(in *gin.Context) {
 
 	query := ezdb.M{
 		"Disabled": false,
+	}
+
+	if req.GetPDecrease() > 0 {
+		query["PDecrease"] = ezdb.M{"$gte": req.GetPDecrease()}
 	}
 
 	if req.GetLimit() <= 0 {
