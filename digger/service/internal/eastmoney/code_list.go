@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/common/webapi"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/job"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
+	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/request"
 	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
 	log "github.com/Sirupsen/logrus"
 	ezdb "github.com/ezbuy/ezorm/db"
@@ -34,7 +34,7 @@ func GetCodeList() {
 			break
 		}
 
-		if err := webapi.GetEastmoneyCode(inc, 80, resp); err != nil || resp.Data == nil {
+		if err := request.GetEastmoneyCode(inc, 80, resp); err != nil || resp.Data == nil {
 			log.Errorf("eastmoney get failed: %d|%+v\n", inc, err)
 			inc++
 			continue

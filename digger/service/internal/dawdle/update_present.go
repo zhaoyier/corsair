@@ -4,8 +4,8 @@ import (
 	"strings"
 	"time"
 
-	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/common/webapi"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
+	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/request"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
 	log "github.com/Sirupsen/logrus"
 	ezdb "github.com/ezbuy/ezorm/db"
@@ -39,7 +39,7 @@ func getPresentPrice(secucode string) float64 {
 	secucode = strings.ToLower(secucode)
 	secucode = strings.Replace(secucode, ".", "", -1)
 
-	results, err := webapi.GetSinaDayDetail(secucode)
+	results, err := request.GetSinaDayDetail(secucode)
 	if err != nil {
 		log.Errorf("get present price failed: %s|%q", secucode, err)
 		return 0

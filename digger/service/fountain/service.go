@@ -6,13 +6,13 @@ import (
 	"os"
 	"os/signal"
 
-	"git.ezbuy.me/ezbuy/corsair/digger/common"
+	"git.ezbuy.me/ezbuy/evsill/common/middle"
 	"github.com/gin-gonic/gin"
 )
 
 func Start() {
 	router := gin.Default()
-	router.Use(common.Cors())
+	router.Use(middle.Cors())
 
 	// config := cors.DefaultConfig()
 	// config.AllowOrigins = []string{"http://localhost:9528"}
@@ -48,7 +48,7 @@ func Start() {
 
 func Start2() {
 	router := gin.Default()
-	router.Use(common.Cors())
+	router.Use(middle.Cors())
 	go startRoute(router)
 
 	pem := "/home/gopath/crt/ibet/ibet.sale_bundle.pem"

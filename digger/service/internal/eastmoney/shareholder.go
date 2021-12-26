@@ -7,9 +7,9 @@ import (
 	"sync"
 	"time"
 
-	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/common/webapi"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/job"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
+	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/request"
 	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
 	log "github.com/Sirupsen/logrus"
@@ -43,7 +43,7 @@ func GetShareholder() {
 	for iter.Next(&secucode) {
 		shareholder := new(ShareholderResearch)
 		code := strings.Replace(secucode.Secucode, ".", "", -1)
-		if err := webapi.GetEastmoneyData(trpc.EastMoneyType_EastMoneyTypeHolder, code, shareholder); err != nil {
+		if err := request.GetEastmoneyData(trpc.EastMoneyType_EastMoneyTypeHolder, code, shareholder); err != nil {
 			log.Infof("eastmoney get failed: %s|%+v\n", code, err)
 			continue
 		}
