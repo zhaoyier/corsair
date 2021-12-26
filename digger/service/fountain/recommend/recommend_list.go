@@ -5,10 +5,13 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
 	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
+
+	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/dawdle"
 	log "github.com/Sirupsen/logrus"
 	ezdb "github.com/ezbuy/ezorm/db"
 	"github.com/gin-gonic/gin"
@@ -59,24 +62,32 @@ func GPRecommendList(in *gin.Context) {
 }
 
 func GetRecommend(in *gin.Context) {
-	limit, _ := strconv.Atoi(in.Query("limit"))
-	offset, _ := strconv.Atoi(in.Query("offset"))
+	// limit, _ := strconv.Atoi(in.Query("limit"))
+	// offset, _ := strconv.Atoi(in.Query("offset"))
+	var req trpc.GetRecommendReq
 	resp := &trpc.GetRecommendResp{
-		Code: 20000,
+		Code: 21000,
 		Data: &trpc.RecommendData{
 			Items: make([]*trpc.RecommendItem, 0),
 		},
+	}
+	if err := in.BindJSON(&req); err != nil {
+		log.Infof("==>>TODO 1011: %+v|%+v", req, err)
+		in.JSON(http.StatusBadRequest, resp)
+		return
 	}
 
 	query := ezdb.M{
 		"Disabled": false,
 	}
 
-	if limit <= 0 {
-		limit = 10
+	if req.GetLimit() <= 0 {
+		req.Limit = 20
 	}
 
-	results, err := orm.GPRecommendMgr.Find(query, limit, offset, "-PDecrease", "-State", "GDDecrease")
+	log.Infof("==>>TODO 1012: %+v", req)
+
+	results, err := orm.GPRecommendMgr.Find(query, int(req.Limit), int(req.GetOffset()), "-PDecrease", "-State", "GDDecrease")
 	if err != nil {
 		log.Errorf("query recommend failed: %q", err)
 	}
@@ -100,8 +111,36 @@ func GetRecommend(in *gin.Context) {
 		})
 	}
 
+	resp.Code = 20000
 	resp.Data.Items = sortRecommend2(resp.Data.Items)
 
+	in.JSON(http.StatusOK, resp)
+}
+
+func UpdateRecommend(in *gin.Context) {
+	log.Infof("==>>TODO 1010: %+v", nil)
+	var req trpc.UpdateRecommendReq
+	resp := &trpc.UpdateRecommendResp{
+		Code: 21000,
+	}
+	if err := in.BindJSON(&req); err != nil {
+		log.Infof("==>>TODO 1011: %+v", req)
+		in.JSON(http.StatusBadRequest, resp)
+		return
+	}
+	log.Infof("==>>TODO 1012: %+v", req)
+	result := orm.GPDelayMgr.MustFindOneBySecucodeDisabled(req.GetSecucode(), false)
+	result.Name = req.GetName()
+	result.DecreaseTag = req.GetPriceDecrease()
+	result.UpdateDate = time.Now().Unix()
+	if _, err := result.Save(); err != nil {
+		in.JSON(http.StatusNotFound, resp)
+		return
+	}
+
+	dawdle.GenRecommendTmp(req.GetSecucode())
+
+	resp.Code = 20000
 	in.JSON(http.StatusOK, resp)
 }
 

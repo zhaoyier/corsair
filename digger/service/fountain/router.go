@@ -32,6 +32,8 @@ func startRoute(router *gin.Engine) {
 	stockGroup := router.Group("/api/stock")
 	{
 		stockGroup.POST("/GetRecommend", recommend.GetRecommend)
+		stockGroup.POST("/UpdateRecommend", recommend.UpdateRecommend)
+		// UpdateRecommend
 	}
 
 	// /api/user/info

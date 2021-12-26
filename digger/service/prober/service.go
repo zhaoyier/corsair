@@ -9,9 +9,13 @@ import (
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
 	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
-	"git.ezbuy.me/ezbuy/corsair/digger/service/prober/internal/dawdle"
-	"git.ezbuy.me/ezbuy/corsair/digger/service/prober/internal/eastmoney"
+
+	// "git.ezbuy.me/ezbuy/corsair/digger/service/prober/internal/dawdle"
+	// "git.ezbuy.me/ezbuy/corsair/digger/service/prober/internal/eastmoney"
 	"github.com/ezbuy/ezorm/db"
+
+	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/dawdle"
+	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/eastmoney"
 )
 
 func Start() {
