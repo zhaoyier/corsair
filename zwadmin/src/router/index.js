@@ -81,11 +81,24 @@ export const constantRoutes = [
         meta: { title: '推荐列表', icon: 'tree' }
       },
       {
+        path: 'stock/pricelist',
+        name: '涨跌列表',
+        component: () => import('@/views/stock/pricelist/index'),
+        meta: { title: '涨跌列表', icon: 'tree' }
+      },
+      {
         path: 'stock/shareholder',
         name: '股东列表',
         component: () => import('@/views/stock/shareholder/index'),
         meta: { title: '股东列表', icon: 'tree' }
-      }
+      },
+      {
+        path: 'stock/focus',
+        name: '关注列表',
+        component: () => import('@/views/stock/focus/index'),
+        meta: { title: '关注列表', icon: 'tree' }
+      },
+
     ]
   },
 

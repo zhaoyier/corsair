@@ -21,7 +21,12 @@
     <el-table-column fixed prop="secucode" label="代码" width="150"></el-table-column>
     <el-table-column prop="name" label="名称" width="120"></el-table-column>
     <el-table-column prop="rMIndex" label="推荐指数" width="120"></el-table-column>
-    <el-table-column prop="state" label="状态" width="120"> </el-table-column>
+    <!-- <el-table-column prop="state" label="状态" width="120"> </el-table-column> -->
+    <el-table-column class-name="status-col" label="Status" width="110" align="center">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.state | statusFilter" effect="dark">{{ scope.row.state }}</el-tag>
+        </template>
+      </el-table-column>
     <el-table-column prop="pDecrease" label="最近跌幅" width="120"></el-table-column>
     <el-table-column prop="maxPrice" label="最高价" width="120"></el-table-column>
     <el-table-column prop="rMPrice" label="推荐价格" width="220"> </el-table-column>
@@ -36,17 +41,12 @@
           size="small">
           修改
         </el-button>
+        <el-divider direction="vertical"></el-divider>
         <el-button
-          @click.native.prevent="lineChartDate(scope.$index, tableData)"
+          @click.native.prevent="KLineChart(scope.$index, tableData)"
           type="text"
           size="small">
-          日线
-        </el-button>
-        <el-button
-          @click.native.prevent="lineChartContour(scope.$index, tableData)"
-          type="text"
-          size="small">
-          周线
+          K线图
         </el-button>
       </template>
     </el-table-column>
@@ -84,7 +84,15 @@
   </div>
   <div>
     <el-dialog title="K线查询" :visible.sync="lineChartForm.lineChartVisible">
-      <el-image :src="lineChartForm.lineChartSrc"></el-image>
+      <!-- <el-image :src="lineChartForm.lineChartSrc"></el-image> -->
+      <el-tabs v-model="lineChartForm.activeName" @tab-click="handleClick">
+        <el-tab-pane label="日线" name="date">
+          <el-image :src="lineChartForm.lineChartSrc"></el-image>
+        </el-tab-pane>
+        <el-tab-pane label="周线" name="contour">
+          <el-image :src="lineChartForm.lineChartSrc"></el-image>
+        </el-tab-pane>
+      </el-tabs>
     </el-dialog>
   </div>
   </div>
@@ -97,9 +105,9 @@ export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
+        "进行中": 'danger',
+        "开始": 'warning',
+        "准备": 'info'
       }
       return statusMap[status]
     }
@@ -121,8 +129,10 @@ export default {
         priceDecrease: 0,
       },
       lineChartForm:{
+        activeName: 'date',
         lineChartVisible: false,
         lineChartSrc: '',
+        secucode: '',
       },
       formLabelWidth: '120px',
       tableData: [],
@@ -160,22 +170,23 @@ export default {
       this.modifyForm.priceDecrease = data.pDecrease
       this.modifyForm.name = data.name
     },
-    lineChartDate(index, rows) {//日线图
+    KLineChart(index, rows) {//日线图
       console.log("==>>TODO 3141: ", rows[index])
       var data = rows[index]
       var secucode = data.secucode.split('.').join("").toLowerCase()
+      this.lineChartForm.secucode = secucode
       console.log("==>>TODO 3142: ", secucode)
       this.lineChartForm.lineChartVisible = !this.lineChartForm.lineChartVisible
       this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/daily/n/'+secucode+'.gif'
     },
-    lineChartContour(index, rows) {
-      console.log("==>>TODO 3141: ", rows[index])
-      var data = rows[index]
-      var secucode = data.secucode.split('.').join("").toLowerCase()
-      console.log("==>>TODO 3142: ", secucode)
-      this.lineChartForm.lineChartVisible = !this.lineChartForm.lineChartVisible
-      this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/weekly/n/'+secucode+'.gif'
-    },
+    // lineChartContour(index, rows) {
+    //   console.log("==>>TODO 3141: ", rows[index])
+    //   var data = rows[index]
+    //   var secucode = data.secucode.split('.').join("").toLowerCase()
+    //   console.log("==>>TODO 3142: ", secucode)
+    //   this.lineChartForm.lineChartVisible = !this.lineChartForm.lineChartVisible
+    //   this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/weekly/n/'+secucode+'.gif'
+    // },
     cancelDialog(index, rows) {
       this.modifyDialogVisible = !this.modifyDialogVisible
     },
@@ -218,7 +229,17 @@ export default {
     },
     handleSizeChange(val) {
       console.log("===>>TODO 214: ", val)
+    },
+    handleClick(tab) {
+      console.log("===>>TODO 254: ", tab)
+      var secucode = this.lineChartForm.secucode
+      if (tab.name == "date") {
+        this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/daily/n/'+secucode+'.gif'
+      } else { //contour
+        this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/weekly/n/'+secucode+'.gif'
+      }
     }
+
   }
 }
 </script>
