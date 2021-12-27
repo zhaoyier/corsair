@@ -92,6 +92,9 @@
         <el-tab-pane label="周线" name="contour">
           <el-image :src="lineChartForm.lineChartSrc"></el-image>
         </el-tab-pane>
+        <el-tab-pane label="分时线" name="minute">
+          <el-image :src="lineChartForm.lineChartSrc"></el-image>
+        </el-tab-pane>
       </el-tabs>
     </el-dialog>
   </div>
@@ -179,14 +182,6 @@ export default {
       this.lineChartForm.lineChartVisible = !this.lineChartForm.lineChartVisible
       this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/daily/n/'+secucode+'.gif'
     },
-    // lineChartContour(index, rows) {
-    //   console.log("==>>TODO 3141: ", rows[index])
-    //   var data = rows[index]
-    //   var secucode = data.secucode.split('.').join("").toLowerCase()
-    //   console.log("==>>TODO 3142: ", secucode)
-    //   this.lineChartForm.lineChartVisible = !this.lineChartForm.lineChartVisible
-    //   this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/weekly/n/'+secucode+'.gif'
-    // },
     cancelDialog(index, rows) {
       this.modifyDialogVisible = !this.modifyDialogVisible
     },
@@ -235,8 +230,10 @@ export default {
       var secucode = this.lineChartForm.secucode
       if (tab.name == "date") {
         this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/daily/n/'+secucode+'.gif'
-      } else { //contour
+      } else if (tab.name == "contour") { //contour
         this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/weekly/n/'+secucode+'.gif'
+      } else { //分时线
+        this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/min/n/'+secucode+'.gif'
       }
     }
 
