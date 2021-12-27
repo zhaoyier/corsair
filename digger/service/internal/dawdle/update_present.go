@@ -44,6 +44,10 @@ func getPresentPrice(secucode string) float64 {
 		log.Errorf("get present price failed: %s|%q", secucode, err)
 		return 0
 	}
+	if len(results) < 3 {
+		log.Errorf("get present price invalid: %s|%+v", secucode, results)
+		return 0
+	}
 	price := results[3]
 	return utils.String2Float64(price)
 }
