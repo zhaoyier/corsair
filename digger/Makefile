@@ -2,7 +2,8 @@ pub:
 	rm -rf service/internal/rpc/*
 	go generate && go build
 	mv digger /home/gopath/bin/
-	cp web/recommend_list.html /data/www/index.html
+	cp web/recommend_list.html /data/www/temp/index.html
+	cp -rf ../zwadmin/dist/* /data/www/backend
 	supervisorctl restart all
 	supervisorctl status
 
