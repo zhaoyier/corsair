@@ -1,4 +1,4 @@
-package common
+package middle
 
 import (
 	"fmt"
@@ -15,25 +15,6 @@ func Cors4() gin.HandlerFunc {
 }
 
 func Cors() gin.HandlerFunc {
-	// return func(c *gin.Context) {
-	// 	method := c.Request.Method
-	// 	origin := c.Request.Header.Get("Origin") //请求头部
-	// 	if origin != "" {
-	// 		// 可将将* 替换为指定的域名
-	// 		c.Header("Access-Control-Allow-Origin", origin)
-	// 		c.Header("Access-Control-Allow-Headers", "Authorization, Content-Length, X-CSRF-Token, Token,session,X_Requested_With,Accept, Origin, Host, Connection, Accept-Encoding, Accept-Language,DNT, X-CustomHeader, Keep-Alive, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type, X-Token")
-	// 		c.Header("Access-Control-Allow-Credentials", "true")
-	// 	}
-	// 	fmt.Printf("==>>TODO 312: %+v|%+v\n", method, origin)
-	// 	if method == "OPTIONS" {
-	// 		fmt.Printf("==>>TODO 313: %+v\n", nil)
-	// 		c.JSON(http.StatusOK, "Options Request!")
-	// 		return
-	// 	}
-
-	// 	c.Next()
-	// }
-
 	return func(c *gin.Context) {
 		method := c.Request.Method
 		origin := c.Request.Header.Get("Origin")

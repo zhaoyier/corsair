@@ -6,7 +6,7 @@ import (
 	"os"
 	"os/signal"
 
-	"git.ezbuy.me/ezbuy/evsill/common/middle"
+	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/middle"
 	"github.com/gin-gonic/gin"
 )
 
