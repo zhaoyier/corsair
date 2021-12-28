@@ -23,6 +23,7 @@ type GPRecommend struct {
 	State        int32             `bson:"State" json:"State"`
 	Remark       map[string]string `bson:"Remark" json:"Remark"`
 	Disabled     bool              `bson:"Disabled" json:"Disabled"`
+	UpdateNum    int32             `bson:"UpdateNum" json:"UpdateNum"`
 	CreateDate   int64             `bson:"CreateDate" json:"CreateDate"`
 	UpdateBy     string            `bson:"UpdateBy" json:"UpdateBy"`
 	UpdateDate   int64             `bson:"UpdateDate" json:"UpdateDate"`
@@ -46,6 +47,7 @@ const (
 	GPRecommendMgoFieldState        = "State"
 	GPRecommendMgoFieldRemark       = "Remark"
 	GPRecommendMgoFieldDisabled     = "Disabled"
+	GPRecommendMgoFieldUpdateNum    = "UpdateNum"
 	GPRecommendMgoFieldCreateDate   = "CreateDate"
 	GPRecommendMgoFieldUpdateBy     = "UpdateBy"
 	GPRecommendMgoFieldUpdateDate   = "UpdateDate"

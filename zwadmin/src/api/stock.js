@@ -16,3 +16,12 @@ export function updateRecommend(data) {
     data
   })
 }
+
+// 更新
+export function promptBuyList(data) {
+  return request({
+    url: '/api/stock/PromptBuyList',
+    method: 'post',
+    data
+  })
+}

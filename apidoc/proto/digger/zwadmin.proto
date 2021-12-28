@@ -9,7 +9,43 @@ service ZWAdmin {
     rpc UserLogout(UserLogoutReq) returns(UserLogoutResp);
     rpc GetRecommend(GetRecommendReq) returns(GetRecommendResp);
     rpc UpdateRecommend(UpdateRecommendReq) returns(UpdateRecommendResp);
+    rpc PromptBuyList(PromptBuyListReq) returns(PromptBuyListResp);
+    rpc UpdatePromptBuy(UpdatePromptBuyReq) returns(UpdatePromptBuyResp);
 }
+
+message PromptBuyListReq {
+    int32 limit = 10;
+    int32 offset = 11;
+}
+
+message PromptBuyItem {
+    string secucode = 2;
+    string name = 3;
+    double minPrice = 4;
+    double presentPrice = 5;
+    double priceDiff = 6;
+    string createDate = 7;
+}
+
+message PromptBuyData {
+    int32 total = 1;
+    repeated PromptBuyItem items = 2;
+}
+
+message PromptBuyListResp {
+    int32 code = 1;
+    PromptBuyData data = 2; 
+}
+
+message UpdatePromptBuyReq {
+    string secucode = 2;
+    bool disabled = 3;
+}
+
+message UpdatePromptBuyResp {
+    int32 code = 1;
+}
+
 message UpdateRecommendReq {
     string name = 1;
     string secucode = 2;
@@ -22,6 +58,8 @@ message UpdateRecommendResp {
 
 message GetRecommendReq {
     int32 pDecrease = 1;
+    int32 state = 2;    //状态
+    string secucode = 3;
     int32 limit = 10;
     int32 offset = 11;
 }
@@ -37,8 +75,9 @@ message RecommendItem {
     string rMPrice = 11;
     int32 gDDecrease = 12;
     string state = 13;          //状态
-    string updateDate=14;
-    double presentPrice = 15;
+    int32 updateNum = 14;
+    string updateDate=15;
+    double presentPrice = 16;
 }
 
 message RecommendData {

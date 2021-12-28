@@ -82,6 +82,12 @@ func GetRecommend(in *gin.Context) {
 	if req.GetPDecrease() > 0 {
 		query["PDecrease"] = ezdb.M{"$gte": req.GetPDecrease()}
 	}
+	if req.GetState() > 0 {
+		query["State"] = ezdb.M{"$gte": req.GetState()}
+	}
+	if req.GetSecucode() != "" {
+		query["Secucode"] = req.GetSecucode()
+	}
 
 	if req.GetLimit() <= 0 {
 		req.Limit = 20
@@ -108,6 +114,7 @@ func GetRecommend(in *gin.Context) {
 			RMPrice:      result.RMPrice,
 			GDDecrease:   result.GDDecrease,
 			State:        getState(result.State),
+			UpdateNum:    result.UpdateNum,
 			UpdateDate:   utils.TS2Date(result.UpdateDate),
 			PresentPrice: result.PresentPrice,
 		})

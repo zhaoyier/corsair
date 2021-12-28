@@ -34,6 +34,333 @@ var _ = strings.TrimPrefix
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
+type PromptBuyListReq struct {
+	//
+	Limit int32 `protobuf:"varint,10,opt,name=limit,proto3" json:"limit"`
+	//
+	Offset int32 `protobuf:"varint,11,opt,name=offset,proto3" json:"offset"`
+}
+
+func (m *PromptBuyListReq) Validate() error {
+	return nil
+}
+
+func (m *PromptBuyListReq) Reset()         { *m = PromptBuyListReq{} }
+func (m *PromptBuyListReq) String() string { return proto.CompactTextString(m) }
+func (*PromptBuyListReq) ProtoMessage()    {}
+func (*PromptBuyListReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2a29ab15f05ba3dc, []int{0}
+}
+
+func (m *PromptBuyListReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_PromptBuyListReq.Unmarshal(m, b)
+}
+func (m *PromptBuyListReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_PromptBuyListReq.Marshal(b, m, deterministic)
+}
+func (m *PromptBuyListReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PromptBuyListReq.Merge(m, src)
+}
+func (m *PromptBuyListReq) XXX_Size() int {
+	return xxx_messageInfo_PromptBuyListReq.Size(m)
+}
+func (m *PromptBuyListReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_PromptBuyListReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PromptBuyListReq proto.InternalMessageInfo
+
+func (m *PromptBuyListReq) GetLimit() int32 {
+	if m != nil {
+		return m.Limit
+	}
+	return 0
+}
+
+func (m *PromptBuyListReq) GetOffset() int32 {
+	if m != nil {
+		return m.Offset
+	}
+	return 0
+}
+
+type PromptBuyItem struct {
+	//
+	Secucode string `protobuf:"bytes,2,opt,name=secucode,proto3" json:"secucode"`
+	//
+	Name string `protobuf:"bytes,3,opt,name=name,proto3" json:"name"`
+	//
+	MinPrice float64 `protobuf:"fixed64,4,opt,name=minPrice,proto3" json:"minPrice"`
+	//
+	PresentPrice float64 `protobuf:"fixed64,5,opt,name=presentPrice,proto3" json:"presentPrice"`
+	//
+	PriceDiff float64 `protobuf:"fixed64,6,opt,name=priceDiff,proto3" json:"priceDiff"`
+	//
+	CreateDate string `protobuf:"bytes,7,opt,name=createDate,proto3" json:"createDate"`
+}
+
+func (m *PromptBuyItem) Validate() error {
+	return nil
+}
+
+func (m *PromptBuyItem) Reset()         { *m = PromptBuyItem{} }
+func (m *PromptBuyItem) String() string { return proto.CompactTextString(m) }
+func (*PromptBuyItem) ProtoMessage()    {}
+func (*PromptBuyItem) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2a29ab15f05ba3dc, []int{1}
+}
+
+func (m *PromptBuyItem) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_PromptBuyItem.Unmarshal(m, b)
+}
+func (m *PromptBuyItem) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_PromptBuyItem.Marshal(b, m, deterministic)
+}
+func (m *PromptBuyItem) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PromptBuyItem.Merge(m, src)
+}
+func (m *PromptBuyItem) XXX_Size() int {
+	return xxx_messageInfo_PromptBuyItem.Size(m)
+}
+func (m *PromptBuyItem) XXX_DiscardUnknown() {
+	xxx_messageInfo_PromptBuyItem.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PromptBuyItem proto.InternalMessageInfo
+
+func (m *PromptBuyItem) GetSecucode() string {
+	if m != nil {
+		return m.Secucode
+	}
+	return ""
+}
+
+func (m *PromptBuyItem) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *PromptBuyItem) GetMinPrice() float64 {
+	if m != nil {
+		return m.MinPrice
+	}
+	return 0
+}
+
+func (m *PromptBuyItem) GetPresentPrice() float64 {
+	if m != nil {
+		return m.PresentPrice
+	}
+	return 0
+}
+
+func (m *PromptBuyItem) GetPriceDiff() float64 {
+	if m != nil {
+		return m.PriceDiff
+	}
+	return 0
+}
+
+func (m *PromptBuyItem) GetCreateDate() string {
+	if m != nil {
+		return m.CreateDate
+	}
+	return ""
+}
+
+type PromptBuyData struct {
+	//
+	Total int32 `protobuf:"varint,1,opt,name=total,proto3" json:"total"`
+	//
+	Items []*PromptBuyItem `protobuf:"bytes,2,rep,name=items,proto3" json:"items"`
+}
+
+func (m *PromptBuyData) Validate() error {
+	return nil
+}
+
+func (m *PromptBuyData) Reset()         { *m = PromptBuyData{} }
+func (m *PromptBuyData) String() string { return proto.CompactTextString(m) }
+func (*PromptBuyData) ProtoMessage()    {}
+func (*PromptBuyData) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2a29ab15f05ba3dc, []int{2}
+}
+
+func (m *PromptBuyData) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_PromptBuyData.Unmarshal(m, b)
+}
+func (m *PromptBuyData) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_PromptBuyData.Marshal(b, m, deterministic)
+}
+func (m *PromptBuyData) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PromptBuyData.Merge(m, src)
+}
+func (m *PromptBuyData) XXX_Size() int {
+	return xxx_messageInfo_PromptBuyData.Size(m)
+}
+func (m *PromptBuyData) XXX_DiscardUnknown() {
+	xxx_messageInfo_PromptBuyData.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PromptBuyData proto.InternalMessageInfo
+
+func (m *PromptBuyData) GetTotal() int32 {
+	if m != nil {
+		return m.Total
+	}
+	return 0
+}
+
+func (m *PromptBuyData) GetItems() []*PromptBuyItem {
+	if m != nil {
+		return m.Items
+	}
+	return nil
+}
+
+type PromptBuyListResp struct {
+	//
+	Code int32 `protobuf:"varint,1,opt,name=code,proto3" json:"code"`
+	//
+	Data *PromptBuyData `protobuf:"bytes,2,opt,name=data,proto3" json:"data"`
+}
+
+func (m *PromptBuyListResp) Validate() error {
+	return nil
+}
+
+func (m *PromptBuyListResp) Reset()         { *m = PromptBuyListResp{} }
+func (m *PromptBuyListResp) String() string { return proto.CompactTextString(m) }
+func (*PromptBuyListResp) ProtoMessage()    {}
+func (*PromptBuyListResp) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2a29ab15f05ba3dc, []int{3}
+}
+
+func (m *PromptBuyListResp) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_PromptBuyListResp.Unmarshal(m, b)
+}
+func (m *PromptBuyListResp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_PromptBuyListResp.Marshal(b, m, deterministic)
+}
+func (m *PromptBuyListResp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PromptBuyListResp.Merge(m, src)
+}
+func (m *PromptBuyListResp) XXX_Size() int {
+	return xxx_messageInfo_PromptBuyListResp.Size(m)
+}
+func (m *PromptBuyListResp) XXX_DiscardUnknown() {
+	xxx_messageInfo_PromptBuyListResp.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PromptBuyListResp proto.InternalMessageInfo
+
+func (m *PromptBuyListResp) GetCode() int32 {
+	if m != nil {
+		return m.Code
+	}
+	return 0
+}
+
+func (m *PromptBuyListResp) GetData() *PromptBuyData {
+	if m != nil {
+		return m.Data
+	}
+	return nil
+}
+
+type UpdatePromptBuyReq struct {
+	//
+	Secucode string `protobuf:"bytes,2,opt,name=secucode,proto3" json:"secucode"`
+	//
+	Disabled bool `protobuf:"varint,3,opt,name=disabled,proto3" json:"disabled"`
+}
+
+func (m *UpdatePromptBuyReq) Validate() error {
+	return nil
+}
+
+func (m *UpdatePromptBuyReq) Reset()         { *m = UpdatePromptBuyReq{} }
+func (m *UpdatePromptBuyReq) String() string { return proto.CompactTextString(m) }
+func (*UpdatePromptBuyReq) ProtoMessage()    {}
+func (*UpdatePromptBuyReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2a29ab15f05ba3dc, []int{4}
+}
+
+func (m *UpdatePromptBuyReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdatePromptBuyReq.Unmarshal(m, b)
+}
+func (m *UpdatePromptBuyReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdatePromptBuyReq.Marshal(b, m, deterministic)
+}
+func (m *UpdatePromptBuyReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdatePromptBuyReq.Merge(m, src)
+}
+func (m *UpdatePromptBuyReq) XXX_Size() int {
+	return xxx_messageInfo_UpdatePromptBuyReq.Size(m)
+}
+func (m *UpdatePromptBuyReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdatePromptBuyReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdatePromptBuyReq proto.InternalMessageInfo
+
+func (m *UpdatePromptBuyReq) GetSecucode() string {
+	if m != nil {
+		return m.Secucode
+	}
+	return ""
+}
+
+func (m *UpdatePromptBuyReq) GetDisabled() bool {
+	if m != nil {
+		return m.Disabled
+	}
+	return false
+}
+
+type UpdatePromptBuyResp struct {
+	//
+	Code int32 `protobuf:"varint,1,opt,name=code,proto3" json:"code"`
+}
+
+func (m *UpdatePromptBuyResp) Validate() error {
+	return nil
+}
+
+func (m *UpdatePromptBuyResp) Reset()         { *m = UpdatePromptBuyResp{} }
+func (m *UpdatePromptBuyResp) String() string { return proto.CompactTextString(m) }
+func (*UpdatePromptBuyResp) ProtoMessage()    {}
+func (*UpdatePromptBuyResp) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2a29ab15f05ba3dc, []int{5}
+}
+
+func (m *UpdatePromptBuyResp) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdatePromptBuyResp.Unmarshal(m, b)
+}
+func (m *UpdatePromptBuyResp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdatePromptBuyResp.Marshal(b, m, deterministic)
+}
+func (m *UpdatePromptBuyResp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdatePromptBuyResp.Merge(m, src)
+}
+func (m *UpdatePromptBuyResp) XXX_Size() int {
+	return xxx_messageInfo_UpdatePromptBuyResp.Size(m)
+}
+func (m *UpdatePromptBuyResp) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdatePromptBuyResp.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdatePromptBuyResp proto.InternalMessageInfo
+
+func (m *UpdatePromptBuyResp) GetCode() int32 {
+	if m != nil {
+		return m.Code
+	}
+	return 0
+}
+
 type UpdateRecommendReq struct {
 	//
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name"`
@@ -51,7 +378,7 @@ func (m *UpdateRecommendReq) Reset()         { *m = UpdateRecommendReq{} }
 func (m *UpdateRecommendReq) String() string { return proto.CompactTextString(m) }
 func (*UpdateRecommendReq) ProtoMessage()    {}
 func (*UpdateRecommendReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{0}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{6}
 }
 
 func (m *UpdateRecommendReq) XXX_Unmarshal(b []byte) error {
@@ -106,7 +433,7 @@ func (m *UpdateRecommendResp) Reset()         { *m = UpdateRecommendResp{} }
 func (m *UpdateRecommendResp) String() string { return proto.CompactTextString(m) }
 func (*UpdateRecommendResp) ProtoMessage()    {}
 func (*UpdateRecommendResp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{1}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{7}
 }
 
 func (m *UpdateRecommendResp) XXX_Unmarshal(b []byte) error {
@@ -138,6 +465,10 @@ type GetRecommendReq struct {
 	//
 	PDecrease int32 `protobuf:"varint,1,opt,name=pDecrease,proto3" json:"pDecrease"`
 	//
+	State int32 `protobuf:"varint,2,opt,name=state,proto3" json:"state"`
+	//
+	Secucode string `protobuf:"bytes,3,opt,name=secucode,proto3" json:"secucode"`
+	//
 	Limit int32 `protobuf:"varint,10,opt,name=limit,proto3" json:"limit"`
 	//
 	Offset int32 `protobuf:"varint,11,opt,name=offset,proto3" json:"offset"`
@@ -151,7 +482,7 @@ func (m *GetRecommendReq) Reset()         { *m = GetRecommendReq{} }
 func (m *GetRecommendReq) String() string { return proto.CompactTextString(m) }
 func (*GetRecommendReq) ProtoMessage()    {}
 func (*GetRecommendReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{2}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{8}
 }
 
 func (m *GetRecommendReq) XXX_Unmarshal(b []byte) error {
@@ -177,6 +508,20 @@ func (m *GetRecommendReq) GetPDecrease() int32 {
 		return m.PDecrease
 	}
 	return 0
+}
+
+func (m *GetRecommendReq) GetState() int32 {
+	if m != nil {
+		return m.State
+	}
+	return 0
+}
+
+func (m *GetRecommendReq) GetSecucode() string {
+	if m != nil {
+		return m.Secucode
+	}
+	return ""
 }
 
 func (m *GetRecommendReq) GetLimit() int32 {
@@ -215,9 +560,11 @@ type RecommendItem struct {
 	//
 	State string `protobuf:"bytes,13,opt,name=state,proto3" json:"state"`
 	//
-	UpdateDate string `protobuf:"bytes,14,opt,name=updateDate,proto3" json:"updateDate"`
+	UpdateNum int32 `protobuf:"varint,14,opt,name=updateNum,proto3" json:"updateNum"`
 	//
-	PresentPrice float64 `protobuf:"fixed64,15,opt,name=presentPrice,proto3" json:"presentPrice"`
+	UpdateDate string `protobuf:"bytes,15,opt,name=updateDate,proto3" json:"updateDate"`
+	//
+	PresentPrice float64 `protobuf:"fixed64,16,opt,name=presentPrice,proto3" json:"presentPrice"`
 }
 
 func (m *RecommendItem) Validate() error {
@@ -228,7 +575,7 @@ func (m *RecommendItem) Reset()         { *m = RecommendItem{} }
 func (m *RecommendItem) String() string { return proto.CompactTextString(m) }
 func (*RecommendItem) ProtoMessage()    {}
 func (*RecommendItem) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{3}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{9}
 }
 
 func (m *RecommendItem) XXX_Unmarshal(b []byte) error {
@@ -319,6 +666,13 @@ func (m *RecommendItem) GetState() string {
 	return ""
 }
 
+func (m *RecommendItem) GetUpdateNum() int32 {
+	if m != nil {
+		return m.UpdateNum
+	}
+	return 0
+}
+
 func (m *RecommendItem) GetUpdateDate() string {
 	if m != nil {
 		return m.UpdateDate
@@ -348,7 +702,7 @@ func (m *RecommendData) Reset()         { *m = RecommendData{} }
 func (m *RecommendData) String() string { return proto.CompactTextString(m) }
 func (*RecommendData) ProtoMessage()    {}
 func (*RecommendData) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{4}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{10}
 }
 
 func (m *RecommendData) XXX_Unmarshal(b []byte) error {
@@ -398,7 +752,7 @@ func (m *GetRecommendResp) Reset()         { *m = GetRecommendResp{} }
 func (m *GetRecommendResp) String() string { return proto.CompactTextString(m) }
 func (*GetRecommendResp) ProtoMessage()    {}
 func (*GetRecommendResp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{5}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{11}
 }
 
 func (m *GetRecommendResp) XXX_Unmarshal(b []byte) error {
@@ -444,7 +798,7 @@ func (m *UserLogoutReq) Reset()         { *m = UserLogoutReq{} }
 func (m *UserLogoutReq) String() string { return proto.CompactTextString(m) }
 func (*UserLogoutReq) ProtoMessage()    {}
 func (*UserLogoutReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{6}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{12}
 }
 
 func (m *UserLogoutReq) XXX_Unmarshal(b []byte) error {
@@ -478,7 +832,7 @@ func (m *UserLogoutResp) Reset()         { *m = UserLogoutResp{} }
 func (m *UserLogoutResp) String() string { return proto.CompactTextString(m) }
 func (*UserLogoutResp) ProtoMessage()    {}
 func (*UserLogoutResp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{7}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{13}
 }
 
 func (m *UserLogoutResp) XXX_Unmarshal(b []byte) error {
@@ -525,7 +879,7 @@ func (m *UserInfoData) Reset()         { *m = UserInfoData{} }
 func (m *UserInfoData) String() string { return proto.CompactTextString(m) }
 func (*UserInfoData) ProtoMessage()    {}
 func (*UserInfoData) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{8}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{14}
 }
 
 func (m *UserInfoData) XXX_Unmarshal(b []byte) error {
@@ -585,7 +939,7 @@ func (m *UserInfoReq) Reset()         { *m = UserInfoReq{} }
 func (m *UserInfoReq) String() string { return proto.CompactTextString(m) }
 func (*UserInfoReq) ProtoMessage()    {}
 func (*UserInfoReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{9}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{15}
 }
 
 func (m *UserInfoReq) XXX_Unmarshal(b []byte) error {
@@ -621,7 +975,7 @@ func (m *UserInfoResp) Reset()         { *m = UserInfoResp{} }
 func (m *UserInfoResp) String() string { return proto.CompactTextString(m) }
 func (*UserInfoResp) ProtoMessage()    {}
 func (*UserInfoResp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{10}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{16}
 }
 
 func (m *UserInfoResp) XXX_Unmarshal(b []byte) error {
@@ -671,7 +1025,7 @@ func (m *UserLoginReq) Reset()         { *m = UserLoginReq{} }
 func (m *UserLoginReq) String() string { return proto.CompactTextString(m) }
 func (*UserLoginReq) ProtoMessage()    {}
 func (*UserLoginReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{11}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{17}
 }
 
 func (m *UserLoginReq) XXX_Unmarshal(b []byte) error {
@@ -719,7 +1073,7 @@ func (m *LoginData) Reset()         { *m = LoginData{} }
 func (m *LoginData) String() string { return proto.CompactTextString(m) }
 func (*LoginData) ProtoMessage()    {}
 func (*LoginData) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{12}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{18}
 }
 
 func (m *LoginData) XXX_Unmarshal(b []byte) error {
@@ -762,7 +1116,7 @@ func (m *UserLoginResp) Reset()         { *m = UserLoginResp{} }
 func (m *UserLoginResp) String() string { return proto.CompactTextString(m) }
 func (*UserLoginResp) ProtoMessage()    {}
 func (*UserLoginResp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{13}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{19}
 }
 
 func (m *UserLoginResp) XXX_Unmarshal(b []byte) error {
@@ -798,6 +1152,12 @@ func (m *UserLoginResp) GetData() *LoginData {
 }
 
 func init() {
+	proto.RegisterType((*PromptBuyListReq)(nil), "digger.PromptBuyListReq")
+	proto.RegisterType((*PromptBuyItem)(nil), "digger.PromptBuyItem")
+	proto.RegisterType((*PromptBuyData)(nil), "digger.PromptBuyData")
+	proto.RegisterType((*PromptBuyListResp)(nil), "digger.PromptBuyListResp")
+	proto.RegisterType((*UpdatePromptBuyReq)(nil), "digger.UpdatePromptBuyReq")
+	proto.RegisterType((*UpdatePromptBuyResp)(nil), "digger.UpdatePromptBuyResp")
 	proto.RegisterType((*UpdateRecommendReq)(nil), "digger.UpdateRecommendReq")
 	proto.RegisterType((*UpdateRecommendResp)(nil), "digger.UpdateRecommendResp")
 	proto.RegisterType((*GetRecommendReq)(nil), "digger.GetRecommendReq")
@@ -817,48 +1177,60 @@ func init() {
 func init() { proto.RegisterFile("digger/zwadmin.proto", fileDescriptor_2a29ab15f05ba3dc) }
 
 var fileDescriptor_2a29ab15f05ba3dc = []byte{
-	// 653 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x04, 0x03, 0x02, 0x01, 0x02, 0xff, 0x7c, 0x55, 0xdf, 0x6b, 0xdb, 0x30,
-	0x10, 0x26, 0x3f, 0x9b, 0x5c, 0x92, 0x66, 0x53, 0xd3, 0xce, 0x78, 0x63, 0x64, 0xa2, 0x83, 0x94,
-	0x41, 0x0a, 0x1d, 0x83, 0x41, 0x9f, 0x3a, 0xc2, 0x46, 0x4b, 0x07, 0x9b, 0xa1, 0x0c, 0x0a, 0x7b,
-	0xd0, 0xe2, 0x6b, 0xf0, 0x56, 0x5b, 0xaa, 0xa4, 0xac, 0xdd, 0xfe, 0xc0, 0xbd, 0xef, 0x3f, 0x1a,
-	0x92, 0x6c, 0xc7, 0x4e, 0x9c, 0xbd, 0xf9, 0xfb, 0xee, 0xf4, 0xdd, 0xe9, 0xd3, 0x49, 0x86, 0x51,
-	0x18, 0x2d, 0x16, 0x28, 0x8f, 0x7f, 0xdf, 0xb3, 0x30, 0x8e, 0x92, 0xa9, 0x90, 0x5c, 0x73, 0xd2,
-	0x76, 0x2c, 0xfd, 0x0e, 0xe4, 0x4a, 0x84, 0x4c, 0x63, 0x80, 0x73, 0x1e, 0xc7, 0x98, 0x84, 0x01,
-	0xde, 0x11, 0x02, 0xcd, 0x84, 0xc5, 0xe8, 0xd5, 0xc6, 0xb5, 0x49, 0x37, 0xb0, 0xdf, 0xc4, 0x87,
-	0x8e, 0xc2, 0xf9, 0x72, 0xce, 0x43, 0xf4, 0xea, 0x96, 0xcf, 0x31, 0x39, 0x84, 0x81, 0x90, 0xd1,
-	0x1c, 0x67, 0x38, 0x97, 0xc8, 0x14, 0x7a, 0x8d, 0x71, 0x6d, 0xd2, 0x0a, 0xca, 0x24, 0x3d, 0x82,
-	0xbd, 0x8d, 0x5a, 0x4a, 0x98, 0x62, 0x56, 0xb4, 0x66, 0xd7, 0xd8, 0x6f, 0xfa, 0x15, 0x86, 0x1f,
-	0x50, 0x97, 0x7a, 0x7a, 0x06, 0x5d, 0x91, 0xeb, 0xbb, 0xdc, 0x15, 0x41, 0x46, 0xd0, 0xba, 0x8d,
-	0xe2, 0x48, 0x7b, 0x60, 0x23, 0x0e, 0x90, 0x03, 0x68, 0xf3, 0x9b, 0x1b, 0x85, 0xda, 0xeb, 0x59,
-	0x3a, 0x45, 0xf4, 0x6f, 0x1d, 0x06, 0xb9, 0xf8, 0xb9, 0xc6, 0x98, 0xec, 0x42, 0x3d, 0x0a, 0x53,
-	0xd9, 0x7a, 0x14, 0xfe, 0x77, 0xb7, 0x99, 0x3b, 0x8d, 0x82, 0x3b, 0x1e, 0xec, 0xc8, 0x8f, 0xe7,
-	0x49, 0x88, 0x0f, 0x5e, 0xd3, 0x8a, 0x64, 0xb0, 0xdc, 0x77, 0x6b, 0xbd, 0x6f, 0x1f, 0x3a, 0x31,
-	0x7b, 0xf8, 0x64, 0x7c, 0xf2, 0xda, 0xe3, 0xda, 0xa4, 0x16, 0xe4, 0xd8, 0x68, 0x9a, 0xef, 0x19,
-	0xfb, 0x65, 0x77, 0xd5, 0x0d, 0x32, 0xe8, 0xaa, 0xb9, 0x45, 0x3d, 0x17, 0x49, 0x21, 0x79, 0x0e,
-	0xb0, 0x98, 0xe5, 0xe5, 0xfa, 0xb6, 0x5c, 0x81, 0x31, 0x3e, 0x29, 0xcd, 0x34, 0x7a, 0x03, 0xbb,
-	0xce, 0x01, 0xb3, 0x6a, 0x69, 0x4f, 0x66, 0x66, 0x42, 0xbb, 0x36, 0x54, 0x60, 0x08, 0x85, 0xbe,
-	0x90, 0xa8, 0x30, 0xd1, 0xae, 0xe8, 0xd0, 0x76, 0x5a, 0xe2, 0x68, 0x50, 0xb0, 0x74, 0xc6, 0x34,
-	0x33, 0xa5, 0x34, 0xd7, 0xec, 0x36, 0x75, 0xd5, 0x01, 0xf2, 0x0a, 0x5a, 0x91, 0xc6, 0x58, 0x79,
-	0xf5, 0x71, 0x63, 0xd2, 0x3b, 0xd9, 0x9f, 0xba, 0x41, 0x9c, 0x96, 0x8e, 0x23, 0x70, 0x39, 0xf4,
-	0x33, 0x3c, 0x2a, 0x8f, 0x41, 0xf5, 0xb8, 0x90, 0x23, 0x68, 0x86, 0x4c, 0x33, 0x7b, 0x52, 0x55,
-	0x9a, 0xa6, 0x9f, 0xc0, 0xa6, 0xd0, 0x21, 0x0c, 0xae, 0x14, 0xca, 0x4b, 0xbe, 0xe0, 0x4b, 0x1d,
-	0xe0, 0x1d, 0x3d, 0x84, 0xdd, 0x22, 0xb1, 0x65, 0x20, 0x35, 0xf4, 0x4d, 0xd6, 0x79, 0x72, 0xc3,
-	0xed, 0xe6, 0x0e, 0xa0, 0xcd, 0x7e, 0x32, 0xcd, 0x64, 0x7a, 0x47, 0x52, 0x64, 0x9c, 0x8a, 0x12,
-	0x2d, 0x79, 0xb8, 0x9c, 0xeb, 0x88, 0x27, 0xe9, 0xec, 0x94, 0xb8, 0xca, 0xf9, 0x19, 0x41, 0x4b,
-	0xf2, 0x5b, 0x54, 0x5e, 0x73, 0xdc, 0x30, 0xe7, 0x62, 0x01, 0x1d, 0x40, 0x2f, 0xab, 0x6a, 0x5a,
-	0xbd, 0x5c, 0x35, 0xb1, 0xd5, 0x8a, 0x49, 0xc9, 0x8a, 0x51, 0x66, 0x45, 0xb1, 0xf9, 0xd4, 0x89,
-	0xf7, 0x4e, 0xed, 0x92, 0x2f, 0xa2, 0xc4, 0x5c, 0x30, 0x1f, 0x3a, 0x4b, 0x85, 0xb2, 0x70, 0xf1,
-	0x73, 0x6c, 0x62, 0x82, 0x29, 0x75, 0xcf, 0x65, 0x98, 0x5d, 0x87, 0x0c, 0xd3, 0x17, 0xd0, 0xb5,
-	0x1a, 0xab, 0x43, 0xff, 0x81, 0x49, 0xaa, 0xe0, 0x00, 0xbd, 0xc8, 0x4d, 0x37, 0xa5, 0xb6, 0x74,
-	0xfe, 0xb2, 0xd4, 0xf9, 0xe3, 0xac, 0xf3, 0x5c, 0xdb, 0xb5, 0x7d, 0xf2, 0xa7, 0x0e, 0x3b, 0xd7,
-	0x5f, 0xce, 0xcc, 0x5b, 0x46, 0xde, 0x42, 0x37, 0xd7, 0x25, 0xa5, 0xbd, 0x66, 0xbb, 0xf2, 0xf7,
-	0x2b, 0x58, 0x25, 0xc8, 0x1b, 0xe8, 0x64, 0x96, 0x90, 0xbd, 0x75, 0x93, 0xcc, 0xba, 0xd1, 0x26,
-	0xa9, 0x04, 0x39, 0x05, 0x58, 0x0d, 0x0b, 0x59, 0xd7, 0x76, 0x13, 0xe5, 0x1f, 0x54, 0xd1, 0x4a,
-	0x90, 0x33, 0xe8, 0x17, 0xa7, 0x99, 0x3c, 0xc9, 0xf2, 0xd6, 0x9e, 0x3a, 0xdf, 0xab, 0x0e, 0x28,
-	0x41, 0x2e, 0x60, 0xb8, 0xf6, 0x84, 0x12, 0x3f, 0xaf, 0xb6, 0xf1, 0x8e, 0xfb, 0x4f, 0xb7, 0xc6,
-	0x94, 0x78, 0xd7, 0xbb, 0xee, 0x4e, 0x8f, 0x4f, 0x5d, 0xc2, 0xb7, 0xb6, 0xfd, 0x2d, 0xbc, 0xfe,
-	0x17, 0x00, 0x00, 0xff, 0xff, 0xc9, 0xad, 0x72, 0xc4, 0x2e, 0x06, 0x00, 0x00,
+	// 836 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x04, 0x03, 0x02, 0x01, 0x02, 0xff, 0x9c, 0x56, 0xe1, 0x6a, 0xdb, 0x48,
+	0x10, 0x46, 0xb6, 0xe5, 0xd8, 0x63, 0x3b, 0x4e, 0x36, 0x4e, 0x4e, 0xa7, 0x0b, 0x87, 0x4f, 0xe4,
+	0xc0, 0xe1, 0xc0, 0x81, 0x1c, 0x07, 0x07, 0xf9, 0x73, 0x09, 0xe6, 0x8e, 0x04, 0x5f, 0x49, 0x05,
+	0xa1, 0x90, 0x7f, 0x1b, 0x6b, 0x6d, 0xd4, 0x5a, 0x5a, 0x55, 0xbb, 0x6e, 0x92, 0xbe, 0x44, 0x9f,
+	0xa8, 0xef, 0xd1, 0xb7, 0xe8, 0x2b, 0x94, 0xdd, 0x95, 0x56, 0x5a, 0xd9, 0x2e, 0xa4, 0xff, 0x34,
+	0x33, 0xeb, 0x99, 0x6f, 0xbe, 0x99, 0x6f, 0xd7, 0x30, 0x08, 0xc2, 0xc5, 0x82, 0xa4, 0x67, 0x1f,
+	0x1f, 0x71, 0x10, 0x85, 0xf1, 0x38, 0x49, 0x29, 0xa7, 0xa8, 0xa9, 0xbc, 0xde, 0x3f, 0xb0, 0x77,
+	0x9b, 0xd2, 0x28, 0xe1, 0x57, 0xab, 0xe7, 0x69, 0xc8, 0xb8, 0x4f, 0xde, 0xa3, 0x01, 0xd8, 0xcb,
+	0x30, 0x0a, 0xb9, 0x03, 0x43, 0x6b, 0x64, 0xfb, 0xca, 0x40, 0x47, 0xd0, 0xa4, 0xf3, 0x39, 0x23,
+	0xdc, 0xe9, 0x48, 0x77, 0x66, 0x79, 0x9f, 0x2d, 0xe8, 0xe9, 0x14, 0xd7, 0x9c, 0x44, 0xc8, 0x85,
+	0x16, 0x23, 0xb3, 0xd5, 0x8c, 0x06, 0xc4, 0xa9, 0x0d, 0xad, 0x51, 0xdb, 0xd7, 0x36, 0x42, 0xd0,
+	0x88, 0x71, 0x44, 0x9c, 0xba, 0xf4, 0xcb, 0x6f, 0x71, 0x3e, 0x0a, 0xe3, 0xdb, 0x34, 0x9c, 0x11,
+	0xa7, 0x31, 0xb4, 0x46, 0x96, 0xaf, 0x6d, 0xe4, 0x41, 0x37, 0x49, 0x09, 0x23, 0x31, 0x57, 0x71,
+	0x5b, 0xc6, 0x0d, 0x1f, 0x3a, 0x86, 0x76, 0x22, 0x3e, 0x26, 0xe1, 0x7c, 0xee, 0x34, 0xe5, 0x81,
+	0xc2, 0x81, 0x7e, 0x05, 0x98, 0xa5, 0x04, 0x73, 0x32, 0xc1, 0x9c, 0x38, 0x3b, 0xb2, 0x6e, 0xc9,
+	0xe3, 0xf9, 0x25, 0xf8, 0x13, 0xcc, 0xb1, 0x68, 0x9f, 0x53, 0x8e, 0x97, 0x8e, 0xa5, 0xda, 0x97,
+	0x06, 0xfa, 0x03, 0xec, 0x90, 0x93, 0x88, 0x39, 0xb5, 0x61, 0x7d, 0xd4, 0x39, 0x3f, 0x1c, 0x2b,
+	0x02, 0xc7, 0x46, 0xeb, 0xbe, 0x3a, 0xe3, 0xf9, 0xb0, 0x5f, 0x61, 0x95, 0x25, 0xa2, 0x75, 0x49,
+	0x89, 0x4a, 0x2b, 0xbf, 0xd1, 0x29, 0x34, 0x02, 0xcc, 0xb1, 0xa4, 0x69, 0x53, 0x52, 0x01, 0xc8,
+	0x97, 0x47, 0xbc, 0x29, 0xa0, 0xbb, 0x24, 0xc0, 0x9c, 0xe8, 0xa0, 0x98, 0xd5, 0xf7, 0xb8, 0x76,
+	0xa1, 0x15, 0x84, 0x0c, 0x3f, 0x2c, 0x49, 0x20, 0xf9, 0x6e, 0xf9, 0xda, 0xf6, 0x4e, 0xe1, 0x60,
+	0x2d, 0xdb, 0x66, 0x8c, 0xde, 0xdb, 0xbc, 0xb0, 0x4f, 0x66, 0x34, 0x8a, 0x48, 0x1c, 0x88, 0xc2,
+	0xf9, 0x20, 0x2d, 0x73, 0x90, 0x5b, 0xc1, 0x9c, 0x40, 0x4f, 0xcd, 0x84, 0x08, 0xee, 0x99, 0xda,
+	0x00, 0xdb, 0x37, 0x9d, 0x05, 0xac, 0x52, 0xad, 0x2d, 0xb0, 0x3e, 0x59, 0xd0, 0xff, 0x8f, 0x70,
+	0x03, 0x94, 0xd8, 0x04, 0x5d, 0x40, 0x1d, 0x2e, 0x1c, 0x62, 0xb0, 0x8c, 0x8b, 0x25, 0xa8, 0xa9,
+	0xc1, 0x4a, 0xc3, 0x00, 0x5d, 0xaf, 0x80, 0x7e, 0x99, 0x12, 0xbe, 0xd6, 0xa0, 0xa7, 0xe1, 0x48,
+	0x25, 0xec, 0x42, 0x2d, 0x0c, 0x32, 0x20, 0xb5, 0x30, 0x78, 0xb1, 0x32, 0x1c, 0xd8, 0x49, 0xff,
+	0xbf, 0x8e, 0x03, 0xf2, 0x24, 0x85, 0x61, 0xfb, 0xb9, 0x69, 0x76, 0x6a, 0x57, 0x3b, 0x15, 0x8a,
+	0xc2, 0x4f, 0x4a, 0x31, 0xcd, 0x4c, 0x51, 0x99, 0x2d, 0x72, 0x8a, 0xef, 0x09, 0x7e, 0x96, 0x5d,
+	0xb5, 0xfd, 0xdc, 0x54, 0xd5, 0xd4, 0x8f, 0x3a, 0x2a, 0x92, 0x99, 0x42, 0x43, 0x8b, 0x89, 0x2e,
+	0xd7, 0x95, 0xe5, 0x4a, 0x9e, 0x82, 0xd9, 0x9e, 0xfc, 0x5d, 0xc6, 0xec, 0x31, 0xb4, 0x57, 0x72,
+	0x98, 0xaf, 0x56, 0x91, 0xb3, 0xab, 0x30, 0x6a, 0x87, 0xc8, 0xa9, 0x0c, 0xa9, 0xcb, 0xbe, 0xd2,
+	0x65, 0xe1, 0x59, 0x53, 0xfe, 0xde, 0xba, 0xf2, 0x85, 0x76, 0x35, 0xe1, 0x3f, 0xa0, 0x5d, 0x63,
+	0x58, 0xb9, 0x76, 0x5f, 0xc3, 0x9e, 0xb9, 0x56, 0x2f, 0x93, 0xae, 0x81, 0x27, 0x93, 0x6e, 0x1f,
+	0x7a, 0x77, 0x8c, 0xa4, 0x53, 0xba, 0xa0, 0x2b, 0x71, 0xc3, 0x7a, 0x27, 0xb0, 0x5b, 0x76, 0x6c,
+	0xd9, 0x70, 0x0e, 0x5d, 0x71, 0xea, 0x3a, 0x9e, 0x53, 0xd9, 0xdc, 0x11, 0x34, 0xf1, 0x07, 0xcc,
+	0x71, 0x9a, 0x89, 0x2e, 0xb3, 0x04, 0x53, 0x61, 0xcc, 0x53, 0x1a, 0xac, 0x66, 0x3c, 0xa4, 0x71,
+	0xb6, 0x59, 0x86, 0x6f, 0xe3, 0x76, 0x0d, 0xc0, 0x4e, 0xe9, 0x92, 0x30, 0xa7, 0x31, 0xac, 0x8b,
+	0xa9, 0x49, 0xc3, 0xeb, 0x41, 0x27, 0xaf, 0x2a, 0xa0, 0x4e, 0x0b, 0x10, 0x5b, 0xa9, 0x18, 0x19,
+	0x54, 0x0c, 0x72, 0x2a, 0xca, 0xe0, 0x33, 0x26, 0xfe, 0x55, 0xd9, 0xa6, 0x74, 0x11, 0xc6, 0xd9,
+	0xf5, 0xb5, 0x62, 0x24, 0x2d, 0xdd, 0x24, 0xda, 0x16, 0xb1, 0x04, 0x33, 0xf6, 0x48, 0xd3, 0x20,
+	0x17, 0x4b, 0x6e, 0x7b, 0xbf, 0x41, 0x5b, 0xe6, 0x28, 0x86, 0xfe, 0x8e, 0xc4, 0x59, 0x06, 0x65,
+	0x78, 0x37, 0x9a, 0x74, 0x51, 0x6a, 0x0b, 0xf2, 0xdf, 0x0d, 0xe4, 0xfb, 0x39, 0x72, 0x9d, 0x5b,
+	0xc1, 0x3e, 0xff, 0x52, 0x87, 0x9d, 0xfb, 0x37, 0x97, 0xe2, 0xfd, 0x44, 0x7f, 0x43, 0x5b, 0xe7,
+	0x45, 0x46, 0xaf, 0x79, 0x57, 0xee, 0xe1, 0x06, 0x2f, 0x4b, 0xd0, 0x5f, 0xd0, 0xca, 0x29, 0x41,
+	0x07, 0x55, 0x92, 0xc4, 0xef, 0x06, 0xeb, 0x4e, 0x96, 0xa0, 0x0b, 0x80, 0x62, 0x59, 0x50, 0x35,
+	0xb7, 0xda, 0x28, 0xf7, 0x68, 0x93, 0x9b, 0x25, 0xe8, 0x12, 0xba, 0xe5, 0x6d, 0x46, 0x3f, 0xe5,
+	0xe7, 0x2a, 0x57, 0xa7, 0xeb, 0x6c, 0x0e, 0xb0, 0x04, 0xdd, 0x40, 0xbf, 0x72, 0x27, 0x23, 0x57,
+	0x57, 0x5b, 0x7b, 0x18, 0xdc, 0x5f, 0xb6, 0xc6, 0x58, 0x82, 0x26, 0xa5, 0xc7, 0x56, 0x3c, 0x8c,
+	0xc8, 0x59, 0x7b, 0xf2, 0xb2, 0x7f, 0x21, 0xee, 0xcf, 0x5b, 0x22, 0x65, 0x44, 0x3a, 0x54, 0x45,
+	0x54, 0x7e, 0x23, 0xab, 0x88, 0x8c, 0x17, 0xef, 0xaa, 0x73, 0xdf, 0x1e, 0x9f, 0x5d, 0xa8, 0x03,
+	0x0f, 0x4d, 0xf9, 0xe7, 0xe8, 0xcf, 0x6f, 0x01, 0x00, 0x00, 0xff, 0xff, 0x31, 0x9a, 0xb7, 0x9d,
+	0x34, 0x09, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -879,6 +1251,8 @@ var ServiceMethodZWAdmin = []string{
 	"UserLogout",
 	"GetRecommend",
 	"UpdateRecommend",
+	"PromptBuyList",
+	"UpdatePromptBuy",
 }
 
 // Client API for ZWAdmin service
@@ -892,6 +1266,8 @@ type ZWAdminClient interface {
 	UserLogout(ctx context.T, in *UserLogoutReq, opts ...grpc1.CallOption) (*UserLogoutResp, error)
 	GetRecommend(ctx context.T, in *GetRecommendReq, opts ...grpc1.CallOption) (*GetRecommendResp, error)
 	UpdateRecommend(ctx context.T, in *UpdateRecommendReq, opts ...grpc1.CallOption) (*UpdateRecommendResp, error)
+	PromptBuyList(ctx context.T, in *PromptBuyListReq, opts ...grpc1.CallOption) (*PromptBuyListResp, error)
+	UpdatePromptBuy(ctx context.T, in *UpdatePromptBuyReq, opts ...grpc1.CallOption) (*UpdatePromptBuyResp, error)
 }
 
 type zWAdminClient struct {
@@ -971,6 +1347,24 @@ func (c *zWAdminClient) UpdateRecommend(ctx context.T, in *UpdateRecommendReq, o
 	return out, nil
 }
 
+func (c *zWAdminClient) PromptBuyList(ctx context.T, in *PromptBuyListReq, opts ...grpc1.CallOption) (*PromptBuyListResp, error) {
+	out := new(PromptBuyListResp)
+	err := c.cc.Invoke(ctx, "/digger.ZWAdmin/PromptBuyList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *zWAdminClient) UpdatePromptBuy(ctx context.T, in *UpdatePromptBuyReq, opts ...grpc1.CallOption) (*UpdatePromptBuyResp, error) {
+	out := new(UpdatePromptBuyResp)
+	err := c.cc.Invoke(ctx, "/digger.ZWAdmin/UpdatePromptBuy", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ZWAdminServer is the server API for ZWAdmin service.
 type ZWAdminServer interface {
 	UserLogin(context.T, *UserLoginReq) (*UserLoginResp, error)
@@ -978,6 +1372,8 @@ type ZWAdminServer interface {
 	UserLogout(context.T, *UserLogoutReq) (*UserLogoutResp, error)
 	GetRecommend(context.T, *GetRecommendReq) (*GetRecommendResp, error)
 	UpdateRecommend(context.T, *UpdateRecommendReq) (*UpdateRecommendResp, error)
+	PromptBuyList(context.T, *PromptBuyListReq) (*PromptBuyListResp, error)
+	UpdatePromptBuy(context.T, *UpdatePromptBuyReq) (*UpdatePromptBuyResp, error)
 }
 
 func RegisterZWAdminGrpc(s ZWAdminGrpcRegister) {
@@ -1008,6 +1404,12 @@ func (*UnimplementedZWAdminServer) GetRecommend(ctx context1.Context, req *GetRe
 }
 func (*UnimplementedZWAdminServer) UpdateRecommend(ctx context1.Context, req *UpdateRecommendReq) (*UpdateRecommendResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateRecommend not implemented")
+}
+func (*UnimplementedZWAdminServer) PromptBuyList(ctx context1.Context, req *PromptBuyListReq) (*PromptBuyListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PromptBuyList not implemented")
+}
+func (*UnimplementedZWAdminServer) UpdatePromptBuy(ctx context1.Context, req *UpdatePromptBuyReq) (*UpdatePromptBuyResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePromptBuy not implemented")
 }
 
 func RegisterZWAdminServer(s *grpc1.Server, srv ZWAdminServer) {
@@ -1051,6 +1453,8 @@ func RegisterZWAdminWebApiImpl(s mservice.WebApiRegister, impl ZWAdminServer) {
 	s.WebApiRegister("/api/digger.ZWAdmin/UserLogout", wrap.UserLogout)
 	s.WebApiRegister("/api/digger.ZWAdmin/GetRecommend", wrap.GetRecommend)
 	s.WebApiRegister("/api/digger.ZWAdmin/UpdateRecommend", wrap.UpdateRecommend)
+	s.WebApiRegister("/api/digger.ZWAdmin/PromptBuyList", wrap.PromptBuyList)
+	s.WebApiRegister("/api/digger.ZWAdmin/UpdatePromptBuy", wrap.UpdatePromptBuy)
 }
 
 func RegisterZWAdminWebapiEx(s ZWAdminWebApiRegister) {
@@ -1061,6 +1465,8 @@ func RegisterZWAdminWebapiEx(s ZWAdminWebApiRegister) {
 	s.WebApiRegisterMethod("digger.ZWAdmin", "UserLogout", wrap.UserLogout)
 	s.WebApiRegisterMethod("digger.ZWAdmin", "GetRecommend", wrap.GetRecommend)
 	s.WebApiRegisterMethod("digger.ZWAdmin", "UpdateRecommend", wrap.UpdateRecommend)
+	s.WebApiRegisterMethod("digger.ZWAdmin", "PromptBuyList", wrap.PromptBuyList)
+	s.WebApiRegisterMethod("digger.ZWAdmin", "UpdatePromptBuy", wrap.UpdatePromptBuy)
 }
 
 type ZWAdminWebapi struct {
@@ -1115,6 +1521,26 @@ func (s *ZWAdminWebapi) UpdateRecommend(ctx *context.T, w http.ResponseWriter, r
 		return
 	}
 	resp, err := s.server.UpdateRecommend(*ctx, params)
+	s.register.WebApiHandleResp(ctx, w, resp, err)
+}
+
+func (s *ZWAdminWebapi) PromptBuyList(ctx *context.T, w http.ResponseWriter, req *http.Request) {
+	params := new(PromptBuyListReq)
+	if err := s.register.WebApiDecode(ctx, req, params); err != nil {
+		s.register.WebApiHandleResp(ctx, w, nil, err)
+		return
+	}
+	resp, err := s.server.PromptBuyList(*ctx, params)
+	s.register.WebApiHandleResp(ctx, w, resp, err)
+}
+
+func (s *ZWAdminWebapi) UpdatePromptBuy(ctx *context.T, w http.ResponseWriter, req *http.Request) {
+	params := new(UpdatePromptBuyReq)
+	if err := s.register.WebApiDecode(ctx, req, params); err != nil {
+		s.register.WebApiHandleResp(ctx, w, nil, err)
+		return
+	}
+	resp, err := s.server.UpdatePromptBuy(*ctx, params)
 	s.register.WebApiHandleResp(ctx, w, resp, err)
 }
 
@@ -1239,6 +1665,48 @@ func _ZWAdmin_UpdateRecommend_Handler(srv interface{}, ctx context1.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ZWAdmin_PromptBuyList_Handler(srv interface{}, ctx context1.Context, dec func(interface{}) error, interceptor grpc1.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PromptBuyListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if err := in.Validate(); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ZWAdminServer).PromptBuyList(context.From(ctx), in)
+	}
+	info := &grpc1.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/digger.ZWAdmin/PromptBuyList",
+	}
+	handler := func(ctx context1.Context, req interface{}) (interface{}, error) {
+		return srv.(ZWAdminServer).PromptBuyList(context.From(ctx), req.(*PromptBuyListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ZWAdmin_UpdatePromptBuy_Handler(srv interface{}, ctx context1.Context, dec func(interface{}) error, interceptor grpc1.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePromptBuyReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if err := in.Validate(); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ZWAdminServer).UpdatePromptBuy(context.From(ctx), in)
+	}
+	info := &grpc1.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/digger.ZWAdmin/UpdatePromptBuy",
+	}
+	handler := func(ctx context1.Context, req interface{}) (interface{}, error) {
+		return srv.(ZWAdminServer).UpdatePromptBuy(context.From(ctx), req.(*UpdatePromptBuyReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _ZWAdmin_serviceDesc = grpc1.ServiceDesc{
 	ServiceName: "digger.ZWAdmin",
 	HandlerType: (*ZWAdminServer)(nil),
@@ -1263,17 +1731,27 @@ var _ZWAdmin_serviceDesc = grpc1.ServiceDesc{
 			MethodName: "UpdateRecommend",
 			Handler:    _ZWAdmin_UpdateRecommend_Handler,
 		},
+		{
+			MethodName: "PromptBuyList",
+			Handler:    _ZWAdmin_PromptBuyList_Handler,
+		},
+		{
+			MethodName: "UpdatePromptBuy",
+			Handler:    _ZWAdmin_UpdatePromptBuy_Handler,
+		},
 	},
 	Streams:  []grpc1.StreamDesc{},
 	Metadata: "digger/zwadmin.proto",
 }
 
 var OptionZWAdmin = ezcommon.GenOption([]byte{
-	// 90 bytes of Option
+	// 126 bytes of Option
 	0x0a, 0x0e, 0x64, 0x69, 0x67, 0x67, 0x65, 0x72, 0x2e, 0x5a, 0x57, 0x41, 0x64, 0x6d, 0x69, 0x6e,
 	0x1a, 0x0b, 0x0a, 0x09, 0x55, 0x73, 0x65, 0x72, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x1a, 0x0a, 0x0a,
 	0x08, 0x55, 0x73, 0x65, 0x72, 0x49, 0x6e, 0x66, 0x6f, 0x1a, 0x0c, 0x0a, 0x0a, 0x55, 0x73, 0x65,
 	0x72, 0x4c, 0x6f, 0x67, 0x6f, 0x75, 0x74, 0x1a, 0x0e, 0x0a, 0x0c, 0x47, 0x65, 0x74, 0x52, 0x65,
 	0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x64, 0x1a, 0x11, 0x0a, 0x0f, 0x55, 0x70, 0x64, 0x61, 0x74,
-	0x65, 0x52, 0x65, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x64,
+	0x65, 0x52, 0x65, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x64, 0x1a, 0x0f, 0x0a, 0x0d, 0x50, 0x72,
+	0x6f, 0x6d, 0x70, 0x74, 0x42, 0x75, 0x79, 0x4c, 0x69, 0x73, 0x74, 0x1a, 0x11, 0x0a, 0x0f, 0x55,
+	0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x72, 0x6f, 0x6d, 0x70, 0x74, 0x42, 0x75, 0x79,
 })

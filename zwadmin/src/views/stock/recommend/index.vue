@@ -1,18 +1,23 @@
 <template>
   <div>
   <div class="app-container">
-    <el-form :inline="true" :model="formInline" class="demo-form-inline">
-      <el-form-item label="跌幅">
-        <el-input v-model.number="formInline.decrease" placeholder=0></el-input>
+    <el-form :inline="true" :model="queryForm" class="demo-form-inline">
+      <el-form-item label="代码">
+        <el-input v-model="queryForm.secucode" placeholder="SZ.000001"></el-input>
       </el-form-item>
-      <el-form-item label="活动区域">
-        <el-select v-model="formInline.region" placeholder="活动区域">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
+      <el-form-item label="跌幅">
+        <el-input v-model.number="queryForm.decrease" placeholder=20></el-input>
+      </el-form-item>
+      <el-form-item label="状态">
+        <el-select v-model.number=queryForm.state placeholder="准备">
+          <el-option label="准备" value=1></el-option>
+          <el-option label="开始" value=2></el-option>
+          <el-option label="进行中" value=3></el-option>
+          <el-option label="结束" value=4></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">查询</el-button>
+        <el-button type="primary" @click="onQuerySubmit">查询</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -32,6 +37,7 @@
     <el-table-column prop="rMPrice" label="推荐价格" width="220"> </el-table-column>
     <el-table-column prop="presentPrice" label="当前价" width="120"> </el-table-column>
     <el-table-column prop="gDDecrease" label="股东人数" width="120"> </el-table-column>
+    <el-table-column prop="updateNum" label="更新次数" width="80"> </el-table-column>
     <el-table-column prop="updateDate" label="更新时间" width="120"> </el-table-column>
     <el-table-column fixed="right" label="操作" width="220">
       <template slot-scope="scope">
@@ -120,10 +126,11 @@ export default {
       
       listLoading: true,
       modifyDialogVisible: false,
-      formInline: {
-        user: '',
-        region: '',
+      queryForm: {
+        secucode: '',
+        region: 1,
         decrease: 0,
+        state: 1,
       },
       modifyForm: {
         name: '',
@@ -155,7 +162,9 @@ export default {
        var req = {
         limit: this.pageInfo.pageSize,
         offset: (this.pageInfo.pageNum-1)*this.pageInfo.pageSize,
-        pDecrease:this.formInline.decrease,
+        pDecrease:this.queryForm.decrease,
+        state: this.queryForm.state,
+        secucode: this.queryForm.secucode,
       }
       getRecommendList(req).then(response => {
         console.log("===>>TODO 111: ", response)
@@ -200,16 +209,13 @@ export default {
       updateRecommend(req).then(response=>{
         console.log("==>>TODO 3036: ", "ok")
         this.modifyDialogVisible = !this.modifyDialogVisible
+        this.fetchData()
       })
-      this.fetchData()
+      
       this.modifyForm.decrease = 0
     },
-    onSubmit() {
-      console.log('submit!', this.formInline.user, this.formInline.region);
-      // var req = {
-      //   limit: this.pageInfo.pageSize,
-      //   offset: (this.pageInfo.pageNum-1)*this.pageInfo.pageSize,
-      // }
+    onQuerySubmit() {
+      console.log('submit!', this.queryForm.state, this.queryForm.decrease);
       this.fetchData()
       console.log("===>>TODO 212: ", this.tableData)
     },
@@ -229,7 +235,7 @@ export default {
     handleClick(tab) {
       console.log("===>>TODO 254: ", tab)
       var secucode = this.lineChartForm.secucode
-      if (tab.name == "date") {
+      if (tab.name === "date") {
         this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/daily/n/'+secucode+'.gif'
       } else if (tab.name == "contour") { //contour
         this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/weekly/n/'+secucode+'.gif'

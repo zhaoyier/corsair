@@ -5,7 +5,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
-	// log "github.com/Sirupsen/logrus"
+
+	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
+	log "github.com/Sirupsen/logrus"
 )
 
 // data[3] current p
@@ -39,4 +41,23 @@ func GetSinaDayDetail(code string) ([]string, error) {
 
 	data = data[start:end]
 	return strings.Split(data, ","), nil
+}
+
+func GetSinaDayPrice(secucode string) float64 {
+	codes := strings.Split(secucode, ".")
+	secucode = strings.Join(codes, "")
+	secucode = strings.ToLower(secucode)
+	results, err := GetSinaDayDetail(secucode)
+	if err != nil {
+		log.Errorf("get present price failed: %s|%q", secucode, err)
+		return 0
+	}
+
+	log.Infof("==>>TODO 131: %+v|%+v", secucode, results)
+	if len(results) < 3 {
+		log.Errorf("get present price invalid: %s|%+v", secucode, results)
+		return 0
+	}
+	price := results[3]
+	return utils.String2Float64(price)
 }

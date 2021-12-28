@@ -37,7 +37,7 @@ func GenRecommendTmp(secucode string) {
 		log.Errorf("query short line failed: %s|%q", secucode, err)
 		return
 	}
-	getShortRecommendedData(result)
+	getShortRecommendedData(result, true)
 }
 
 func genRecommendData() error {
@@ -48,13 +48,13 @@ func genRecommendData() error {
 	iter := col.Find(ezdb.M{"Disabled": false}).Batch(100).Prefetch(0.25).Iter()
 	for iter.Next(&data) {
 		log.Infof("==>>TODO 101:%+v", data.Name)
-		getShortRecommendedData(data)
+		getShortRecommendedData(data, true)
 	}
 
 	return nil
 }
 
-func getShortRecommendedData(data *orm.GPShortLine) error {
+func getShortRecommendedData(data *orm.GPShortLine, updateNum bool) error {
 	result := getGPRecommend(data.Secucode)
 	data.DecreaseTag = getDecreaseTag(data.Secucode, data.DecreaseTag)
 	decrease := math.Max(float64(data.MDecrease), float64(data.TDecrease))
@@ -80,9 +80,17 @@ func getShortRecommendedData(data *orm.GPShortLine) error {
 	result.RMIndex = getRecommendIndex(result)
 	result.Disabled = data.Disabled
 	result.GDDecrease = getGDDecrease(data.Secucode)
+	if result.State >= int32(trpc.RMState_RMStateStarted) && updateNum {
+		result.UpdateNum += 1
+	}
 
 	if _, err := result.Save(); err != nil {
 		log.Errorf("save recommend failed: %s|%q", data.Secucode, err)
+		return err
+	}
+
+	if err := SavePromptBuy(result, data.MinPrice); err != nil {
+		log.Errorf("update prompt buy failed: %s|%q", data.Secucode, err)
 		return err
 	}
 

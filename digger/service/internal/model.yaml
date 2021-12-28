@@ -155,11 +155,26 @@ GPRecommend:
       - State: int32  #1准备,2开始, 3进行中,4结束,5放弃
       - Remark: map[string]string  #map[date]xxx
       - Disabled: bool
+      - UpdateNum: int32  #更新次数
       - CreateDate: datetime
       - UpdateBy: string
       - UpdateDate: datetime
     uniques: [[Secucode,Disabled]]
     indexes: [[Secucode,State],[CreateDate]]
+
+GPPromptBuy:
+  db: mongo
+  dbname: digger
+  fields:
+    - Secucode  : string 
+    - Name: string
+    - MinPrice: float64
+    - Start: datetime
+    - PresentPrice: float64
+    - Disabled: bool
+    - UpdateDate: datetime
+  uniques: [[Secucode,Disabled]]
+  indexes: [[Secucode],[Name]]
 
 Job:
     db: mongo

@@ -1,7 +1,6 @@
 package dawdle
 
 import (
-	"strings"
 	"time"
 
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
@@ -30,26 +29,9 @@ func iterGPRecommend() {
 	}
 
 	for _, result := range results {
-		price := getPresentPrice(result.Secucode)
+		price := request.GetSinaDayPrice(result.Secucode)
 		updateRecommendPrice(result.Secucode, price)
 	}
-}
-
-func getPresentPrice(secucode string) float64 {
-	secucode = strings.ToLower(secucode)
-	secucode = strings.Replace(secucode, ".", "", -1)
-
-	results, err := request.GetSinaDayDetail(secucode)
-	if err != nil {
-		log.Errorf("get present price failed: %s|%q", secucode, err)
-		return 0
-	}
-	if len(results) < 3 {
-		log.Errorf("get present price invalid: %s|%+v", secucode, results)
-		return 0
-	}
-	price := results[3]
-	return utils.String2Float64(price)
 }
 
 func updateRecommendPrice(secucode string, price float64) error {
@@ -57,19 +39,18 @@ func updateRecommendPrice(secucode string, price float64) error {
 		log.Infof("update price invalid: %s|%.1f", secucode, price)
 		return nil
 	}
-
-	result, err := orm.GPRecommendMgr.FindOneBySecucodeDisabled(secucode, false)
+	result, err := orm.GPShortLineMgr.FindOne(ezdb.M{"Secucode": secucode}, "-CreateDate")
 	if err != nil {
-		log.Infof("get recommend failed: %q", err)
+		log.Infof("get short line failed: %q", err)
 		return err
 	}
-	result.PresentPrice = price
-	result.UpdateBy = "update price"
-	result.UpdateDate = time.Now().Unix()
+	result.MDecrease = utils.DecreasePercent(result.MaxPrice, price)
+	result.TDecrease = utils.DecreasePercent(result.MaxPrice, price)
 
-	if _, err := result.Save(); err != nil {
-		log.Infof("update recommend failed: %q", err)
+	if err := getShortRecommendedData(result, false); err != nil {
+		log.Infof("gen recommend failed: %s|%q", secucode, err)
 		return err
 	}
+
 	return nil
 }

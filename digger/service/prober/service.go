@@ -27,7 +27,7 @@ func Start() {
 	// go dawdle.GenShortLineOnce()
 	// go dawdle.GenRecommendOnce()
 
-	// dawdle.GenRecommendTmp("SH.603213")
+	// dawdle.GenRecommendTmp("SZ.301168")
 	// dawdle.GenLongLineTmp("SH.603213")
 	// dawdle.GenShortLineTmp("SZ.301138")
 

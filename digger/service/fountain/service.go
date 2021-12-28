@@ -13,10 +13,6 @@ import (
 func Start() {
 	router := gin.Default()
 	router.Use(middle.Cors())
-
-	// config := cors.DefaultConfig()
-	// config.AllowOrigins = []string{"http://localhost:9528"}
-	// router.Use(cors.New(config))
 	startRoute(router)
 
 	server := &http.Server{

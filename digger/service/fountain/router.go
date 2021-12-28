@@ -33,8 +33,6 @@ func startRoute(router *gin.Engine) {
 	{
 		stockGroup.POST("/GetRecommend", recommend.GetRecommend)
 		stockGroup.POST("/UpdateRecommend", recommend.UpdateRecommend)
-		// UpdateRecommend
+		stockGroup.POST("/PromptBuyList", recommend.PromptBuyList)
 	}
-
-	// /api/user/info
 }
