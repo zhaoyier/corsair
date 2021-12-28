@@ -202,6 +202,7 @@ export default {
         this.modifyDialogVisible = !this.modifyDialogVisible
       })
       this.fetchData()
+      this.modifyForm.decrease = 0
     },
     onSubmit() {
       console.log('submit!', this.formInline.user, this.formInline.region);
@@ -235,6 +236,7 @@ export default {
       } else { //分时线
         this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/min/n/'+secucode+'.gif'
       }
+      this.lineChartForm.activeName = "date"
     }
 
   }
