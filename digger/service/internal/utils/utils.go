@@ -41,7 +41,7 @@ func GetFocusStr(cells []string, sep string) string {
 			continue
 		}
 		if cell == pre {
-			str += sep + ".."
+			str += "."
 		} else {
 			str += sep + cell
 		}
@@ -66,18 +66,13 @@ func GetDateStr(cells []int64, sep string) string {
 }
 
 // 最近
-func GetGDReduceRatio(cells []float64) int32 {
-	var counter int32
-	var sum float64
+func GetGDReduceRatio(cells []float64, sep string) string {
+	list := make([]string, 0, len(cells))
 	for _, cell := range cells {
-		if cell > 5 {
-			break
-		}
-		counter++
-		sum += cell
+		list = append(list, fmt.Sprintf("%.1f", cell))
 	}
 
-	return int32(math.Ceil(sum))
+	return strings.Join(list, sep)
 }
 
 func Decimal(value float64) float64 {

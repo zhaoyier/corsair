@@ -11,6 +11,37 @@ service ZWAdmin {
     rpc UpdateRecommend(UpdateRecommendReq) returns(UpdateRecommendResp);
     rpc PromptBuyList(PromptBuyListReq) returns(PromptBuyListResp);
     rpc UpdatePromptBuy(UpdatePromptBuyReq) returns(UpdatePromptBuyResp);
+    rpc GetLongLineList(GetLongLineListReq) returns(GetLongLineListResp);
+
+}
+
+message GetLongLineListReq {
+    string secucode = 2;
+    int32 gdRatio = 3;
+    int32 limit = 10;
+    int32 offset = 11;
+}
+
+message LongLineItem {
+    string secucode = 2;
+    string name = 3;
+    string price = 4;
+    string focus = 5;
+    string date = 6;
+    string ratioStr = 7;
+    int32 gdRatio = 8;
+    string createDate = 9;
+    double presentPrice = 10;
+}
+
+message LongLineData {
+    int32 total = 1;
+    repeated LongLineItem items = 2;
+}
+
+message GetLongLineListResp {
+    int32 code = 1;
+    LongLineData data = 2;
 }
 
 message PromptBuyListReq {

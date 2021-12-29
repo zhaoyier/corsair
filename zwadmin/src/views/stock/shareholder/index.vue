@@ -1,66 +1,97 @@
 <template>
-  <div class="app-container">
-    <el-table
-      v-loading="listLoading"
-      :data="list"
-      element-loading-text="Loading"
-      border
-      fit
-      highlight-current-row
-    >
-      <el-table-column align="center" label="ID" width="95">
+  <div>
+    <div class="app-container">
+      <el-form :inline="true" :model="queryForm" class="demo-form-inline">
+        <el-form-item label="代码">
+          <el-input v-model="queryForm.secucode" placeholder="SZ.000001"></el-input>
+        </el-form-item>
+        <el-form-item label="股东增减">
+          <el-input v-model.number="queryForm.reduceRatio" placeholder=20></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onQuerySubmit">查询</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div class="app-container">
+      <el-table :data="tableData" stripe style="width: 100%" max-height="800">
+      <el-table-column fixed="left" class-name="status-col" label="代码" width="150">
         <template slot-scope="scope">
-          {{ scope.$index }}
+          <el-tag type="danger" effect="plain">{{ scope.row.secucode }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="Title">
+      <el-table-column prop="name" label="名称" width="120"></el-table-column>
+      <el-table-column class-name="status-col" label="股东变化" width="110" align="center">
+          <template slot-scope="scope">
+            <el-tag type="warning" effect="dark">{{ scope.row.gdRatio }}</el-tag>
+          </template>
+        </el-table-column>
+      <el-table-column class-name="status-col" label="当前价格" width="80">
         <template slot-scope="scope">
-          {{ scope.row.title }}
+          <el-tag type="danger" effect="dark">{{ scope.row.presentPrice }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="Author" width="110" align="center">
+      <el-table-column prop="ratioStr" label="股东比例" width="160"></el-table-column>
+      <el-table-column prop="price" label="价格变动" width="160"></el-table-column>
+      <el-table-column prop="date" label="日期" width="160"></el-table-column>
+      <el-table-column prop="focus" label="关注度" width="200"></el-table-column>
+      <el-table-column prop="updateDate" label="最近更新时间" width="120"> </el-table-column>
+
+      <el-table-column fixed="right" label="操作" width="220">
         <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Pageviews" width="110" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.pageviews }}
-        </template>
-      </el-table-column>
-      <el-table-column class-name="status-col" label="Status" width="110" align="center">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" prop="created_at" label="Display_time" width="200">
-        <template slot-scope="scope">
-          <i class="el-icon-time" />
-          <span>{{ scope.row.display_time }}</span>
+          <el-button
+            @click.native.prevent="modifyRow(scope.$index, tableData)"
+            type="text"
+            size="small">
+            修改
+          </el-button>
+          <el-divider direction="vertical"></el-divider>
         </template>
       </el-table-column>
     </el-table>
+    <div class="gva-pagination">
+        <el-pagination
+          :current-page=pageInfo.pageNum
+          :page-size=pageInfo.pageSize
+          :page-sizes="[10, 30, 50, 100]"
+          :total=pageInfo.total
+          layout="total, sizes, prev, pager, next, jumper"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { getList } from '@/api/table'
+import { getLongLineList } from '@/api/stock'
 
 export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
+        "进行中": 'danger',
+        "开始": 'warning',
+        "准备": 'info'
       }
       return statusMap[status]
     }
   },
   data() {
     return {
-      list: null,
-      listLoading: true
+      listLoading: true,
+      queryForm: {
+        secucode: '',
+        reduceRatio: 0,
+      },
+      formLabelWidth: '120px',
+      tableData: [],
+      pageInfo: {
+        pageNum: 1,
+        pageSize: 20,
+        total: 0,
+      }
     }
   },
   created() {
@@ -69,11 +100,42 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      getList().then(response => {
-        this.list = response.data.items
+       var req = {
+        limit: this.pageInfo.pageSize,
+        offset: (this.pageInfo.pageNum-1)*this.pageInfo.pageSize,
+        gdRatio: this.queryForm.reduceRatio,
+        secucode: this.queryForm.secucode,
+      }
+      getLongLineList(req).then(response => {
+        console.log("===>>TODO 111: ", response)
+
+        this.tableData = response.data.items
+        this.pageInfo.total = response.data.total
         this.listLoading = false
       })
-    }
+      console.log("===>>TODO 211: ", this.tableData)
+    },
+    modifyRow(index, rows) {
+      var data = rows[index]
+      this.modifyDialogVisible = !this.modifyDialogVisible
+    },
+    onQuerySubmit() {
+      console.log('submit!', this.queryForm.state, this.queryForm.decrease);
+      this.fetchData()
+      console.log("===>>TODO 212: ", this.tableData)
+    },
+    handleCurrentChange(val) {
+      console.log("===>>TODO 2131: ", val)
+      this.pageInfo.pageNum = val
+      console.log("===>>TODO 2132: ", this.pageInfo.pageNum)
+      var req = {
+        limit: this.pageInfo.pageSize,
+        offset: (this.pageInfo.pageNum-1)*this.pageInfo.pageSize,
+      }
+      this.fetchData()
+    },
+    
+
   }
 }
 </script>

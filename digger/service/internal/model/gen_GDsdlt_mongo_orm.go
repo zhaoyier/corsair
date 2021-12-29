@@ -28,6 +28,15 @@ func initGDsdltIndex() {
 	defer session.Close()
 
 	if err := collection.EnsureIndex(mgo.Index{
+		Key:        []string{"Secucode", "EndDate", "HolderName"},
+		Unique:     true,
+		Background: true,
+		Sparse:     true,
+	}); err != nil {
+		panic("ensureIndex digger.GDsdlt SecucodeEndDateHolderName error:" + err.Error())
+	}
+
+	if err := collection.EnsureIndex(mgo.Index{
 		Key:        []string{"Secucode", "EndDate"},
 		Background: true,
 		Sparse:     true,
@@ -41,15 +50,6 @@ func initGDsdltIndex() {
 		Sparse:     true,
 	}); err != nil {
 		panic("ensureIndex digger.GDsdlt CreateDate error:" + err.Error())
-	}
-
-	if err := collection.EnsureIndex(mgo.Index{
-		Key:        []string{"Secucode", "EndDate", "HolderName"},
-		Unique:     true,
-		Background: true,
-		Sparse:     true,
-	}); err != nil {
-		panic("ensureIndex digger.GDsdlt SecucodeEndDateHolderName error:" + err.Error())
 	}
 
 }
@@ -180,25 +180,6 @@ func (o *_GDsdltMgr) NQuery(query interface{}, limit, offset int, sortFields []s
 
 	return session, q
 }
-func (o *_GDsdltMgr) FindBySecucodeEndDate(Secucode string, EndDate int64, limit int, offset int, sortFields ...string) (result []*GDsdlt, err error) {
-	query := db.M{
-		"Secucode": Secucode,
-		"EndDate":  EndDate,
-	}
-	session, q := GDsdltMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
-}
-func (o *_GDsdltMgr) FindByCreateDate(CreateDate int64, limit int, offset int, sortFields ...string) (result []*GDsdlt, err error) {
-	query := db.M{
-		"CreateDate": CreateDate,
-	}
-	session, q := GDsdltMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
-}
 func (o *_GDsdltMgr) FindOneBySecucodeEndDateHolderName(Secucode string, EndDate int64, HolderName string) (result *GDsdlt, err error) {
 	query := db.M{
 		"Secucode":   Secucode,
@@ -233,6 +214,25 @@ func (o *_GDsdltMgr) RemoveBySecucodeEndDateHolderName(Secucode string, EndDate 
 		"HolderName": HolderName,
 	}
 	return col.Remove(query)
+}
+func (o *_GDsdltMgr) FindBySecucodeEndDate(Secucode string, EndDate int64, limit int, offset int, sortFields ...string) (result []*GDsdlt, err error) {
+	query := db.M{
+		"Secucode": Secucode,
+		"EndDate":  EndDate,
+	}
+	session, q := GDsdltMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
+}
+func (o *_GDsdltMgr) FindByCreateDate(CreateDate int64, limit int, offset int, sortFields ...string) (result []*GDsdlt, err error) {
+	query := db.M{
+		"CreateDate": CreateDate,
+	}
+	session, q := GDsdltMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
 }
 
 func (o *_GDsdltMgr) Find(query interface{}, limit int, offset int, sortFields ...string) (result []*GDsdlt, err error) {

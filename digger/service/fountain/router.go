@@ -5,6 +5,7 @@ import (
 	"time"
 
 	admin "git.ezbuy.me/ezbuy/corsair/digger/service/fountain/internal/zwadmin"
+	"git.ezbuy.me/ezbuy/corsair/digger/service/fountain/longline"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/fountain/prompt"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/fountain/recommend"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
@@ -35,5 +36,6 @@ func startRoute(router *gin.Engine) {
 		stockGroup.POST("/GetRecommend", recommend.GetRecommend)
 		stockGroup.POST("/UpdateRecommend", recommend.UpdateRecommend)
 		stockGroup.POST("/PromptBuyList", prompt.PromptBuyList)
+		stockGroup.POST("/GetLongLineList", longline.GetLongLineList)
 	}
 }

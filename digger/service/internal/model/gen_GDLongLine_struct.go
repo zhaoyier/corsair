@@ -14,6 +14,7 @@ type GDLongLine struct {
 	CumulantPrice string        `bson:"CumulantPrice" json:"CumulantPrice"`
 	CumulantFocus string        `bson:"CumulantFocus" json:"CumulantFocus"`
 	CumulantDate  string        `bson:"CumulantDate" json:"CumulantDate"`
+	CumulantRatio string        `bson:"CumulantRatio" json:"CumulantRatio"`
 	GDReduceRatio int32         `bson:"GDReduceRatio" json:"GDReduceRatio"`
 	Disabled      bool          `bson:"Disabled" json:"Disabled"`
 	Remark        string        `bson:"Remark" json:"Remark"`
@@ -30,6 +31,7 @@ const (
 	GDLongLineMgoFieldCumulantPrice = "CumulantPrice"
 	GDLongLineMgoFieldCumulantFocus = "CumulantFocus"
 	GDLongLineMgoFieldCumulantDate  = "CumulantDate"
+	GDLongLineMgoFieldCumulantRatio = "CumulantRatio"
 	GDLongLineMgoFieldGDReduceRatio = "GDReduceRatio"
 	GDLongLineMgoFieldDisabled      = "Disabled"
 	GDLongLineMgoFieldRemark        = "Remark"

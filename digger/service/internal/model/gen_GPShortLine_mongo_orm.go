@@ -28,6 +28,15 @@ func initGPShortLineIndex() {
 	defer session.Close()
 
 	if err := collection.EnsureIndex(mgo.Index{
+		Key:        []string{"Secucode", "CreateDate"},
+		Unique:     true,
+		Background: true,
+		Sparse:     true,
+	}); err != nil {
+		panic("ensureIndex digger.GPShortLine SecucodeCreateDate error:" + err.Error())
+	}
+
+	if err := collection.EnsureIndex(mgo.Index{
 		Key:        []string{"Secucode"},
 		Background: true,
 		Sparse:     true,
@@ -49,15 +58,6 @@ func initGPShortLineIndex() {
 		Sparse:     true,
 	}); err != nil {
 		panic("ensureIndex digger.GPShortLine CreateDate error:" + err.Error())
-	}
-
-	if err := collection.EnsureIndex(mgo.Index{
-		Key:        []string{"Secucode", "CreateDate"},
-		Unique:     true,
-		Background: true,
-		Sparse:     true,
-	}); err != nil {
-		panic("ensureIndex digger.GPShortLine SecucodeCreateDate error:" + err.Error())
 	}
 
 }
@@ -188,33 +188,6 @@ func (o *_GPShortLineMgr) NQuery(query interface{}, limit, offset int, sortField
 
 	return session, q
 }
-func (o *_GPShortLineMgr) FindBySecucode(Secucode string, limit int, offset int, sortFields ...string) (result []*GPShortLine, err error) {
-	query := db.M{
-		"Secucode": Secucode,
-	}
-	session, q := GPShortLineMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
-}
-func (o *_GPShortLineMgr) FindByDisabled(Disabled bool, limit int, offset int, sortFields ...string) (result []*GPShortLine, err error) {
-	query := db.M{
-		"Disabled": Disabled,
-	}
-	session, q := GPShortLineMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
-}
-func (o *_GPShortLineMgr) FindByCreateDate(CreateDate int64, limit int, offset int, sortFields ...string) (result []*GPShortLine, err error) {
-	query := db.M{
-		"CreateDate": CreateDate,
-	}
-	session, q := GPShortLineMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
-}
 func (o *_GPShortLineMgr) FindOneBySecucodeCreateDate(Secucode string, CreateDate int64) (result *GPShortLine, err error) {
 	query := db.M{
 		"Secucode":   Secucode,
@@ -246,6 +219,33 @@ func (o *_GPShortLineMgr) RemoveBySecucodeCreateDate(Secucode string, CreateDate
 		"CreateDate": CreateDate,
 	}
 	return col.Remove(query)
+}
+func (o *_GPShortLineMgr) FindBySecucode(Secucode string, limit int, offset int, sortFields ...string) (result []*GPShortLine, err error) {
+	query := db.M{
+		"Secucode": Secucode,
+	}
+	session, q := GPShortLineMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
+}
+func (o *_GPShortLineMgr) FindByDisabled(Disabled bool, limit int, offset int, sortFields ...string) (result []*GPShortLine, err error) {
+	query := db.M{
+		"Disabled": Disabled,
+	}
+	session, q := GPShortLineMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
+}
+func (o *_GPShortLineMgr) FindByCreateDate(CreateDate int64, limit int, offset int, sortFields ...string) (result []*GPShortLine, err error) {
+	query := db.M{
+		"CreateDate": CreateDate,
+	}
+	session, q := GPShortLineMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
 }
 
 func (o *_GPShortLineMgr) Find(query interface{}, limit int, offset int, sortFields ...string) (result []*GPShortLine, err error) {

@@ -8,7 +8,6 @@ import (
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/job"
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
 	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
-	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
 	log "github.com/Sirupsen/logrus"
 	ezdb "github.com/ezbuy/ezorm/db"
 	mgo "gopkg.in/mgo.v2"
@@ -88,9 +87,6 @@ func genLongLineData(secucode string, since int64) error {
 		wv.AvgFreesharesRatio = append(wv.AvgFreesharesRatio, r.AvgFreesharesRatio)
 		wv.Date = append(wv.Date, r.EndDate)
 	}
-	// log.Infof("==>>TODO 503: %+v", len(wv.Price))
-	// wv.GPDaily = dailyResult
-	// log.Infof("==>>TODO 504: %+v", len(gdResults))
 	if err := applyLongLine(wv); err != nil {
 		log.Errorf("apply recommend failed: %s|%q", secucode, err)
 		return nil
@@ -116,7 +112,7 @@ func applyLongLine(wv *WeightData) error {
 
 	valueIndex := wv.Cal().GetWeight()
 	// log.Infof("==>>TODO 315:%+v|%+v|%+v", valueIndex, nil, nil)
-	if valueIndex < 50 {
+	if valueIndex < 30 {
 		log.Infof("value low failed: %s|%d", wv.Secucode, valueIndex)
 		return nil
 	}
@@ -127,10 +123,11 @@ func applyLongLine(wv *WeightData) error {
 	result.Secucode = wv.Secucode
 	result.Name = wv.GPDaily.Name
 	result.ValueIndex = wv.Cal().GetWeight()
-	result.CumulantPrice = utils.FloatSlice2Str(wv.Price, "<-")
-	result.CumulantFocus = utils.GetFocusStr(wv.Focus, "<-")
-	result.CumulantDate = utils.GetDateStr(wv.Date, "<-")
-	result.GDReduceRatio = utils.GetGDReduceRatio(wv.TotalNumRatio)
+	result.CumulantPrice = wv.GetCumulantPrice() //utils.FloatSlice2Str(wv.Price, "<-")
+	result.CumulantFocus = wv.GetCumulantFocus() //utils.GetFocusStr(wv.Focus, "<-")
+	result.CumulantDate = wv.GetCumulantDate()   //utils.GetDateStr(wv.Date, "<-")
+	result.CumulantRatio = wv.GetCumulantRatio()
+	result.GDReduceRatio = wv.GetTotalNumRatio()
 	result.CreateDate = time.Now().Unix()
 	log.Infof("long line data:%+v|%+v", result.Name, result.ValueIndex)
 	if result.ValueIndex <= 50 {

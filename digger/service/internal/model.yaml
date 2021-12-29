@@ -81,10 +81,11 @@ GDLongLine:
     fields:
       - Secucode: string
       - Name: string            #名称
-      - ValueIndex: int32      #价值指数
-      - CumulantPrice: string #价格梯度
-      - CumulantFocus: string #集中度梯度
-      - CumulantDate: string  #日期梯度
+      - ValueIndex: int32       #价值指数
+      - CumulantPrice: string   #价格梯度
+      - CumulantFocus: string   #集中度梯度
+      - CumulantDate: string    #日期梯度
+      - CumulantRatio: string    #日期梯度
       - GDReduceRatio: int32    #最近三次股东减少比例
       - Disabled: bool
       - Remark: string

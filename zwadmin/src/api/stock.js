@@ -25,3 +25,12 @@ export function promptBuyList(data) {
     data
   })
 }
+
+// 查询股东人数变化
+export function getLongLineList(data) {
+  return request({
+    url: '/api/stock/GetLongLineList',
+    method: 'post',
+    data
+  })
+}

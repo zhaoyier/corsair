@@ -28,7 +28,7 @@ func Start() {
 	// go dawdle.GenRecommendOnce()
 
 	// dawdle.GenRecommendTmp("SZ.300741")
-	dawdle.GenLongLineTmp("SZ.300741")
+	dawdle.GenLongLineTmp("SZ.002532")
 	// dawdle.GenShortLineTmp("SZ.300741")
 
 	for range tk.C {

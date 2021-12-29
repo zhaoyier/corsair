@@ -28,6 +28,15 @@ func initGPPromptBuyIndex() {
 	defer session.Close()
 
 	if err := collection.EnsureIndex(mgo.Index{
+		Key:        []string{"Secucode", "Disabled"},
+		Unique:     true,
+		Background: true,
+		Sparse:     true,
+	}); err != nil {
+		panic("ensureIndex digger.GPPromptBuy SecucodeDisabled error:" + err.Error())
+	}
+
+	if err := collection.EnsureIndex(mgo.Index{
 		Key:        []string{"Secucode"},
 		Background: true,
 		Sparse:     true,
@@ -41,15 +50,6 @@ func initGPPromptBuyIndex() {
 		Sparse:     true,
 	}); err != nil {
 		panic("ensureIndex digger.GPPromptBuy Name error:" + err.Error())
-	}
-
-	if err := collection.EnsureIndex(mgo.Index{
-		Key:        []string{"Secucode", "Disabled"},
-		Unique:     true,
-		Background: true,
-		Sparse:     true,
-	}); err != nil {
-		panic("ensureIndex digger.GPPromptBuy SecucodeDisabled error:" + err.Error())
 	}
 
 }
@@ -180,24 +180,6 @@ func (o *_GPPromptBuyMgr) NQuery(query interface{}, limit, offset int, sortField
 
 	return session, q
 }
-func (o *_GPPromptBuyMgr) FindBySecucode(Secucode string, limit int, offset int, sortFields ...string) (result []*GPPromptBuy, err error) {
-	query := db.M{
-		"Secucode": Secucode,
-	}
-	session, q := GPPromptBuyMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
-}
-func (o *_GPPromptBuyMgr) FindByName(Name string, limit int, offset int, sortFields ...string) (result []*GPPromptBuy, err error) {
-	query := db.M{
-		"Name": Name,
-	}
-	session, q := GPPromptBuyMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
-}
 func (o *_GPPromptBuyMgr) FindOneBySecucodeDisabled(Secucode string, Disabled bool) (result *GPPromptBuy, err error) {
 	query := db.M{
 		"Secucode": Secucode,
@@ -229,6 +211,24 @@ func (o *_GPPromptBuyMgr) RemoveBySecucodeDisabled(Secucode string, Disabled boo
 		"Disabled": Disabled,
 	}
 	return col.Remove(query)
+}
+func (o *_GPPromptBuyMgr) FindBySecucode(Secucode string, limit int, offset int, sortFields ...string) (result []*GPPromptBuy, err error) {
+	query := db.M{
+		"Secucode": Secucode,
+	}
+	session, q := GPPromptBuyMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
+}
+func (o *_GPPromptBuyMgr) FindByName(Name string, limit int, offset int, sortFields ...string) (result []*GPPromptBuy, err error) {
+	query := db.M{
+		"Name": Name,
+	}
+	session, q := GPPromptBuyMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
 }
 
 func (o *_GPPromptBuyMgr) Find(query interface{}, limit int, offset int, sortFields ...string) (result []*GPPromptBuy, err error) {
