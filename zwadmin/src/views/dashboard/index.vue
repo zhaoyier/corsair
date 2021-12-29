@@ -30,7 +30,7 @@
           {{ scope.row.presentPrice }}
         </template>
       </el-table-column>
-      <el-table-column class-name="status-col" label="Status" width="110" align="center">
+      <el-table-column class-name="status-col" label="涨跌价" width="110" align="center">
         <template slot-scope="scope">          
           <p v-if="scope.row.priceDiff>0">
             <el-tag type="danger">{{ scope.row.priceDiff }}</el-tag>

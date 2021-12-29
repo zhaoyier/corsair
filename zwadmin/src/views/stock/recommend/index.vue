@@ -10,6 +10,7 @@
       </el-form-item>
       <el-form-item label="状态">
         <el-select v-model.number=queryForm.state placeholder="准备">
+          <el-option label="待定" value=0></el-option>
           <el-option label="准备" value=1></el-option>
           <el-option label="开始" value=2></el-option>
           <el-option label="进行中" value=3></el-option>
@@ -123,14 +124,13 @@ export default {
   },
   data() {
     return {
-      
       listLoading: true,
       modifyDialogVisible: false,
       queryForm: {
         secucode: '',
         region: 1,
         decrease: 0,
-        state: 1,
+        state: 0,
       },
       modifyForm: {
         name: '',
