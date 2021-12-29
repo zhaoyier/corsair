@@ -32,6 +32,7 @@ message LongLineItem {
     int32 gdRatio = 8;
     string createDate = 9;
     double presentPrice = 10;
+    int32 valueIndex = 11;
 }
 
 message LongLineData {

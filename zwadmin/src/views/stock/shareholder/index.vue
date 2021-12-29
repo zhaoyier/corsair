@@ -21,11 +21,16 @@
         </template>
       </el-table-column>
       <el-table-column prop="name" label="名称" width="120"></el-table-column>
+      <el-table-column class-name="status-col" label="推荐指数" width="110" align="center">
+          <template slot-scope="scope">
+            <el-tag type="success" effect="dark">{{ scope.row.valueIndex }}</el-tag>
+          </template>
+      </el-table-column>
       <el-table-column class-name="status-col" label="股东变化" width="110" align="center">
           <template slot-scope="scope">
             <el-tag type="warning" effect="dark">{{ scope.row.gdRatio }}</el-tag>
           </template>
-        </el-table-column>
+      </el-table-column>
       <el-table-column class-name="status-col" label="当前价格" width="80">
         <template slot-scope="scope">
           <el-tag type="danger" effect="dark">{{ scope.row.presentPrice }}</el-tag>
