@@ -76,8 +76,9 @@ message RecommendItem {
     int32 gDDecrease = 12;
     string state = 13;          //状态
     int32 updateNum = 14;
-    string updateDate=15;
-    double presentPrice = 16;
+    int32 referDecrease = 15;   //参照
+    string updateDate=16;
+    double presentPrice = 17;
 }
 
 message RecommendData {

@@ -5,6 +5,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
@@ -102,23 +103,34 @@ func GetRecommend(in *gin.Context) {
 
 	resp.Data.Total = int32(orm.GPRecommendMgr.Count(query))
 
+	wg := sync.WaitGroup{}
+	wg.Add(len(results))
+
 	for idx, result := range results {
-		resp.Data.Items = append(resp.Data.Items, &trpc.RecommendItem{
-			Id:           int32(idx + 1),
-			Secucode:     result.Secucode,
-			Name:         result.Name, //getName(result.Secucode),
-			RMIndex:      result.RMIndex,
-			PDecrease:    result.PDecrease,
-			MaxPrice:     result.MaxPrice,
-			MaxPDay:      utils.TS2Date(result.MaxPDay),
-			RMPrice:      result.RMPrice,
-			GDDecrease:   result.GDDecrease,
-			State:        getState(result.State),
-			UpdateNum:    result.UpdateNum,
-			UpdateDate:   utils.TS2Date(result.UpdateDate),
-			PresentPrice: result.PresentPrice,
-		})
+		idx, result := idx, result
+		go func(wg *sync.WaitGroup) {
+			resp.Data.Items = append(resp.Data.Items, &trpc.RecommendItem{
+				Id:            int32(idx + 1),
+				Secucode:      result.Secucode,
+				Name:          result.Name, //getName(result.Secucode),
+				RMIndex:       result.RMIndex,
+				PDecrease:     result.PDecrease,
+				MaxPrice:      result.MaxPrice,
+				MaxPDay:       utils.TS2Date(result.MaxPDay),
+				RMPrice:       result.RMPrice,
+				GDDecrease:    result.GDDecrease,
+				State:         getState(result.State),
+				UpdateNum:     result.UpdateNum,
+				UpdateDate:    utils.TS2Date(result.UpdateDate),
+				PresentPrice:  result.PresentPrice,
+				ReferDecrease: getReferDecrease(result.Secucode),
+			})
+
+			wg.Done()
+		}(&wg)
 	}
+
+	wg.Wait()
 
 	resp.Code = 20000
 	resp.Data.Items = sortRecommend2(resp.Data.Items)

@@ -1,4 +1,4 @@
-package recommend
+package prompt
 
 import (
 	"net/http"
