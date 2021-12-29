@@ -46,6 +46,11 @@ func updateRecommendPrice(secucode string, price float64) error {
 	}
 	result.MDecrease = utils.DecreasePercent(result.MaxPrice, price)
 	result.TDecrease = utils.DecreasePercent(result.MaxPrice, price)
+	if result.MinPrice < price {
+		return nil
+	} else {
+		result.MinPrice = price
+	}
 
 	if err := getShortRecommendedData(result, false); err != nil {
 		log.Infof("gen recommend failed: %s|%q", secucode, err)

@@ -50,7 +50,6 @@
 </template>
 
 <script>
-// import { mapGetters } from 'vuex'
 import { promptBuyList } from '@/api/stock'
 
 export default {
@@ -67,6 +66,7 @@ export default {
   data() {
     return {
       list: null,
+      timer:null,
       listLoading: true,
       promptForm: {
         pageNum: 1,
@@ -75,9 +75,15 @@ export default {
       }
     }
   },
-  created() {
-    this.fetchData()
+  mounted(){
+    this.fetchData();
+    this.timer = setInterval(() => {
+        setTimeout(this.fetchData, 0)
+    }, 1000*600)
   },
+  // created() {
+  //   this.fetchData()
+  // },
   methods: {
     fetchData() {
       this.listLoading = true
@@ -94,14 +100,6 @@ export default {
   }
 }
 
-// export default {
-//   name: 'Dashboard',
-//   computed: {
-//     ...mapGetters([
-//       'name'
-//     ])
-//   }
-// }
 </script>
 
 <style lang="scss" scoped>

@@ -27,9 +27,9 @@ func Start() {
 	// go dawdle.GenShortLineOnce()
 	// go dawdle.GenRecommendOnce()
 
-	// dawdle.GenRecommendTmp("SZ.301168")
-	// dawdle.GenLongLineTmp("SH.603213")
-	// dawdle.GenShortLineTmp("SZ.301138")
+	// dawdle.GenRecommendTmp("SZ.300741")
+	dawdle.GenLongLineTmp("SZ.300741")
+	// dawdle.GenShortLineTmp("SZ.300741")
 
 	for range tk.C {
 		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeCodeList) {

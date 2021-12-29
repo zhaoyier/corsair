@@ -32,12 +32,11 @@ func GenLongLineOnce() {
 // 临时测试
 func GenLongLineTmp(code string) error {
 	start := time.Now().AddDate(0, -9, 0).Unix()
-	getLongLineData(code, start)
+	genLongLineData(code, start)
 	return nil
 }
 
 func GenLongLine() error {
-
 	sess, col := orm.CNSecucodeMgr.GetCol()
 	defer sess.Close()
 
@@ -45,13 +44,13 @@ func GenLongLine() error {
 	var secucode *orm.CNSecucode
 	iter := col.Find(ezdb.M{"Disabled": false}).Batch(100).Prefetch(0.25).Iter()
 	for iter.Next(&secucode) {
-		getLongLineData(secucode.Secucode, start)
+		genLongLineData(secucode.Secucode, start)
 	}
 
 	return nil
 }
 
-func getLongLineData(secucode string, since int64) error {
+func genLongLineData(secucode string, since int64) error {
 	wv := NewWeightData(secucode)
 	codes := strings.Split(secucode, ".")
 	if len(codes) < 2 {
@@ -116,7 +115,8 @@ func applyLongLine(wv *WeightData) error {
 	}
 
 	valueIndex := wv.Cal().GetWeight()
-	if valueIndex < 80 {
+	// log.Infof("==>>TODO 315:%+v|%+v|%+v", valueIndex, nil, nil)
+	if valueIndex < 50 {
 		log.Infof("value low failed: %s|%d", wv.Secucode, valueIndex)
 		return nil
 	}
