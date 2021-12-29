@@ -24,7 +24,11 @@
   </div>
   <div class="app-container">
     <el-table :data="tableData" stripe style="width: 100%" max-height="800">
-    <el-table-column fixed prop="secucode" label="代码" width="150"></el-table-column>
+    <el-table-column class-name="status-col" label="代码" width="150">
+      <template slot-scope="scope">
+        <el-tag type="danger" effect="dark">{{ scope.row.secucode }}</el-tag>
+      </template>
+    </el-table-column>
     <el-table-column prop="name" label="名称" width="120"></el-table-column>
     <el-table-column prop="rMIndex" label="推荐指数" width="120"></el-table-column>
     <el-table-column class-name="status-col" label="状态" width="110" align="center">
@@ -33,23 +37,26 @@
         </template>
       </el-table-column>
     <el-table-column prop="pDecrease" label="最近跌幅" width="120"></el-table-column>
-    <el-table-column prop="maxPrice" label="最高价" width="120"></el-table-column>
     <el-table-column class-name="status-col" label="推荐价格" width="160">
       <template slot-scope="scope">
-        <el-tag type="success" effect="plain">{{ scope.row.rMPrice }}</el-tag>
+        <el-tag type="success" effect="dark">{{ scope.row.rMPrice }}</el-tag>
       </template>
     </el-table-column>
     <el-table-column class-name="status-col" label="当前价" width="120">
-      <!-- warning -->
       <template slot-scope="scope">
-        <el-tag type="warning" effect="plain">{{ scope.row.presentPrice }}</el-tag>
+        <el-tag type="danger" effect="dark">{{ scope.row.presentPrice }}</el-tag>
+      </template>
+    </el-table-column>
+    <el-table-column class-name="status-col" label="最高价" width="120">
+      <template slot-scope="scope">
+        <el-tag type="" effect="dark">{{ scope.row.maxPrice }}</el-tag>
       </template>
     </el-table-column>
     <el-table-column prop="gDDecrease" label="股东人数" width="120"> </el-table-column>
     <el-table-column prop="updateNum" label="更新次数" width="80"> </el-table-column>
     <el-table-column class-name="status-col" label="参考幅度" width="80">
       <template slot-scope="scope">
-        <el-tag type="warning" effect="dark">{{ scope.row.referDecrease }}</el-tag>
+        <el-tag type="danger" effect="dark">{{ scope.row.referDecrease }}</el-tag>
       </template>
     </el-table-column>
     <el-table-column prop="updateDate" label="最近更新时间" width="120"> </el-table-column>
