@@ -34,14 +34,23 @@
       </el-table-column>
     <el-table-column prop="pDecrease" label="最近跌幅" width="120"></el-table-column>
     <el-table-column prop="maxPrice" label="最高价" width="120"></el-table-column>
-    <el-table-column prop="rMPrice" label="推荐价格" width="220"> </el-table-column>
-    <el-table-column prop="presentPrice" label="当前价" width="120"> </el-table-column>
+    <el-table-column class-name="status-col" label="推荐价格" width="160">
+      <template slot-scope="scope">
+        <el-tag type="success" effect="plain">{{ scope.row.rMPrice }}</el-tag>
+      </template>
+    </el-table-column>
+    <el-table-column class-name="status-col" label="当前价" width="120">
+      <!-- warning -->
+      <template slot-scope="scope">
+        <el-tag type="warning" effect="plain">{{ scope.row.presentPrice }}</el-tag>
+      </template>
+    </el-table-column>
     <el-table-column prop="gDDecrease" label="股东人数" width="120"> </el-table-column>
     <el-table-column prop="updateNum" label="更新次数" width="80"> </el-table-column>
     <el-table-column class-name="status-col" label="参考幅度" width="80">
       <template slot-scope="scope">
-          <el-tag type="warning" effect="dark">{{ scope.row.referDecrease }}</el-tag>
-        </template>
+        <el-tag type="warning" effect="dark">{{ scope.row.referDecrease }}</el-tag>
+      </template>
     </el-table-column>
     <el-table-column prop="updateDate" label="最近更新时间" width="120"> </el-table-column>
 
