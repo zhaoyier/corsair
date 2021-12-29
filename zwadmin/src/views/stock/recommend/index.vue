@@ -27,7 +27,7 @@
     <el-table-column fixed prop="secucode" label="代码" width="150"></el-table-column>
     <el-table-column prop="name" label="名称" width="120"></el-table-column>
     <el-table-column prop="rMIndex" label="推荐指数" width="120"></el-table-column>
-    <el-table-column class-name="status-col" label="Status" width="110" align="center">
+    <el-table-column class-name="status-col" label="状态" width="110" align="center">
         <template slot-scope="scope">
           <el-tag :type="scope.row.state | statusFilter" effect="dark">{{ scope.row.state }}</el-tag>
         </template>
@@ -38,8 +38,13 @@
     <el-table-column prop="presentPrice" label="当前价" width="120"> </el-table-column>
     <el-table-column prop="gDDecrease" label="股东人数" width="120"> </el-table-column>
     <el-table-column prop="updateNum" label="更新次数" width="80"> </el-table-column>
-    <el-table-column prop="updateNum" label="更新次数" width="80"> </el-table-column>
-    <el-table-column prop="referDecrease" label="参考幅度" width="120"> </el-table-column>
+    <el-table-column class-name="status-col" label="参考幅度" width="80">
+      <template slot-scope="scope">
+          <el-tag type="warning" effect="dark">{{ scope.row.referDecrease }}</el-tag>
+        </template>
+    </el-table-column>
+    <el-table-column prop="updateDate" label="最近更新时间" width="120"> </el-table-column>
+
     <el-table-column fixed="right" label="操作" width="220">
       <template slot-scope="scope">
         <el-button
