@@ -53,7 +53,6 @@ func GetSinaDayPrice(secucode string) float64 {
 		return 0
 	}
 
-	log.Infof("==>>TODO 131: %+v|%+v", secucode, results)
 	if len(results) < 3 {
 		log.Errorf("get present price invalid: %s|%+v", secucode, results)
 		return 0

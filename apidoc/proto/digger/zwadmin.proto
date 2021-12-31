@@ -12,7 +12,37 @@ service ZWAdmin {
     rpc PromptBuyList(PromptBuyListReq) returns(PromptBuyListResp);
     rpc UpdatePromptBuy(UpdatePromptBuyReq) returns(UpdatePromptBuyResp);
     rpc GetLongLineList(GetLongLineListReq) returns(GetLongLineListResp);
+    rpc GetFocusList(GetFocusListReq) returns(GetFocusListResp);
+}
 
+enum RecommendSortType {
+    RecommendSortTypeUnknown = 1;
+    RecommendSortTypeState = 2;
+    RecommendSortTypeGPDecrease = 3;
+    RecommendSortTypeGDDecrease = 4;
+}
+
+message GetFocusListReq {
+    string name = 1;
+    string secucode = 2;
+    int32 limit = 10;
+    int32 offset = 11;
+}
+
+message FocusItem {
+    string secucode = 2;
+    string name = 3;
+    double presentPrice = 5;
+}
+
+message FocusData {
+    int32 total = 1;
+    repeated FocusItem items = 2;
+}
+
+message GetFocusListResp {
+    int32 code = 1;
+    FocusData data = 2;
 }
 
 message GetLongLineListReq {
@@ -92,6 +122,7 @@ message GetRecommendReq {
     int32 pDecrease = 1;
     int32 state = 2;    //状态
     string secucode = 3;
+    RecommendSortType sortType = 4;
     int32 limit = 10;
     int32 offset = 11;
 }

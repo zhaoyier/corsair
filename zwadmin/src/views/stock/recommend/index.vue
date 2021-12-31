@@ -24,12 +24,12 @@
   </div>
   <div class="app-container">
     <el-table :data="tableData" stripe style="width: 100%" max-height="800">
-    <el-table-column fixed="left" class-name="status-col" label="代码" width="150">
+    <el-table-column fixed="left" class-name="status-col" label="名称" width="120">
       <template slot-scope="scope">
-        <el-tag type="danger" effect="plain">{{ scope.row.secucode }}</el-tag>
+        <el-tag type="danger" effect="plain">{{ scope.row.name }}</el-tag>
       </template>
     </el-table-column>
-    <el-table-column prop="name" label="名称" width="120"></el-table-column>
+    <el-table-column prop="secucode" label="代码" width="120"></el-table-column>
     <el-table-column prop="rMIndex" label="推荐指数" width="120"></el-table-column>
     <el-table-column class-name="status-col" label="状态" width="110" align="center">
         <template slot-scope="scope">
