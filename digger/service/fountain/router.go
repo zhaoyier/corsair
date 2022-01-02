@@ -37,5 +37,10 @@ func startRoute(router *gin.Engine) {
 		stockGroup.POST("/UpdateRecommend", recommend.UpdateRecommend)
 		stockGroup.POST("/PromptBuyList", prompt.PromptBuyList)
 		stockGroup.POST("/GetLongLineList", longline.GetLongLineList)
+		stockGroup.POST("/GetDailyList", admin.GetDailyList)
+		stockGroup.POST("/ManualDecreaseList", admin.ManualDecreaseList)
+		stockGroup.POST("/GetFocusList", admin.GetFocusList)
+		stockGroup.POST("/FocusConfirm", admin.FocusConfirm)
+
 	}
 }

@@ -49,7 +49,7 @@ func GPRecommendList(in *gin.Context) {
 			PDecrease:    result.PDecrease,
 			MaxPrice:     result.MaxPrice,
 			MaxPDay:      utils.TS2Date(result.MaxPDay),
-			RMPrice:      result.RMPrice,
+			RMPrice:      getRMPrice(result.RMPrice),
 			GDDecrease:   result.GDDecrease,
 			State:        getState(result.State),
 			UpdateDate:   utils.TS2Date(result.UpdateDate),
@@ -89,6 +89,9 @@ func GetRecommend(in *gin.Context) {
 	if req.GetSecucode() != "" {
 		query["Secucode"] = req.GetSecucode()
 	}
+	if req.GetRmIndex() > 0 {
+		query["RMIndex"] = ezdb.M{"$gte": req.GetRmIndex()}
+	}
 
 	if req.GetLimit() <= 0 {
 		req.Limit = 20
@@ -117,7 +120,7 @@ func GetRecommend(in *gin.Context) {
 				PDecrease:     result.PDecrease,
 				MaxPrice:      result.MaxPrice,
 				MaxPDay:       utils.TS2Date(result.MaxPDay),
-				RMPrice:       result.RMPrice,
+				RMPrice:       getRMPrice(result.RMPrice),
 				GDDecrease:    result.GDDecrease,
 				State:         getState(result.State),
 				UpdateNum:     result.UpdateNum,
@@ -150,7 +153,7 @@ func UpdateRecommend(in *gin.Context) {
 		return
 	}
 	log.Infof("==>>TODO 1012: %+v", req)
-	result := orm.GPDelayMgr.MustFindOneBySecucodeDisabled(req.GetSecucode(), false)
+	result := orm.GPManualDecreaseMgr.MustFindOneBySecucodeDisabled(req.GetSecucode(), false)
 	result.Name = req.GetName()
 	result.DecreaseTag = req.GetPriceDecrease()
 	result.UpdateDate = time.Now().Unix()
@@ -191,9 +194,15 @@ func getState(state int32) string {
 	case 2:
 		return "开始"
 	case 3:
-		return "进行中"
+		return "第一阶段"
 	case 4:
+		return "第二阶段"
+	case 5:
+		return "第三阶段"
+	case 6:
 		return "结束"
+	case 7:
+		return "放弃"
 	default:
 		return "准备"
 	}

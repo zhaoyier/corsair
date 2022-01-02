@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '磨刀3',
+  title: '磨刀',
 
   /**
    * @type {boolean} true | false

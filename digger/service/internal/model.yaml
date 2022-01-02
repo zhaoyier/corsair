@@ -152,7 +152,7 @@ GPRecommend:
       - MaxPrice: float64
       - MaxPDay: int64
       - PresentPrice: float64
-      - RMPrice: string     
+      - RMPrice: list<float64>     
       - State: int32  #1准备,2开始, 3进行中,4结束,5放弃
       - Remark: map[string]string  #map[date]xxx
       - Disabled: bool
@@ -187,7 +187,7 @@ Job:
     uniques: [[CreateDate]] 
 
 #延迟配置
-GPDelay:
+GPManualDecrease:
   db: mongo
   dbname: digger
   fields:
@@ -195,7 +195,23 @@ GPDelay:
     - Name: string
     - Disabled: bool
     - DecreaseTag: int32
-    - EffectiveDate: string
+    - EffectStart: int64    #生效开始
+    - EffectEnd: int64      #生效结束
+    - CreateDate: datetime  
+    - UpdateDate: datetime
+  uniques: [[Secucode,Disabled]]
+  indexes: [[Secucode],[Name]]
+
+# 关注列表
+GPFocus:
+  db: mongo
+  dbname: digger
+  fields:
+    - Name: string
+    - Secucode: string 
+    - Disabled: bool
+    - FocusPrice: float64     #关注价格
+    - PresentPrice: float64   #当前价格
     - CreateDate: datetime  
     - UpdateDate: datetime
   uniques: [[Secucode,Disabled]]

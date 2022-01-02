@@ -81,10 +81,16 @@ export const constantRoutes = [
         meta: { title: '推荐列表', icon: 'tree' }
       },
       {
-        path: 'stock/pricelist',
-        name: '涨跌列表',
-        component: () => import('@/views/stock/pricelist/index'),
-        meta: { title: '涨跌列表', icon: 'tree' }
+        path: 'stock/manualdecrease',
+        name: '手动调整',
+        component: () => import('@/views/stock/manualdecrease/index'),
+        meta: { title: '手动调整', icon: 'tree' }
+      },
+      {
+        path: 'stock/dailylist',
+        name: '股票列表',
+        component: () => import('@/views/stock/dailylist/index'),
+        meta: { title: '股票列表', icon: 'tree' }
       },
       {
         path: 'stock/shareholder',
@@ -93,9 +99,9 @@ export const constantRoutes = [
         meta: { title: '股东列表', icon: 'tree' }
       },
       {
-        path: 'stock/focus',
+        path: 'stock/focuslist',
         name: '关注列表',
-        component: () => import('@/views/stock/focus/index'),
+        component: () => import('@/views/stock/focuslist/index'),
         meta: { title: '关注列表', icon: 'tree' }
       },
 

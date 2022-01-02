@@ -139,8 +139,9 @@ export default {
       }
       this.fetchData()
     },
-    
+    handleSizeChange(val) {
 
+    }
   }
 }
 </script>

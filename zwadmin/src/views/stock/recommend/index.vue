@@ -13,7 +13,9 @@
           <el-option label="待定" value=0></el-option>
           <el-option label="准备" value=1></el-option>
           <el-option label="开始" value=2></el-option>
-          <el-option label="进行中" value=3></el-option>
+          <el-option label="第一阶段" value=3></el-option>
+          <el-option label="第二阶段" value=4></el-option>
+          <el-option label="第三阶段" value=5></el-option>
           <el-option label="结束" value=4></el-option>
         </el-select>
       </el-form-item>
@@ -26,7 +28,7 @@
     <el-table :data="tableData" stripe style="width: 100%" max-height="800">
     <el-table-column fixed="left" class-name="status-col" label="名称" width="120">
       <template slot-scope="scope">
-        <el-tag type="danger" effect="plain">{{ scope.row.name }}</el-tag>
+        <el-tag type="danger" effect="dark">{{ scope.row.name }}</el-tag>
       </template>
     </el-table-column>
     <el-table-column prop="secucode" label="代码" width="120"></el-table-column>
@@ -71,7 +73,14 @@
         </el-button>
         <el-divider direction="vertical"></el-divider>
         <el-button
-          @click.native.prevent="KLineChart(scope.$index, tableData)"
+          @click.native.prevent="confirmFocus(scope.$index, tableData)"
+          type="text"
+          size="small">
+          关注
+        </el-button>
+        <el-divider direction="vertical"></el-divider>
+        <el-button
+          @click.native.prevent="klineChart(scope.$index, tableData)"
           type="text"
           size="small">
           K线图
@@ -113,7 +122,7 @@
   <div>
     <el-dialog title="K线查询" :visible.sync="lineChartForm.lineChartVisible">
       <!-- <el-image :src="lineChartForm.lineChartSrc"></el-image> -->
-      <el-tabs v-model="lineChartForm.activeName" @tab-click="handleClick">
+      <el-tabs v-model="lineChartForm.activeName" @tab-click="selectTabClick">
         <el-tab-pane label="日线" name="date">
           <el-image :src="lineChartForm.lineChartSrc"></el-image>
         </el-tab-pane>
@@ -130,15 +139,19 @@
 </template>
 
 <script>
-import { getRecommendList,updateRecommend } from '@/api/stock'
+import { getRecommendList,updateRecommend,focusConfirm } from '@/api/stock'
 
 export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
-        "进行中": 'danger',
+        "第一阶段": 'danger',
+        "第二阶段": 'danger',
+        "第三阶段": 'danger',
         "开始": 'warning',
-        "准备": 'info'
+        "结束": 'info',
+        "放弃": 'info',
+        "准备": 'success',
       }
       return statusMap[status]
     }
@@ -203,7 +216,19 @@ export default {
       this.modifyForm.priceDecrease = data.pDecrease
       this.modifyForm.name = data.name
     },
-    KLineChart(index, rows) {//日线图
+    confirmFocus(index, rows) {
+      var data = rows[index]
+      var req = {
+        name : data.name,
+        secucode: data.secucode,
+        presentPrice: data.presentPrice,
+      }
+      
+      focusConfirm(req).then(response=>{
+        console.log("==>>TODO fucus:", response)
+      })
+    },
+    klineChart(index, rows) {//日线图
       console.log("==>>TODO 3141: ", rows[index])
       var data = rows[index]
       var secucode = data.secucode.split('.').join("").toLowerCase()
@@ -253,7 +278,7 @@ export default {
     handleSizeChange(val) {
       console.log("===>>TODO 214: ", val)
     },
-    handleClick(tab) {
+    selectTabClick(tab) {
       console.log("===>>TODO 254: ", tab)
       var secucode = this.lineChartForm.secucode
       if (tab.name === "date") {

@@ -34,3 +34,39 @@ export function getLongLineList(data) {
     data
   })
 }
+
+// 查询每日数据
+export function getDailyList(data) {
+  return request({
+    url: '/api/stock/GetDailyList',
+    method: 'post',
+    data
+  })
+}
+
+// 查询手动调整幅度列表
+export function manualDecreaseList(data) {
+  return request({
+    url: '/api/stock/ManualDecreaseList',
+    method: 'post',
+    data
+  })
+}
+
+// 关注确认
+export function focusConfirm(data) {
+  return request({
+    url: '/api/stock/FocusConfirm',
+    method: 'post',
+    data
+  })
+}
+
+// 关注列表
+export function getFocusList(data) {
+  return request({
+    url: '/api/stock/GetFocusList',
+    method: 'post',
+    data
+  })
+}

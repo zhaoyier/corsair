@@ -41,11 +41,13 @@ enum RMType {
 //1准备,2开始, 3进行中,4结束,5放弃
 enum RMState {
     RMStateUnknown = 0;
-    RMStatePrepared = 1;
-    RMStateStarted = 2;
-    RMStateInProgress = 3;
-    RMStateOver = 4;
-    RMStateAbandoned = 5;
+    RMStatePrepared = 1;    //准备
+    RMStateStarted = 2;     //开始
+    RMStateFirst = 3;       //第一阶段
+    RMStateSecond = 4;      //第二阶段
+    RMStateThird = 5;       //第三阶段
+    RMStateOver = 6;        //结束
+    RMStateAbandoned = 7;   //放弃
 }
 
 enum FunctionType {

@@ -19,7 +19,7 @@ type GPRecommend struct {
 	MaxPrice     float64           `bson:"MaxPrice" json:"MaxPrice"`
 	MaxPDay      int64             `bson:"MaxPDay" json:"MaxPDay"`
 	PresentPrice float64           `bson:"PresentPrice" json:"PresentPrice"`
-	RMPrice      string            `bson:"RMPrice" json:"RMPrice"`
+	RMPrice      []float64         `bson:"RMPrice" json:"RMPrice"`
 	State        int32             `bson:"State" json:"State"`
 	Remark       map[string]string `bson:"Remark" json:"Remark"`
 	Disabled     bool              `bson:"Disabled" json:"Disabled"`

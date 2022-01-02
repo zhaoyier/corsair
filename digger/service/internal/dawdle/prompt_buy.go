@@ -12,7 +12,9 @@ import (
 
 func SavePromptBuy(data *orm.GPRecommend, minPrice float64) error {
 	switch trpc.RMState(data.State) {
-	case trpc.RMState_RMStateInProgress:
+	case trpc.RMState_RMStateFirst:
+	case trpc.RMState_RMStateSecond:
+	case trpc.RMState_RMStateThird:
 	case trpc.RMState_RMStateStarted:
 		break
 	default:

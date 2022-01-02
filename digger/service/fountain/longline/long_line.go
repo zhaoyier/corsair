@@ -16,8 +16,6 @@ import (
 )
 
 func GetLongLineList(in *gin.Context) {
-	// var sortField string
-
 	var req trpc.GetLongLineListReq
 	resp := &trpc.GetLongLineListResp{
 		Code: 21000,

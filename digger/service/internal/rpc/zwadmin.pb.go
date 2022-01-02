@@ -34,6 +34,1145 @@ var _ = strings.TrimPrefix
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
+type _RecommendSortTypeEnum struct {
+	Unknown    RecommendSortType
+	State      RecommendSortType
+	GPIncrease RecommendSortType
+	GPDecrease RecommendSortType
+	GDIncrease RecommendSortType
+	GDDecrease RecommendSortType
+	TotalSize  int
+	List       []RecommendSortType
+	ZeroList   []RecommendSortType
+}
+
+var RecommendSortTypeEnum = _RecommendSortTypeEnum{
+	0,
+	1,
+	2,
+	3,
+	4,
+	5,
+	6,
+	[]RecommendSortType{
+		RecommendSortType_RecommendSortTypeState,
+		RecommendSortType_RecommendSortTypeGPIncrease,
+		RecommendSortType_RecommendSortTypeGPDecrease,
+		RecommendSortType_RecommendSortTypeGDIncrease,
+		RecommendSortType_RecommendSortTypeGDDecrease,
+	},
+	[]RecommendSortType{
+		RecommendSortType_RecommendSortTypeUnknown,
+		RecommendSortType_RecommendSortTypeState,
+		RecommendSortType_RecommendSortTypeGPIncrease,
+		RecommendSortType_RecommendSortTypeGPDecrease,
+		RecommendSortType_RecommendSortTypeGDIncrease,
+		RecommendSortType_RecommendSortTypeGDDecrease,
+	},
+}
+
+func (x *_RecommendSortTypeEnum) Parse(short string) RecommendSortType {
+	return RecommendSortType(RecommendSortType_value["RecommendSortType"+strings.TrimPrefix(short, "RecommendSortType")])
+}
+
+func (x RecommendSortType) IsUnknown() bool {
+	return x == RecommendSortTypeEnum.Unknown
+}
+
+func (x RecommendSortType) GetUnknown() RecommendSortType {
+	return RecommendSortTypeEnum.Unknown
+}
+
+func (x RecommendSortType) IsState() bool {
+	return x == RecommendSortTypeEnum.State
+}
+
+func (x RecommendSortType) GetState() RecommendSortType {
+	return RecommendSortTypeEnum.State
+}
+
+func (x RecommendSortType) IsGPIncrease() bool {
+	return x == RecommendSortTypeEnum.GPIncrease
+}
+
+func (x RecommendSortType) GetGPIncrease() RecommendSortType {
+	return RecommendSortTypeEnum.GPIncrease
+}
+
+func (x RecommendSortType) IsGPDecrease() bool {
+	return x == RecommendSortTypeEnum.GPDecrease
+}
+
+func (x RecommendSortType) GetGPDecrease() RecommendSortType {
+	return RecommendSortTypeEnum.GPDecrease
+}
+
+func (x RecommendSortType) IsGDIncrease() bool {
+	return x == RecommendSortTypeEnum.GDIncrease
+}
+
+func (x RecommendSortType) GetGDIncrease() RecommendSortType {
+	return RecommendSortTypeEnum.GDIncrease
+}
+
+func (x RecommendSortType) IsGDDecrease() bool {
+	return x == RecommendSortTypeEnum.GDDecrease
+}
+
+func (x RecommendSortType) GetGDDecrease() RecommendSortType {
+	return RecommendSortTypeEnum.GDDecrease
+}
+
+func (x RecommendSortType) Valid() bool {
+	if x == RecommendSortType_RecommendSortTypeUnknown {
+		return false
+	}
+	return x.ZeroValid()
+}
+
+func (x RecommendSortType) ZeroValid() bool {
+	_, ok := RecommendSortType_name[int32(x)]
+	return ok
+}
+func (x RecommendSortType) Short() string {
+	n := x.String()
+	typ := "RecommendSortType"
+	if len(n) > len(typ) {
+		if n[:len(typ)] == typ {
+			return n[len(typ):]
+		}
+	}
+	return n
+
+}
+func (x *RecommendSortType) SetValue(v int32) {
+	*x = RecommendSortType(v)
+}
+
+func (x RecommendSortType) GetValue() int32 {
+	return int32(x)
+}
+
+func (x *RecommendSortType) Type() string {
+	return "RecommendSortType"
+}
+
+type RecommendSortType int32
+
+const (
+	RecommendSortType_RecommendSortTypeUnknown    RecommendSortType = 0
+	RecommendSortType_RecommendSortTypeState      RecommendSortType = 1
+	RecommendSortType_RecommendSortTypeGPIncrease RecommendSortType = 2
+	RecommendSortType_RecommendSortTypeGPDecrease RecommendSortType = 3
+	RecommendSortType_RecommendSortTypeGDIncrease RecommendSortType = 4
+	RecommendSortType_RecommendSortTypeGDDecrease RecommendSortType = 5
+)
+
+var RecommendSortType_name = map[int32]string{
+	0: "RecommendSortTypeUnknown",
+	1: "RecommendSortTypeState",
+	2: "RecommendSortTypeGPIncrease",
+	3: "RecommendSortTypeGPDecrease",
+	4: "RecommendSortTypeGDIncrease",
+	5: "RecommendSortTypeGDDecrease",
+}
+
+var RecommendSortType_value = map[string]int32{
+	"RecommendSortTypeUnknown":    0,
+	"RecommendSortTypeState":      1,
+	"RecommendSortTypeGPIncrease": 2,
+	"RecommendSortTypeGPDecrease": 3,
+	"RecommendSortTypeGDIncrease": 4,
+	"RecommendSortTypeGDDecrease": 5,
+}
+
+func (x RecommendSortType) String() string {
+	return proto.EnumName(RecommendSortType_name, int32(x))
+}
+
+func (RecommendSortType) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_2a29ab15f05ba3dc, []int{0}
+}
+
+type FocusConfirmReq struct {
+	//
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name"`
+	//
+	Secucode string `protobuf:"bytes,2,opt,name=secucode,proto3" json:"secucode"`
+	//
+	PresentPrice float64 `protobuf:"fixed64,3,opt,name=presentPrice,proto3" json:"presentPrice"`
+}
+
+func (m *FocusConfirmReq) Validate() error {
+	return nil
+}
+
+func (m *FocusConfirmReq) Reset()         { *m = FocusConfirmReq{} }
+func (m *FocusConfirmReq) String() string { return proto.CompactTextString(m) }
+func (*FocusConfirmReq) ProtoMessage()    {}
+func (*FocusConfirmReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2a29ab15f05ba3dc, []int{0}
+}
+
+func (m *FocusConfirmReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_FocusConfirmReq.Unmarshal(m, b)
+}
+func (m *FocusConfirmReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_FocusConfirmReq.Marshal(b, m, deterministic)
+}
+func (m *FocusConfirmReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_FocusConfirmReq.Merge(m, src)
+}
+func (m *FocusConfirmReq) XXX_Size() int {
+	return xxx_messageInfo_FocusConfirmReq.Size(m)
+}
+func (m *FocusConfirmReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_FocusConfirmReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_FocusConfirmReq proto.InternalMessageInfo
+
+func (m *FocusConfirmReq) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *FocusConfirmReq) GetSecucode() string {
+	if m != nil {
+		return m.Secucode
+	}
+	return ""
+}
+
+func (m *FocusConfirmReq) GetPresentPrice() float64 {
+	if m != nil {
+		return m.PresentPrice
+	}
+	return 0
+}
+
+type FocusConfirmResp struct {
+	//
+	Code int32 `protobuf:"varint,1,opt,name=code,proto3" json:"code"`
+}
+
+func (m *FocusConfirmResp) Validate() error {
+	return nil
+}
+
+func (m *FocusConfirmResp) Reset()         { *m = FocusConfirmResp{} }
+func (m *FocusConfirmResp) String() string { return proto.CompactTextString(m) }
+func (*FocusConfirmResp) ProtoMessage()    {}
+func (*FocusConfirmResp) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2a29ab15f05ba3dc, []int{1}
+}
+
+func (m *FocusConfirmResp) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_FocusConfirmResp.Unmarshal(m, b)
+}
+func (m *FocusConfirmResp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_FocusConfirmResp.Marshal(b, m, deterministic)
+}
+func (m *FocusConfirmResp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_FocusConfirmResp.Merge(m, src)
+}
+func (m *FocusConfirmResp) XXX_Size() int {
+	return xxx_messageInfo_FocusConfirmResp.Size(m)
+}
+func (m *FocusConfirmResp) XXX_DiscardUnknown() {
+	xxx_messageInfo_FocusConfirmResp.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_FocusConfirmResp proto.InternalMessageInfo
+
+func (m *FocusConfirmResp) GetCode() int32 {
+	if m != nil {
+		return m.Code
+	}
+	return 0
+}
+
+type ManualDecreaseListReq struct {
+	//
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name"`
+	//
+	Secucode string `protobuf:"bytes,2,opt,name=secucode,proto3" json:"secucode"`
+	//
+	DecreaseTag int32 `protobuf:"varint,3,opt,name=decreaseTag,proto3" json:"decreaseTag"`
+	//
+	Limit int32 `protobuf:"varint,10,opt,name=limit,proto3" json:"limit"`
+	//
+	Offset int32 `protobuf:"varint,11,opt,name=offset,proto3" json:"offset"`
+}
+
+func (m *ManualDecreaseListReq) Validate() error {
+	return nil
+}
+
+func (m *ManualDecreaseListReq) Reset()         { *m = ManualDecreaseListReq{} }
+func (m *ManualDecreaseListReq) String() string { return proto.CompactTextString(m) }
+func (*ManualDecreaseListReq) ProtoMessage()    {}
+func (*ManualDecreaseListReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2a29ab15f05ba3dc, []int{2}
+}
+
+func (m *ManualDecreaseListReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ManualDecreaseListReq.Unmarshal(m, b)
+}
+func (m *ManualDecreaseListReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ManualDecreaseListReq.Marshal(b, m, deterministic)
+}
+func (m *ManualDecreaseListReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ManualDecreaseListReq.Merge(m, src)
+}
+func (m *ManualDecreaseListReq) XXX_Size() int {
+	return xxx_messageInfo_ManualDecreaseListReq.Size(m)
+}
+func (m *ManualDecreaseListReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_ManualDecreaseListReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ManualDecreaseListReq proto.InternalMessageInfo
+
+func (m *ManualDecreaseListReq) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *ManualDecreaseListReq) GetSecucode() string {
+	if m != nil {
+		return m.Secucode
+	}
+	return ""
+}
+
+func (m *ManualDecreaseListReq) GetDecreaseTag() int32 {
+	if m != nil {
+		return m.DecreaseTag
+	}
+	return 0
+}
+
+func (m *ManualDecreaseListReq) GetLimit() int32 {
+	if m != nil {
+		return m.Limit
+	}
+	return 0
+}
+
+func (m *ManualDecreaseListReq) GetOffset() int32 {
+	if m != nil {
+		return m.Offset
+	}
+	return 0
+}
+
+type ManualDecreaseItem struct {
+	//
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name"`
+	//
+	Secucode string `protobuf:"bytes,2,opt,name=secucode,proto3" json:"secucode"`
+	//
+	DecreaseTag int32 `protobuf:"varint,3,opt,name=decreaseTag,proto3" json:"decreaseTag"`
+	//
+	EffectStart string `protobuf:"bytes,4,opt,name=effectStart,proto3" json:"effectStart"`
+	//
+	EffectEnd string `protobuf:"bytes,5,opt,name=effectEnd,proto3" json:"effectEnd"`
+	//
+	CreateDate string `protobuf:"bytes,6,opt,name=createDate,proto3" json:"createDate"`
+	//
+	UpdateDate string `protobuf:"bytes,7,opt,name=updateDate,proto3" json:"updateDate"`
+}
+
+func (m *ManualDecreaseItem) Validate() error {
+	return nil
+}
+
+func (m *ManualDecreaseItem) Reset()         { *m = ManualDecreaseItem{} }
+func (m *ManualDecreaseItem) String() string { return proto.CompactTextString(m) }
+func (*ManualDecreaseItem) ProtoMessage()    {}
+func (*ManualDecreaseItem) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2a29ab15f05ba3dc, []int{3}
+}
+
+func (m *ManualDecreaseItem) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ManualDecreaseItem.Unmarshal(m, b)
+}
+func (m *ManualDecreaseItem) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ManualDecreaseItem.Marshal(b, m, deterministic)
+}
+func (m *ManualDecreaseItem) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ManualDecreaseItem.Merge(m, src)
+}
+func (m *ManualDecreaseItem) XXX_Size() int {
+	return xxx_messageInfo_ManualDecreaseItem.Size(m)
+}
+func (m *ManualDecreaseItem) XXX_DiscardUnknown() {
+	xxx_messageInfo_ManualDecreaseItem.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ManualDecreaseItem proto.InternalMessageInfo
+
+func (m *ManualDecreaseItem) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *ManualDecreaseItem) GetSecucode() string {
+	if m != nil {
+		return m.Secucode
+	}
+	return ""
+}
+
+func (m *ManualDecreaseItem) GetDecreaseTag() int32 {
+	if m != nil {
+		return m.DecreaseTag
+	}
+	return 0
+}
+
+func (m *ManualDecreaseItem) GetEffectStart() string {
+	if m != nil {
+		return m.EffectStart
+	}
+	return ""
+}
+
+func (m *ManualDecreaseItem) GetEffectEnd() string {
+	if m != nil {
+		return m.EffectEnd
+	}
+	return ""
+}
+
+func (m *ManualDecreaseItem) GetCreateDate() string {
+	if m != nil {
+		return m.CreateDate
+	}
+	return ""
+}
+
+func (m *ManualDecreaseItem) GetUpdateDate() string {
+	if m != nil {
+		return m.UpdateDate
+	}
+	return ""
+}
+
+type ManualDecreaseData struct {
+	//
+	Total int32 `protobuf:"varint,1,opt,name=total,proto3" json:"total"`
+	//
+	Items []*ManualDecreaseItem `protobuf:"bytes,2,rep,name=items,proto3" json:"items"`
+}
+
+func (m *ManualDecreaseData) Validate() error {
+	return nil
+}
+
+func (m *ManualDecreaseData) Reset()         { *m = ManualDecreaseData{} }
+func (m *ManualDecreaseData) String() string { return proto.CompactTextString(m) }
+func (*ManualDecreaseData) ProtoMessage()    {}
+func (*ManualDecreaseData) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2a29ab15f05ba3dc, []int{4}
+}
+
+func (m *ManualDecreaseData) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ManualDecreaseData.Unmarshal(m, b)
+}
+func (m *ManualDecreaseData) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ManualDecreaseData.Marshal(b, m, deterministic)
+}
+func (m *ManualDecreaseData) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ManualDecreaseData.Merge(m, src)
+}
+func (m *ManualDecreaseData) XXX_Size() int {
+	return xxx_messageInfo_ManualDecreaseData.Size(m)
+}
+func (m *ManualDecreaseData) XXX_DiscardUnknown() {
+	xxx_messageInfo_ManualDecreaseData.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ManualDecreaseData proto.InternalMessageInfo
+
+func (m *ManualDecreaseData) GetTotal() int32 {
+	if m != nil {
+		return m.Total
+	}
+	return 0
+}
+
+func (m *ManualDecreaseData) GetItems() []*ManualDecreaseItem {
+	if m != nil {
+		return m.Items
+	}
+	return nil
+}
+
+type ManualDecreaseListResp struct {
+	//
+	Code int32 `protobuf:"varint,1,opt,name=code,proto3" json:"code"`
+	//
+	Data *ManualDecreaseData `protobuf:"bytes,2,opt,name=data,proto3" json:"data"`
+}
+
+func (m *ManualDecreaseListResp) Validate() error {
+	return nil
+}
+
+func (m *ManualDecreaseListResp) Reset()         { *m = ManualDecreaseListResp{} }
+func (m *ManualDecreaseListResp) String() string { return proto.CompactTextString(m) }
+func (*ManualDecreaseListResp) ProtoMessage()    {}
+func (*ManualDecreaseListResp) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2a29ab15f05ba3dc, []int{5}
+}
+
+func (m *ManualDecreaseListResp) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ManualDecreaseListResp.Unmarshal(m, b)
+}
+func (m *ManualDecreaseListResp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ManualDecreaseListResp.Marshal(b, m, deterministic)
+}
+func (m *ManualDecreaseListResp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ManualDecreaseListResp.Merge(m, src)
+}
+func (m *ManualDecreaseListResp) XXX_Size() int {
+	return xxx_messageInfo_ManualDecreaseListResp.Size(m)
+}
+func (m *ManualDecreaseListResp) XXX_DiscardUnknown() {
+	xxx_messageInfo_ManualDecreaseListResp.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ManualDecreaseListResp proto.InternalMessageInfo
+
+func (m *ManualDecreaseListResp) GetCode() int32 {
+	if m != nil {
+		return m.Code
+	}
+	return 0
+}
+
+func (m *ManualDecreaseListResp) GetData() *ManualDecreaseData {
+	if m != nil {
+		return m.Data
+	}
+	return nil
+}
+
+type GetDailyListReq struct {
+	//
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name"`
+	//
+	Secucode string `protobuf:"bytes,2,opt,name=secucode,proto3" json:"secucode"`
+	//
+	Decrease float64 `protobuf:"fixed64,3,opt,name=decrease,proto3" json:"decrease"`
+	//
+	StartDate int64 `protobuf:"varint,5,opt,name=startDate,proto3" json:"startDate"`
+	//
+	EndDate int64 `protobuf:"varint,6,opt,name=endDate,proto3" json:"endDate"`
+	//
+	Limit int32 `protobuf:"varint,10,opt,name=limit,proto3" json:"limit"`
+	//
+	Offset int32 `protobuf:"varint,11,opt,name=offset,proto3" json:"offset"`
+}
+
+func (m *GetDailyListReq) Validate() error {
+	return nil
+}
+
+func (m *GetDailyListReq) Reset()         { *m = GetDailyListReq{} }
+func (m *GetDailyListReq) String() string { return proto.CompactTextString(m) }
+func (*GetDailyListReq) ProtoMessage()    {}
+func (*GetDailyListReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2a29ab15f05ba3dc, []int{6}
+}
+
+func (m *GetDailyListReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetDailyListReq.Unmarshal(m, b)
+}
+func (m *GetDailyListReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetDailyListReq.Marshal(b, m, deterministic)
+}
+func (m *GetDailyListReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDailyListReq.Merge(m, src)
+}
+func (m *GetDailyListReq) XXX_Size() int {
+	return xxx_messageInfo_GetDailyListReq.Size(m)
+}
+func (m *GetDailyListReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDailyListReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetDailyListReq proto.InternalMessageInfo
+
+func (m *GetDailyListReq) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *GetDailyListReq) GetSecucode() string {
+	if m != nil {
+		return m.Secucode
+	}
+	return ""
+}
+
+func (m *GetDailyListReq) GetDecrease() float64 {
+	if m != nil {
+		return m.Decrease
+	}
+	return 0
+}
+
+func (m *GetDailyListReq) GetStartDate() int64 {
+	if m != nil {
+		return m.StartDate
+	}
+	return 0
+}
+
+func (m *GetDailyListReq) GetEndDate() int64 {
+	if m != nil {
+		return m.EndDate
+	}
+	return 0
+}
+
+func (m *GetDailyListReq) GetLimit() int32 {
+	if m != nil {
+		return m.Limit
+	}
+	return 0
+}
+
+func (m *GetDailyListReq) GetOffset() int32 {
+	if m != nil {
+		return m.Offset
+	}
+	return 0
+}
+
+type GPDailyItem struct {
+	//
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name"`
+	//
+	Secucode string `protobuf:"bytes,2,opt,name=secucode,proto3" json:"secucode"`
+	//
+	Opening float64 `protobuf:"fixed64,3,opt,name=opening,proto3" json:"opening"`
+	//
+	Closing float64 `protobuf:"fixed64,5,opt,name=closing,proto3" json:"closing"`
+	//
+	Prise float64 `protobuf:"fixed64,6,opt,name=prise,proto3" json:"prise"`
+	//
+	Turnover int64 `protobuf:"varint,7,opt,name=turnover,proto3" json:"turnover"`
+	//
+	Business float64 `protobuf:"fixed64,8,opt,name=business,proto3" json:"business"`
+	//
+	Liangbi float64 `protobuf:"fixed64,10,opt,name=liangbi,proto3" json:"liangbi"`
+	//
+	MaxPrice float64 `protobuf:"fixed64,11,opt,name=maxPrice,proto3" json:"maxPrice"`
+	//
+	MinPrice float64 `protobuf:"fixed64,12,opt,name=minPrice,proto3" json:"minPrice"`
+	//
+	Market int64 `protobuf:"varint,13,opt,name=market,proto3" json:"market"`
+	//
+	Traded int64 `protobuf:"varint,14,opt,name=traded,proto3" json:"traded"`
+	//
+	BookRatio float64 `protobuf:"fixed64,16,opt,name=bookRatio,proto3" json:"bookRatio"`
+	//
+	CreateDate string `protobuf:"bytes,20,opt,name=createDate,proto3" json:"createDate"`
+}
+
+func (m *GPDailyItem) Validate() error {
+	return nil
+}
+
+func (m *GPDailyItem) Reset()         { *m = GPDailyItem{} }
+func (m *GPDailyItem) String() string { return proto.CompactTextString(m) }
+func (*GPDailyItem) ProtoMessage()    {}
+func (*GPDailyItem) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2a29ab15f05ba3dc, []int{7}
+}
+
+func (m *GPDailyItem) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GPDailyItem.Unmarshal(m, b)
+}
+func (m *GPDailyItem) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GPDailyItem.Marshal(b, m, deterministic)
+}
+func (m *GPDailyItem) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GPDailyItem.Merge(m, src)
+}
+func (m *GPDailyItem) XXX_Size() int {
+	return xxx_messageInfo_GPDailyItem.Size(m)
+}
+func (m *GPDailyItem) XXX_DiscardUnknown() {
+	xxx_messageInfo_GPDailyItem.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GPDailyItem proto.InternalMessageInfo
+
+func (m *GPDailyItem) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *GPDailyItem) GetSecucode() string {
+	if m != nil {
+		return m.Secucode
+	}
+	return ""
+}
+
+func (m *GPDailyItem) GetOpening() float64 {
+	if m != nil {
+		return m.Opening
+	}
+	return 0
+}
+
+func (m *GPDailyItem) GetClosing() float64 {
+	if m != nil {
+		return m.Closing
+	}
+	return 0
+}
+
+func (m *GPDailyItem) GetPrise() float64 {
+	if m != nil {
+		return m.Prise
+	}
+	return 0
+}
+
+func (m *GPDailyItem) GetTurnover() int64 {
+	if m != nil {
+		return m.Turnover
+	}
+	return 0
+}
+
+func (m *GPDailyItem) GetBusiness() float64 {
+	if m != nil {
+		return m.Business
+	}
+	return 0
+}
+
+func (m *GPDailyItem) GetLiangbi() float64 {
+	if m != nil {
+		return m.Liangbi
+	}
+	return 0
+}
+
+func (m *GPDailyItem) GetMaxPrice() float64 {
+	if m != nil {
+		return m.MaxPrice
+	}
+	return 0
+}
+
+func (m *GPDailyItem) GetMinPrice() float64 {
+	if m != nil {
+		return m.MinPrice
+	}
+	return 0
+}
+
+func (m *GPDailyItem) GetMarket() int64 {
+	if m != nil {
+		return m.Market
+	}
+	return 0
+}
+
+func (m *GPDailyItem) GetTraded() int64 {
+	if m != nil {
+		return m.Traded
+	}
+	return 0
+}
+
+func (m *GPDailyItem) GetBookRatio() float64 {
+	if m != nil {
+		return m.BookRatio
+	}
+	return 0
+}
+
+func (m *GPDailyItem) GetCreateDate() string {
+	if m != nil {
+		return m.CreateDate
+	}
+	return ""
+}
+
+type GPDailyData struct {
+	//
+	Total int32 `protobuf:"varint,1,opt,name=total,proto3" json:"total"`
+	//
+	Items []*GPDailyItem `protobuf:"bytes,2,rep,name=items,proto3" json:"items"`
+}
+
+func (m *GPDailyData) Validate() error {
+	return nil
+}
+
+func (m *GPDailyData) Reset()         { *m = GPDailyData{} }
+func (m *GPDailyData) String() string { return proto.CompactTextString(m) }
+func (*GPDailyData) ProtoMessage()    {}
+func (*GPDailyData) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2a29ab15f05ba3dc, []int{8}
+}
+
+func (m *GPDailyData) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GPDailyData.Unmarshal(m, b)
+}
+func (m *GPDailyData) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GPDailyData.Marshal(b, m, deterministic)
+}
+func (m *GPDailyData) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GPDailyData.Merge(m, src)
+}
+func (m *GPDailyData) XXX_Size() int {
+	return xxx_messageInfo_GPDailyData.Size(m)
+}
+func (m *GPDailyData) XXX_DiscardUnknown() {
+	xxx_messageInfo_GPDailyData.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GPDailyData proto.InternalMessageInfo
+
+func (m *GPDailyData) GetTotal() int32 {
+	if m != nil {
+		return m.Total
+	}
+	return 0
+}
+
+func (m *GPDailyData) GetItems() []*GPDailyItem {
+	if m != nil {
+		return m.Items
+	}
+	return nil
+}
+
+type GetDailyListResp struct {
+	//
+	Code int32 `protobuf:"varint,1,opt,name=code,proto3" json:"code"`
+	//
+	Data *GPDailyData `protobuf:"bytes,2,opt,name=data,proto3" json:"data"`
+}
+
+func (m *GetDailyListResp) Validate() error {
+	return nil
+}
+
+func (m *GetDailyListResp) Reset()         { *m = GetDailyListResp{} }
+func (m *GetDailyListResp) String() string { return proto.CompactTextString(m) }
+func (*GetDailyListResp) ProtoMessage()    {}
+func (*GetDailyListResp) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2a29ab15f05ba3dc, []int{9}
+}
+
+func (m *GetDailyListResp) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetDailyListResp.Unmarshal(m, b)
+}
+func (m *GetDailyListResp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetDailyListResp.Marshal(b, m, deterministic)
+}
+func (m *GetDailyListResp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDailyListResp.Merge(m, src)
+}
+func (m *GetDailyListResp) XXX_Size() int {
+	return xxx_messageInfo_GetDailyListResp.Size(m)
+}
+func (m *GetDailyListResp) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDailyListResp.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetDailyListResp proto.InternalMessageInfo
+
+func (m *GetDailyListResp) GetCode() int32 {
+	if m != nil {
+		return m.Code
+	}
+	return 0
+}
+
+func (m *GetDailyListResp) GetData() *GPDailyData {
+	if m != nil {
+		return m.Data
+	}
+	return nil
+}
+
+type FocusListReq struct {
+	//
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name"`
+	//
+	Secucode string `protobuf:"bytes,2,opt,name=secucode,proto3" json:"secucode"`
+	//
+	Limit int32 `protobuf:"varint,10,opt,name=limit,proto3" json:"limit"`
+	//
+	Offset int32 `protobuf:"varint,11,opt,name=offset,proto3" json:"offset"`
+}
+
+func (m *FocusListReq) Validate() error {
+	return nil
+}
+
+func (m *FocusListReq) Reset()         { *m = FocusListReq{} }
+func (m *FocusListReq) String() string { return proto.CompactTextString(m) }
+func (*FocusListReq) ProtoMessage()    {}
+func (*FocusListReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2a29ab15f05ba3dc, []int{10}
+}
+
+func (m *FocusListReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_FocusListReq.Unmarshal(m, b)
+}
+func (m *FocusListReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_FocusListReq.Marshal(b, m, deterministic)
+}
+func (m *FocusListReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_FocusListReq.Merge(m, src)
+}
+func (m *FocusListReq) XXX_Size() int {
+	return xxx_messageInfo_FocusListReq.Size(m)
+}
+func (m *FocusListReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_FocusListReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_FocusListReq proto.InternalMessageInfo
+
+func (m *FocusListReq) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *FocusListReq) GetSecucode() string {
+	if m != nil {
+		return m.Secucode
+	}
+	return ""
+}
+
+func (m *FocusListReq) GetLimit() int32 {
+	if m != nil {
+		return m.Limit
+	}
+	return 0
+}
+
+func (m *FocusListReq) GetOffset() int32 {
+	if m != nil {
+		return m.Offset
+	}
+	return 0
+}
+
+type GPFocusItem struct {
+	//
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name"`
+	//
+	Secucode string `protobuf:"bytes,2,opt,name=secucode,proto3" json:"secucode"`
+	//
+	FocusPrice float64 `protobuf:"fixed64,3,opt,name=focusPrice,proto3" json:"focusPrice"`
+	//
+	PresentPrice float64 `protobuf:"fixed64,5,opt,name=presentPrice,proto3" json:"presentPrice"`
+	//
+	CreateDate string `protobuf:"bytes,9,opt,name=createDate,proto3" json:"createDate"`
+	//
+	UpdateDate string `protobuf:"bytes,10,opt,name=updateDate,proto3" json:"updateDate"`
+}
+
+func (m *GPFocusItem) Validate() error {
+	return nil
+}
+
+func (m *GPFocusItem) Reset()         { *m = GPFocusItem{} }
+func (m *GPFocusItem) String() string { return proto.CompactTextString(m) }
+func (*GPFocusItem) ProtoMessage()    {}
+func (*GPFocusItem) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2a29ab15f05ba3dc, []int{11}
+}
+
+func (m *GPFocusItem) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GPFocusItem.Unmarshal(m, b)
+}
+func (m *GPFocusItem) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GPFocusItem.Marshal(b, m, deterministic)
+}
+func (m *GPFocusItem) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GPFocusItem.Merge(m, src)
+}
+func (m *GPFocusItem) XXX_Size() int {
+	return xxx_messageInfo_GPFocusItem.Size(m)
+}
+func (m *GPFocusItem) XXX_DiscardUnknown() {
+	xxx_messageInfo_GPFocusItem.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GPFocusItem proto.InternalMessageInfo
+
+func (m *GPFocusItem) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *GPFocusItem) GetSecucode() string {
+	if m != nil {
+		return m.Secucode
+	}
+	return ""
+}
+
+func (m *GPFocusItem) GetFocusPrice() float64 {
+	if m != nil {
+		return m.FocusPrice
+	}
+	return 0
+}
+
+func (m *GPFocusItem) GetPresentPrice() float64 {
+	if m != nil {
+		return m.PresentPrice
+	}
+	return 0
+}
+
+func (m *GPFocusItem) GetCreateDate() string {
+	if m != nil {
+		return m.CreateDate
+	}
+	return ""
+}
+
+func (m *GPFocusItem) GetUpdateDate() string {
+	if m != nil {
+		return m.UpdateDate
+	}
+	return ""
+}
+
+type GPFocusData struct {
+	//
+	Total int32 `protobuf:"varint,1,opt,name=total,proto3" json:"total"`
+	//
+	Items []*GPFocusItem `protobuf:"bytes,2,rep,name=items,proto3" json:"items"`
+}
+
+func (m *GPFocusData) Validate() error {
+	return nil
+}
+
+func (m *GPFocusData) Reset()         { *m = GPFocusData{} }
+func (m *GPFocusData) String() string { return proto.CompactTextString(m) }
+func (*GPFocusData) ProtoMessage()    {}
+func (*GPFocusData) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2a29ab15f05ba3dc, []int{12}
+}
+
+func (m *GPFocusData) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GPFocusData.Unmarshal(m, b)
+}
+func (m *GPFocusData) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GPFocusData.Marshal(b, m, deterministic)
+}
+func (m *GPFocusData) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GPFocusData.Merge(m, src)
+}
+func (m *GPFocusData) XXX_Size() int {
+	return xxx_messageInfo_GPFocusData.Size(m)
+}
+func (m *GPFocusData) XXX_DiscardUnknown() {
+	xxx_messageInfo_GPFocusData.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GPFocusData proto.InternalMessageInfo
+
+func (m *GPFocusData) GetTotal() int32 {
+	if m != nil {
+		return m.Total
+	}
+	return 0
+}
+
+func (m *GPFocusData) GetItems() []*GPFocusItem {
+	if m != nil {
+		return m.Items
+	}
+	return nil
+}
+
+type FocusListResp struct {
+	//
+	Code int32 `protobuf:"varint,1,opt,name=code,proto3" json:"code"`
+	//
+	Data *GPFocusData `protobuf:"bytes,2,opt,name=data,proto3" json:"data"`
+}
+
+func (m *FocusListResp) Validate() error {
+	return nil
+}
+
+func (m *FocusListResp) Reset()         { *m = FocusListResp{} }
+func (m *FocusListResp) String() string { return proto.CompactTextString(m) }
+func (*FocusListResp) ProtoMessage()    {}
+func (*FocusListResp) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2a29ab15f05ba3dc, []int{13}
+}
+
+func (m *FocusListResp) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_FocusListResp.Unmarshal(m, b)
+}
+func (m *FocusListResp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_FocusListResp.Marshal(b, m, deterministic)
+}
+func (m *FocusListResp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_FocusListResp.Merge(m, src)
+}
+func (m *FocusListResp) XXX_Size() int {
+	return xxx_messageInfo_FocusListResp.Size(m)
+}
+func (m *FocusListResp) XXX_DiscardUnknown() {
+	xxx_messageInfo_FocusListResp.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_FocusListResp proto.InternalMessageInfo
+
+func (m *FocusListResp) GetCode() int32 {
+	if m != nil {
+		return m.Code
+	}
+	return 0
+}
+
+func (m *FocusListResp) GetData() *GPFocusData {
+	if m != nil {
+		return m.Data
+	}
+	return nil
+}
+
 type GetLongLineListReq struct {
 	//
 	Secucode string `protobuf:"bytes,2,opt,name=secucode,proto3" json:"secucode"`
@@ -53,7 +1192,7 @@ func (m *GetLongLineListReq) Reset()         { *m = GetLongLineListReq{} }
 func (m *GetLongLineListReq) String() string { return proto.CompactTextString(m) }
 func (*GetLongLineListReq) ProtoMessage()    {}
 func (*GetLongLineListReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{0}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{14}
 }
 
 func (m *GetLongLineListReq) XXX_Unmarshal(b []byte) error {
@@ -133,7 +1272,7 @@ func (m *LongLineItem) Reset()         { *m = LongLineItem{} }
 func (m *LongLineItem) String() string { return proto.CompactTextString(m) }
 func (*LongLineItem) ProtoMessage()    {}
 func (*LongLineItem) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{1}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{15}
 }
 
 func (m *LongLineItem) XXX_Unmarshal(b []byte) error {
@@ -239,7 +1378,7 @@ func (m *LongLineData) Reset()         { *m = LongLineData{} }
 func (m *LongLineData) String() string { return proto.CompactTextString(m) }
 func (*LongLineData) ProtoMessage()    {}
 func (*LongLineData) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{2}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{16}
 }
 
 func (m *LongLineData) XXX_Unmarshal(b []byte) error {
@@ -289,7 +1428,7 @@ func (m *GetLongLineListResp) Reset()         { *m = GetLongLineListResp{} }
 func (m *GetLongLineListResp) String() string { return proto.CompactTextString(m) }
 func (*GetLongLineListResp) ProtoMessage()    {}
 func (*GetLongLineListResp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{3}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{17}
 }
 
 func (m *GetLongLineListResp) XXX_Unmarshal(b []byte) error {
@@ -339,7 +1478,7 @@ func (m *PromptBuyListReq) Reset()         { *m = PromptBuyListReq{} }
 func (m *PromptBuyListReq) String() string { return proto.CompactTextString(m) }
 func (*PromptBuyListReq) ProtoMessage()    {}
 func (*PromptBuyListReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{4}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{18}
 }
 
 func (m *PromptBuyListReq) XXX_Unmarshal(b []byte) error {
@@ -397,7 +1536,7 @@ func (m *PromptBuyItem) Reset()         { *m = PromptBuyItem{} }
 func (m *PromptBuyItem) String() string { return proto.CompactTextString(m) }
 func (*PromptBuyItem) ProtoMessage()    {}
 func (*PromptBuyItem) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{5}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{19}
 }
 
 func (m *PromptBuyItem) XXX_Unmarshal(b []byte) error {
@@ -475,7 +1614,7 @@ func (m *PromptBuyData) Reset()         { *m = PromptBuyData{} }
 func (m *PromptBuyData) String() string { return proto.CompactTextString(m) }
 func (*PromptBuyData) ProtoMessage()    {}
 func (*PromptBuyData) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{6}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{20}
 }
 
 func (m *PromptBuyData) XXX_Unmarshal(b []byte) error {
@@ -525,7 +1664,7 @@ func (m *PromptBuyListResp) Reset()         { *m = PromptBuyListResp{} }
 func (m *PromptBuyListResp) String() string { return proto.CompactTextString(m) }
 func (*PromptBuyListResp) ProtoMessage()    {}
 func (*PromptBuyListResp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{7}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{21}
 }
 
 func (m *PromptBuyListResp) XXX_Unmarshal(b []byte) error {
@@ -575,7 +1714,7 @@ func (m *UpdatePromptBuyReq) Reset()         { *m = UpdatePromptBuyReq{} }
 func (m *UpdatePromptBuyReq) String() string { return proto.CompactTextString(m) }
 func (*UpdatePromptBuyReq) ProtoMessage()    {}
 func (*UpdatePromptBuyReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{8}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{22}
 }
 
 func (m *UpdatePromptBuyReq) XXX_Unmarshal(b []byte) error {
@@ -623,7 +1762,7 @@ func (m *UpdatePromptBuyResp) Reset()         { *m = UpdatePromptBuyResp{} }
 func (m *UpdatePromptBuyResp) String() string { return proto.CompactTextString(m) }
 func (*UpdatePromptBuyResp) ProtoMessage()    {}
 func (*UpdatePromptBuyResp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{9}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{23}
 }
 
 func (m *UpdatePromptBuyResp) XXX_Unmarshal(b []byte) error {
@@ -668,7 +1807,7 @@ func (m *UpdateRecommendReq) Reset()         { *m = UpdateRecommendReq{} }
 func (m *UpdateRecommendReq) String() string { return proto.CompactTextString(m) }
 func (*UpdateRecommendReq) ProtoMessage()    {}
 func (*UpdateRecommendReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{10}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{24}
 }
 
 func (m *UpdateRecommendReq) XXX_Unmarshal(b []byte) error {
@@ -723,7 +1862,7 @@ func (m *UpdateRecommendResp) Reset()         { *m = UpdateRecommendResp{} }
 func (m *UpdateRecommendResp) String() string { return proto.CompactTextString(m) }
 func (*UpdateRecommendResp) ProtoMessage()    {}
 func (*UpdateRecommendResp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{11}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{25}
 }
 
 func (m *UpdateRecommendResp) XXX_Unmarshal(b []byte) error {
@@ -759,6 +1898,10 @@ type GetRecommendReq struct {
 	//
 	Secucode string `protobuf:"bytes,3,opt,name=secucode,proto3" json:"secucode"`
 	//
+	SortType RecommendSortType `protobuf:"varint,4,opt,name=sortType,proto3,enum=digger.RecommendSortType" json:"sortType"`
+	//
+	RmIndex int32 `protobuf:"varint,5,opt,name=rmIndex,proto3" json:"rmIndex"`
+	//
 	Limit int32 `protobuf:"varint,10,opt,name=limit,proto3" json:"limit"`
 	//
 	Offset int32 `protobuf:"varint,11,opt,name=offset,proto3" json:"offset"`
@@ -772,7 +1915,7 @@ func (m *GetRecommendReq) Reset()         { *m = GetRecommendReq{} }
 func (m *GetRecommendReq) String() string { return proto.CompactTextString(m) }
 func (*GetRecommendReq) ProtoMessage()    {}
 func (*GetRecommendReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{12}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{26}
 }
 
 func (m *GetRecommendReq) XXX_Unmarshal(b []byte) error {
@@ -812,6 +1955,20 @@ func (m *GetRecommendReq) GetSecucode() string {
 		return m.Secucode
 	}
 	return ""
+}
+
+func (m *GetRecommendReq) GetSortType() RecommendSortType {
+	if m != nil {
+		return m.SortType
+	}
+	return RecommendSortType_RecommendSortTypeUnknown
+}
+
+func (m *GetRecommendReq) GetRmIndex() int32 {
+	if m != nil {
+		return m.RmIndex
+	}
+	return 0
 }
 
 func (m *GetRecommendReq) GetLimit() int32 {
@@ -867,7 +2024,7 @@ func (m *RecommendItem) Reset()         { *m = RecommendItem{} }
 func (m *RecommendItem) String() string { return proto.CompactTextString(m) }
 func (*RecommendItem) ProtoMessage()    {}
 func (*RecommendItem) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{13}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{27}
 }
 
 func (m *RecommendItem) XXX_Unmarshal(b []byte) error {
@@ -1001,7 +2158,7 @@ func (m *RecommendData) Reset()         { *m = RecommendData{} }
 func (m *RecommendData) String() string { return proto.CompactTextString(m) }
 func (*RecommendData) ProtoMessage()    {}
 func (*RecommendData) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{14}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{28}
 }
 
 func (m *RecommendData) XXX_Unmarshal(b []byte) error {
@@ -1051,7 +2208,7 @@ func (m *GetRecommendResp) Reset()         { *m = GetRecommendResp{} }
 func (m *GetRecommendResp) String() string { return proto.CompactTextString(m) }
 func (*GetRecommendResp) ProtoMessage()    {}
 func (*GetRecommendResp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{15}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{29}
 }
 
 func (m *GetRecommendResp) XXX_Unmarshal(b []byte) error {
@@ -1097,7 +2254,7 @@ func (m *UserLogoutReq) Reset()         { *m = UserLogoutReq{} }
 func (m *UserLogoutReq) String() string { return proto.CompactTextString(m) }
 func (*UserLogoutReq) ProtoMessage()    {}
 func (*UserLogoutReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{16}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{30}
 }
 
 func (m *UserLogoutReq) XXX_Unmarshal(b []byte) error {
@@ -1131,7 +2288,7 @@ func (m *UserLogoutResp) Reset()         { *m = UserLogoutResp{} }
 func (m *UserLogoutResp) String() string { return proto.CompactTextString(m) }
 func (*UserLogoutResp) ProtoMessage()    {}
 func (*UserLogoutResp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{17}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{31}
 }
 
 func (m *UserLogoutResp) XXX_Unmarshal(b []byte) error {
@@ -1178,7 +2335,7 @@ func (m *UserInfoData) Reset()         { *m = UserInfoData{} }
 func (m *UserInfoData) String() string { return proto.CompactTextString(m) }
 func (*UserInfoData) ProtoMessage()    {}
 func (*UserInfoData) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{18}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{32}
 }
 
 func (m *UserInfoData) XXX_Unmarshal(b []byte) error {
@@ -1238,7 +2395,7 @@ func (m *UserInfoReq) Reset()         { *m = UserInfoReq{} }
 func (m *UserInfoReq) String() string { return proto.CompactTextString(m) }
 func (*UserInfoReq) ProtoMessage()    {}
 func (*UserInfoReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{19}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{33}
 }
 
 func (m *UserInfoReq) XXX_Unmarshal(b []byte) error {
@@ -1274,7 +2431,7 @@ func (m *UserInfoResp) Reset()         { *m = UserInfoResp{} }
 func (m *UserInfoResp) String() string { return proto.CompactTextString(m) }
 func (*UserInfoResp) ProtoMessage()    {}
 func (*UserInfoResp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{20}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{34}
 }
 
 func (m *UserInfoResp) XXX_Unmarshal(b []byte) error {
@@ -1324,7 +2481,7 @@ func (m *UserLoginReq) Reset()         { *m = UserLoginReq{} }
 func (m *UserLoginReq) String() string { return proto.CompactTextString(m) }
 func (*UserLoginReq) ProtoMessage()    {}
 func (*UserLoginReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{21}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{35}
 }
 
 func (m *UserLoginReq) XXX_Unmarshal(b []byte) error {
@@ -1372,7 +2529,7 @@ func (m *LoginData) Reset()         { *m = LoginData{} }
 func (m *LoginData) String() string { return proto.CompactTextString(m) }
 func (*LoginData) ProtoMessage()    {}
 func (*LoginData) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{22}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{36}
 }
 
 func (m *LoginData) XXX_Unmarshal(b []byte) error {
@@ -1415,7 +2572,7 @@ func (m *UserLoginResp) Reset()         { *m = UserLoginResp{} }
 func (m *UserLoginResp) String() string { return proto.CompactTextString(m) }
 func (*UserLoginResp) ProtoMessage()    {}
 func (*UserLoginResp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2a29ab15f05ba3dc, []int{23}
+	return fileDescriptor_2a29ab15f05ba3dc, []int{37}
 }
 
 func (m *UserLoginResp) XXX_Unmarshal(b []byte) error {
@@ -1451,6 +2608,21 @@ func (m *UserLoginResp) GetData() *LoginData {
 }
 
 func init() {
+	proto.RegisterEnum("digger.RecommendSortType", RecommendSortType_name, RecommendSortType_value)
+	proto.RegisterType((*FocusConfirmReq)(nil), "digger.FocusConfirmReq")
+	proto.RegisterType((*FocusConfirmResp)(nil), "digger.FocusConfirmResp")
+	proto.RegisterType((*ManualDecreaseListReq)(nil), "digger.ManualDecreaseListReq")
+	proto.RegisterType((*ManualDecreaseItem)(nil), "digger.ManualDecreaseItem")
+	proto.RegisterType((*ManualDecreaseData)(nil), "digger.ManualDecreaseData")
+	proto.RegisterType((*ManualDecreaseListResp)(nil), "digger.ManualDecreaseListResp")
+	proto.RegisterType((*GetDailyListReq)(nil), "digger.GetDailyListReq")
+	proto.RegisterType((*GPDailyItem)(nil), "digger.GPDailyItem")
+	proto.RegisterType((*GPDailyData)(nil), "digger.GPDailyData")
+	proto.RegisterType((*GetDailyListResp)(nil), "digger.GetDailyListResp")
+	proto.RegisterType((*FocusListReq)(nil), "digger.FocusListReq")
+	proto.RegisterType((*GPFocusItem)(nil), "digger.GPFocusItem")
+	proto.RegisterType((*GPFocusData)(nil), "digger.GPFocusData")
+	proto.RegisterType((*FocusListResp)(nil), "digger.FocusListResp")
 	proto.RegisterType((*GetLongLineListReq)(nil), "digger.GetLongLineListReq")
 	proto.RegisterType((*LongLineItem)(nil), "digger.LongLineItem")
 	proto.RegisterType((*LongLineData)(nil), "digger.LongLineData")
@@ -1480,69 +2652,104 @@ func init() {
 func init() { proto.RegisterFile("digger/zwadmin.proto", fileDescriptor_2a29ab15f05ba3dc) }
 
 var fileDescriptor_2a29ab15f05ba3dc = []byte{
-	// 989 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x04, 0x03, 0x02, 0x01, 0x02, 0xff, 0x9c, 0x56, 0xef, 0x8a, 0xdc, 0x36,
-	0x10, 0xc7, 0xfb, 0xdf, 0xb3, 0xbb, 0xb9, 0x3b, 0xdd, 0xe5, 0xea, 0xba, 0xa1, 0x5c, 0x4d, 0x0a,
-	0x97, 0x16, 0x2e, 0x90, 0x52, 0x28, 0xe4, 0x4b, 0x13, 0x96, 0x86, 0x3b, 0xb6, 0xe5, 0xea, 0x10,
-	0x0a, 0xf9, 0xa6, 0xac, 0xb5, 0x8b, 0xdb, 0xb5, 0xe5, 0x5a, 0x72, 0x72, 0xe9, 0x4b, 0xf4, 0x53,
-	0xa1, 0x0f, 0xd0, 0xd7, 0xe8, 0xbb, 0x95, 0x91, 0x6c, 0xd9, 0xb2, 0x77, 0x53, 0x36, 0xdf, 0x3c,
-	0x3f, 0x59, 0x33, 0x3f, 0xcd, 0x6f, 0x66, 0x24, 0x38, 0x8b, 0xe2, 0xcd, 0x86, 0xe5, 0x8f, 0xff,
-	0x78, 0x47, 0xa3, 0x24, 0x4e, 0xaf, 0xb2, 0x9c, 0x4b, 0x4e, 0x46, 0x1a, 0x0d, 0xee, 0x80, 0xbc,
-	0x60, 0x72, 0xc9, 0xd3, 0xcd, 0x32, 0x4e, 0xd9, 0x32, 0x16, 0x32, 0x64, 0xbf, 0x13, 0x1f, 0x26,
-	0x82, 0xad, 0x8a, 0x15, 0x8f, 0x98, 0xd7, 0xbb, 0x70, 0x2e, 0xdd, 0xd0, 0xd8, 0xc4, 0x83, 0xf1,
-	0x26, 0x0a, 0xa9, 0x8c, 0xb9, 0xd7, 0xbf, 0x70, 0x2e, 0x87, 0x61, 0x65, 0x92, 0x33, 0x18, 0x6e,
-	0xe3, 0x24, 0x96, 0x1e, 0x28, 0x5c, 0x1b, 0xe4, 0x1c, 0x46, 0x7c, 0xbd, 0x16, 0x4c, 0x7a, 0x53,
-	0x05, 0x97, 0x56, 0xf0, 0x77, 0x0f, 0x66, 0x55, 0xdc, 0x6b, 0xc9, 0x92, 0x0f, 0x06, 0x25, 0x30,
-	0x48, 0x69, 0xc2, 0x54, 0x44, 0x37, 0x54, 0xdf, 0x18, 0x2e, 0xcb, 0xe3, 0x15, 0xf3, 0x06, 0x0a,
-	0xd4, 0x06, 0xa2, 0x6b, 0xbe, 0x2a, 0x84, 0x37, 0xd4, 0xa8, 0x32, 0x70, 0x7f, 0x44, 0x25, 0xf3,
-	0x46, 0x7a, 0x3f, 0x7e, 0x63, 0xbc, 0x1c, 0x79, 0xbf, 0x94, 0xb9, 0x37, 0xd6, 0xf1, 0x2a, 0xbb,
-	0x79, 0xc8, 0x89, 0x7d, 0xc8, 0xcf, 0x01, 0x56, 0x39, 0xa3, 0x92, 0x2d, 0xd0, 0x9f, 0xab, 0xf6,
-	0x35, 0x10, 0x12, 0xc0, 0x2c, 0xcb, 0x99, 0x60, 0xa9, 0xbc, 0x55, 0xe4, 0x30, 0x17, 0x4e, 0x68,
-	0x61, 0xe8, 0xe3, 0x2d, 0xdd, 0x16, 0xec, 0x3a, 0x8d, 0xd8, 0x5d, 0x99, 0x96, 0x06, 0x12, 0xdc,
-	0xd6, 0x99, 0x59, 0x50, 0x49, 0xf1, 0x4c, 0x92, 0x4b, 0xba, 0xf5, 0x1c, 0x9d, 0x58, 0x65, 0x90,
-	0xaf, 0x60, 0x18, 0x4b, 0x96, 0x08, 0xaf, 0x77, 0xd1, 0xbf, 0x9c, 0x3e, 0x39, 0xbb, 0xd2, 0x92,
-	0x5e, 0x35, 0x93, 0x1a, 0xea, 0x5f, 0x82, 0x97, 0x70, 0xda, 0x91, 0x59, 0x64, 0x98, 0x16, 0x95,
-	0x6e, 0xed, 0x57, 0x7d, 0x93, 0x4b, 0x95, 0x2a, 0xaa, 0x24, 0xd8, 0xe1, 0x15, 0x09, 0xa9, 0x04,
-	0xd2, 0xe0, 0x7b, 0x38, 0xbe, 0xcd, 0x79, 0x92, 0xc9, 0xe7, 0xc5, 0xfb, 0xaa, 0x72, 0x0e, 0xab,
-	0x81, 0x7f, 0x1d, 0x98, 0x1b, 0x17, 0x1f, 0x55, 0x04, 0x3e, 0x4c, 0x92, 0x38, 0xbd, 0x35, 0x75,
-	0xe0, 0x84, 0xc6, 0xee, 0x48, 0x31, 0xdc, 0x21, 0xc5, 0x03, 0x70, 0x55, 0xdd, 0x2c, 0xe2, 0xf5,
-	0x5a, 0x55, 0x87, 0x13, 0xd6, 0x40, 0x4b, 0xec, 0x71, 0x5b, 0xec, 0x20, 0x6c, 0xd0, 0xff, 0x80,
-	0x52, 0x5f, 0xdb, 0x4a, 0xdd, 0xaf, 0x72, 0x6a, 0x1d, 0xbd, 0x92, 0x2a, 0x84, 0x93, 0x56, 0x56,
-	0xf7, 0x08, 0xf5, 0xc8, 0x12, 0xaa, 0xeb, 0xb4, 0xa1, 0xd4, 0x12, 0xc8, 0xab, 0x0c, 0x8b, 0xde,
-	0x2c, 0xfe, 0x5f, 0x97, 0xfb, 0x30, 0x89, 0x62, 0x41, 0xdf, 0x6c, 0x59, 0xa4, 0xf2, 0x3d, 0x09,
-	0x8d, 0x1d, 0x3c, 0x82, 0xd3, 0x8e, 0xb7, 0xdd, 0x1c, 0x83, 0x5f, 0xab, 0xc0, 0x21, 0x5b, 0xf1,
-	0x24, 0x61, 0x69, 0x84, 0x81, 0x2b, 0x21, 0x1d, 0x5b, 0xc8, 0xbd, 0x64, 0x1e, 0xc2, 0x5c, 0x6b,
-	0xc2, 0x30, 0xf7, 0x82, 0x95, 0x83, 0xc7, 0x06, 0x6b, 0x5a, 0x8d, 0x58, 0x7b, 0x68, 0xfd, 0xe9,
-	0xc0, 0xd1, 0x0b, 0x26, 0x2d, 0x52, 0x58, 0x09, 0x26, 0x80, 0xfe, 0xb9, 0x06, 0x50, 0x58, 0x21,
-	0xb1, 0x08, 0x7a, 0x5a, 0x58, 0x65, 0x58, 0xa4, 0xfb, 0x2d, 0xd2, 0x87, 0x75, 0xc2, 0x5f, 0x7d,
-	0x98, 0x1b, 0x3a, 0xaa, 0x13, 0xee, 0x41, 0x2f, 0x8e, 0x4a, 0x22, 0xbd, 0x38, 0x3a, 0xb8, 0x33,
-	0x3c, 0x18, 0xe7, 0x3f, 0xea, 0x09, 0x33, 0xd0, 0x23, 0xac, 0x34, 0xed, 0x93, 0x0e, 0xdb, 0x27,
-	0xc5, 0x8e, 0xa2, 0x77, 0xba, 0x63, 0x46, 0x65, 0x47, 0x95, 0x36, 0xfa, 0xc4, 0xef, 0x05, 0x7d,
-	0xaf, 0x4e, 0xe5, 0x86, 0x95, 0xa9, 0xa3, 0xe9, 0x4d, 0x53, 0xbd, 0x52, 0x9a, 0xd8, 0x43, 0x9b,
-	0x85, 0x09, 0x37, 0xd3, 0xc3, 0xae, 0x46, 0xea, 0xcc, 0xce, 0xf5, 0xc0, 0xd6, 0x99, 0x7d, 0x00,
-	0x6e, 0xa1, 0xc4, 0xfc, 0xa9, 0x48, 0xbc, 0x7b, 0x9a, 0xa3, 0x01, 0xb0, 0x20, 0x72, 0xb6, 0x66,
-	0xb9, 0x71, 0x7b, 0xa4, 0x0b, 0xc2, 0x02, 0x31, 0xb2, 0xde, 0xa2, 0xba, 0xf7, 0x58, 0x77, 0x6f,
-	0x8d, 0x74, 0xe6, 0xc3, 0x49, 0x77, 0x3e, 0x60, 0x87, 0x1b, 0x59, 0x3e, 0xa2, 0xc3, 0x2d, 0x49,
-	0xab, 0x0e, 0xff, 0x19, 0x8e, 0xed, 0xe2, 0x3b, 0xac, 0xc1, 0x2d, 0x3e, 0x65, 0x83, 0x1f, 0xc1,
-	0xfc, 0x95, 0x60, 0xf9, 0x92, 0x6f, 0x78, 0x81, 0x73, 0x38, 0x78, 0x08, 0xf7, 0x9a, 0xc0, 0x9e,
-	0x3e, 0x90, 0x30, 0xc3, 0xbf, 0xae, 0xd3, 0x35, 0x57, 0x87, 0x3b, 0x87, 0x11, 0x7d, 0x4b, 0x25,
-	0xcd, 0xcb, 0xd6, 0x2c, 0x2d, 0xcc, 0x54, 0x9c, 0xca, 0x9c, 0x47, 0xc5, 0x4a, 0xc6, 0x3c, 0x2d,
-	0xeb, 0xcf, 0xc2, 0xf6, 0x5d, 0xd1, 0x39, 0xdf, 0x32, 0xe1, 0x0d, 0x2e, 0xfa, 0xa8, 0xad, 0x32,
-	0x82, 0x39, 0x4c, 0xab, 0xa8, 0x48, 0x75, 0x59, 0x93, 0x38, 0xf4, 0x52, 0x6a, 0x92, 0x2f, 0x33,
-	0xf1, 0x83, 0xf6, 0xb6, 0xe4, 0x9b, 0x38, 0x2d, 0x87, 0x5c, 0x21, 0x58, 0xde, 0x98, 0x37, 0xc6,
-	0xc6, 0xb5, 0x8c, 0x0a, 0xf1, 0x8e, 0xe7, 0x51, 0xd5, 0x52, 0x95, 0x1d, 0x7c, 0x01, 0xae, 0xf2,
-	0x51, 0x8b, 0xfe, 0x1b, 0x4b, 0x4b, 0x0f, 0xda, 0x08, 0x6e, 0x4c, 0xd2, 0x31, 0xd4, 0x1e, 0xe6,
-	0x5f, 0x5a, 0xcc, 0x4f, 0xea, 0xeb, 0xb4, 0xf4, 0xad, 0x69, 0x3f, 0xf9, 0x67, 0x00, 0xe3, 0xd7,
-	0xbf, 0x3c, 0xc3, 0x17, 0x1a, 0xf9, 0x0e, 0x5c, 0xe3, 0x97, 0x58, 0x67, 0xad, 0x4e, 0xe5, 0xdf,
-	0xdf, 0x81, 0x8a, 0x8c, 0x7c, 0x0b, 0x93, 0x2a, 0x25, 0xe4, 0xb4, 0x9d, 0x24, 0xdc, 0x77, 0xd6,
-	0x05, 0x45, 0x46, 0x9e, 0x02, 0xd4, 0xc5, 0x42, 0xda, 0xbe, 0x75, 0x45, 0xf9, 0xe7, 0xbb, 0x60,
-	0x91, 0x91, 0x67, 0x30, 0x6b, 0x56, 0x33, 0xf9, 0xa4, 0xfa, 0xaf, 0x35, 0x60, 0x7d, 0x6f, 0xf7,
-	0x82, 0xc8, 0xc8, 0x0d, 0x1c, 0xb5, 0x26, 0x37, 0xf1, 0x4d, 0xb4, 0xce, 0xf5, 0xe1, 0x7f, 0xb6,
-	0x77, 0x4d, 0x64, 0x64, 0xd1, 0xb8, 0x92, 0xf1, 0xfa, 0x24, 0x5e, 0xe7, 0x62, 0x2c, 0xdf, 0x2a,
-	0xfe, 0xa7, 0x7b, 0x56, 0x9a, 0x8c, 0xcc, 0x52, 0x9b, 0x51, 0xf3, 0x26, 0x6d, 0x33, 0xb2, 0xef,
-	0xc5, 0x1b, 0x75, 0xd7, 0x34, 0xdf, 0x5e, 0xb5, 0xaf, 0xee, 0xdb, 0xbb, 0xf6, 0xb5, 0xe3, 0xc1,
-	0xf6, 0x7c, 0xfa, 0xda, 0xbd, 0x7a, 0xfc, 0x54, 0xff, 0xf0, 0x66, 0xa4, 0x9e, 0xf2, 0xdf, 0xfc,
-	0x17, 0x00, 0x00, 0xff, 0xff, 0xf5, 0x44, 0x99, 0x6e, 0xe2, 0x0b, 0x00, 0x00,
+	// 1542 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x04, 0x03, 0x02, 0x01, 0x02, 0xff, 0xb4, 0x58, 0xef, 0x6e, 0x1b, 0x45,
+	0x10, 0xc7, 0x76, 0xec, 0xc4, 0x63, 0x3b, 0x71, 0x36, 0x69, 0xb8, 0xba, 0xa1, 0x84, 0x53, 0x81,
+	0xb4, 0x48, 0x29, 0x2a, 0x42, 0x42, 0xea, 0x17, 0x5a, 0x4c, 0xa3, 0x54, 0x6e, 0x09, 0x97, 0x56,
+	0x48, 0x55, 0xbf, 0x5c, 0x7c, 0x6b, 0xeb, 0x88, 0xef, 0x0f, 0xb7, 0xeb, 0xfe, 0xe1, 0x3d, 0x10,
+	0x3c, 0x0c, 0x7c, 0x40, 0x3c, 0x01, 0x6f, 0xc0, 0x27, 0x5e, 0x03, 0xb4, 0x7f, 0x6f, 0xf7, 0xce,
+	0x97, 0x60, 0x4b, 0x7c, 0xbb, 0x99, 0xd9, 0x9b, 0x9d, 0x9d, 0xdf, 0x6f, 0x67, 0xe6, 0x0e, 0x76,
+	0x83, 0x70, 0x3a, 0xc5, 0xd9, 0xdd, 0x1f, 0x5f, 0xfb, 0x41, 0x14, 0xc6, 0x47, 0x69, 0x96, 0xd0,
+	0x04, 0xb5, 0x84, 0xd6, 0xc5, 0xb0, 0xf5, 0x28, 0x19, 0xcf, 0xc9, 0x57, 0x49, 0x3c, 0x09, 0xb3,
+	0xc8, 0xc3, 0x3f, 0x20, 0x04, 0x6b, 0xb1, 0x1f, 0x61, 0xa7, 0x76, 0x50, 0x3b, 0x6c, 0x7b, 0xfc,
+	0x19, 0x0d, 0x60, 0x83, 0xe0, 0xf1, 0x7c, 0x9c, 0x04, 0xd8, 0xa9, 0x73, 0xbd, 0x96, 0x91, 0x0b,
+	0xdd, 0x34, 0xc3, 0x04, 0xc7, 0xf4, 0x34, 0x0b, 0xc7, 0xd8, 0x69, 0x1c, 0xd4, 0x0e, 0x6b, 0x9e,
+	0xa5, 0x73, 0x3f, 0x82, 0xbe, 0xbd, 0x0d, 0x49, 0xd9, 0x3e, 0xdc, 0x1f, 0xdb, 0xa7, 0xe9, 0xf1,
+	0x67, 0xf7, 0xe7, 0x1a, 0x5c, 0x7b, 0xe2, 0xc7, 0x73, 0x7f, 0x36, 0xc4, 0xe3, 0x0c, 0xfb, 0x04,
+	0x8f, 0x42, 0x42, 0x57, 0x89, 0xea, 0x00, 0x3a, 0x81, 0x74, 0xf1, 0xcc, 0x9f, 0xf2, 0xa0, 0x9a,
+	0x9e, 0xa9, 0x42, 0xbb, 0xd0, 0x9c, 0x85, 0x51, 0x48, 0x1d, 0xe0, 0x36, 0x21, 0xa0, 0x3d, 0x68,
+	0x25, 0x93, 0x09, 0xc1, 0xd4, 0xe9, 0x70, 0xb5, 0x94, 0xdc, 0xbf, 0x6b, 0x80, 0xec, 0xc8, 0x4e,
+	0x28, 0x8e, 0xfe, 0x87, 0xb0, 0x0e, 0xa0, 0x83, 0x27, 0x13, 0x3c, 0xa6, 0x67, 0xd4, 0xcf, 0xa8,
+	0xb3, 0xc6, 0x1d, 0x98, 0x2a, 0xb4, 0x0f, 0x6d, 0x21, 0x7e, 0x1d, 0x07, 0x4e, 0x93, 0xdb, 0x73,
+	0x05, 0xba, 0x09, 0xc0, 0x9c, 0x51, 0x3c, 0xf4, 0x29, 0x76, 0x5a, 0xdc, 0x6c, 0x68, 0x98, 0x7d,
+	0x9e, 0x06, 0xca, 0xbe, 0x2e, 0xec, 0xb9, 0xc6, 0x7d, 0x59, 0x3c, 0xe7, 0xd0, 0xa7, 0x3e, 0x4b,
+	0x16, 0x4d, 0xa8, 0x3f, 0x93, 0x68, 0x09, 0x01, 0x7d, 0x0a, 0xcd, 0x90, 0xe2, 0x88, 0x38, 0xf5,
+	0x83, 0xc6, 0x61, 0xe7, 0xde, 0xe0, 0x48, 0xb0, 0xea, 0xa8, 0x9c, 0x28, 0x4f, 0x2c, 0x74, 0x5f,
+	0xc2, 0xde, 0x22, 0x7c, 0x17, 0xd3, 0x01, 0x1d, 0xc1, 0x5a, 0xe0, 0x53, 0x9f, 0x67, 0xb1, 0xd2,
+	0x3d, 0x8b, 0xcf, 0xe3, 0xeb, 0xdc, 0x3f, 0x6a, 0xb0, 0x75, 0x8c, 0xe9, 0xd0, 0x0f, 0x67, 0x6f,
+	0x57, 0x25, 0xce, 0x00, 0x36, 0x14, 0x1c, 0x92, 0xca, 0x5a, 0x66, 0x99, 0x27, 0x0c, 0x02, 0x9e,
+	0x3a, 0x96, 0xf9, 0x86, 0x97, 0x2b, 0x90, 0x03, 0xeb, 0x38, 0x0e, 0x74, 0xda, 0x1b, 0x9e, 0x12,
+	0x97, 0xa4, 0xda, 0x3f, 0x75, 0xe8, 0x1c, 0x9f, 0xf2, 0x43, 0xac, 0xc4, 0x31, 0x07, 0xd6, 0x93,
+	0x14, 0xc7, 0x61, 0x3c, 0x95, 0x07, 0x50, 0x22, 0xb3, 0x8c, 0x67, 0x09, 0x61, 0x96, 0xa6, 0xb0,
+	0x48, 0x91, 0x45, 0x98, 0x66, 0x21, 0x11, 0x91, 0xd7, 0x3c, 0x21, 0xb0, 0x5d, 0xe8, 0x3c, 0x8b,
+	0x93, 0x57, 0x38, 0xe3, 0x4c, 0x69, 0x78, 0x5a, 0x66, 0xb6, 0xf3, 0x39, 0x09, 0x63, 0x4c, 0x88,
+	0xb3, 0x21, 0xf2, 0xa4, 0x64, 0xb6, 0xcf, 0x2c, 0xf4, 0xe3, 0xe9, 0x79, 0xc8, 0x4f, 0x5c, 0xf3,
+	0x94, 0xc8, 0xde, 0x8a, 0xfc, 0x37, 0xa2, 0x50, 0x74, 0xc4, 0x5b, 0x4a, 0xe6, 0xb6, 0x30, 0x16,
+	0xb6, 0xae, 0xb4, 0x49, 0x99, 0xe5, 0x2a, 0xf2, 0xb3, 0x0b, 0x4c, 0x9d, 0x1e, 0x8f, 0x43, 0x4a,
+	0x4c, 0x4f, 0x33, 0x3f, 0xc0, 0x81, 0xb3, 0x29, 0xf4, 0x42, 0x62, 0x48, 0x9d, 0x27, 0xc9, 0x85,
+	0xe7, 0xd3, 0x30, 0x71, 0xfa, 0xdc, 0x59, 0xae, 0x28, 0xdc, 0x91, 0xdd, 0xe2, 0x1d, 0x71, 0x9f,
+	0x6a, 0x00, 0x2e, 0x21, 0xff, 0x6d, 0x9b, 0xfc, 0x3b, 0x8a, 0x9d, 0x06, 0x74, 0x8a, 0xf5, 0xdf,
+	0x40, 0xdf, 0xa6, 0x65, 0x05, 0xdf, 0x3f, 0xb6, 0xf8, 0x5e, 0xf4, 0x68, 0x10, 0x7d, 0x06, 0x5d,
+	0x5e, 0x4f, 0x57, 0x25, 0xf9, 0x72, 0x84, 0xfc, 0xbd, 0xc6, 0xf2, 0xc1, 0x37, 0x5c, 0x89, 0x90,
+	0x37, 0x01, 0x26, 0xec, 0x65, 0xb3, 0x3f, 0x18, 0x9a, 0x52, 0x07, 0x69, 0x96, 0x3b, 0x48, 0x01,
+	0xb2, 0xf6, 0x15, 0x65, 0x0d, 0x4a, 0x65, 0xed, 0xa9, 0x3e, 0xc2, 0x4a, 0x90, 0xea, 0xc3, 0x2b,
+	0x48, 0x47, 0xd0, 0x33, 0x10, 0x58, 0x16, 0x4f, 0x1d, 0x88, 0xc4, 0xf3, 0x0d, 0xa0, 0x63, 0x4c,
+	0x47, 0x49, 0x3c, 0x1d, 0x85, 0xb1, 0xee, 0x79, 0x57, 0x5c, 0xf2, 0x69, 0x20, 0xe8, 0x2d, 0x9a,
+	0x88, 0x12, 0x97, 0xc4, 0xf6, 0x97, 0x3a, 0x74, 0xd5, 0xbe, 0x1c, 0xdc, 0xcb, 0x36, 0x55, 0xc0,
+	0x37, 0x0c, 0xe0, 0x45, 0xe5, 0x18, 0x63, 0xd9, 0xa9, 0x84, 0xc0, 0xb4, 0x1c, 0x60, 0xd9, 0x9f,
+	0x84, 0xc0, 0xde, 0x0f, 0xf2, 0xae, 0xc4, 0x9f, 0xd9, 0x7e, 0x19, 0x8b, 0xfb, 0x8c, 0x66, 0xb2,
+	0x1b, 0x69, 0xd9, 0x3c, 0xe4, 0x86, 0x7d, 0xc8, 0xab, 0xe8, 0x50, 0xa4, 0x14, 0x2c, 0xa6, 0xd4,
+	0x2b, 0x7f, 0x36, 0xc7, 0x27, 0x71, 0x80, 0xdf, 0xc8, 0xb4, 0x18, 0x1a, 0xf7, 0x34, 0xcf, 0xcc,
+	0x25, 0x9c, 0xb9, 0x63, 0x73, 0x66, 0x57, 0x81, 0x6c, 0x26, 0x55, 0x91, 0xe6, 0x0c, 0x76, 0x4a,
+	0x30, 0x57, 0x50, 0xe7, 0xd0, 0xa2, 0x4e, 0xc9, 0xab, 0xc1, 0x9d, 0x2f, 0xa1, 0x7f, 0x9a, 0x25,
+	0x51, 0x4a, 0x1f, 0xce, 0x75, 0xd3, 0x5b, 0x8e, 0x03, 0xbf, 0xd5, 0xa0, 0xa7, 0x5d, 0xac, 0x44,
+	0x02, 0xb3, 0x74, 0xaf, 0x15, 0x4a, 0xf7, 0x7f, 0xb9, 0xdd, 0xfb, 0xd0, 0xe6, 0xbc, 0x19, 0x86,
+	0x93, 0x89, 0x6c, 0x41, 0xb9, 0xa2, 0x00, 0xf6, 0x7a, 0xa9, 0x5c, 0x7b, 0x46, 0xf8, 0x97, 0x20,
+	0xf5, 0x89, 0x8d, 0xd4, 0x35, 0x95, 0x53, 0xeb, 0xe8, 0x0a, 0x2a, 0x0f, 0xb6, 0x0b, 0x59, 0xad,
+	0x00, 0xea, 0xb6, 0x05, 0x54, 0xd9, 0xa9, 0x81, 0xd4, 0x08, 0xd0, 0x73, 0x5e, 0x91, 0xb4, 0xf1,
+	0xaa, 0x5b, 0xce, 0x86, 0x91, 0x90, 0xf8, 0xe7, 0x33, 0x1c, 0xf0, 0x7c, 0x6f, 0x78, 0x5a, 0x76,
+	0x6f, 0xc3, 0x4e, 0xc9, 0x5b, 0xc5, 0x58, 0xfd, 0xbd, 0xda, 0xd8, 0xc3, 0xe3, 0x24, 0x8a, 0x70,
+	0x1c, 0xac, 0xd2, 0x34, 0x6e, 0x41, 0x4f, 0x60, 0x62, 0x8e, 0x47, 0x4d, 0xcf, 0x56, 0xe6, 0x61,
+	0x19, 0x7b, 0x55, 0x84, 0xf5, 0x97, 0x18, 0xd7, 0xac, 0xa0, 0x18, 0x13, 0xf4, 0x06, 0x62, 0x71,
+	0xae, 0x60, 0xc0, 0x12, 0xca, 0x48, 0x50, 0x17, 0xc0, 0x72, 0xc1, 0x0a, 0xba, 0x51, 0x08, 0xfa,
+	0x73, 0xd8, 0x20, 0x49, 0x46, 0x9f, 0xbd, 0x4d, 0x05, 0x33, 0x37, 0xef, 0x5d, 0x57, 0x10, 0xe9,
+	0x7d, 0xcf, 0xe4, 0x02, 0x4f, 0x2f, 0x65, 0x95, 0x27, 0x8b, 0x44, 0x61, 0x68, 0x8a, 0xca, 0x23,
+	0xc5, 0x25, 0xaf, 0xd6, 0x4f, 0x0d, 0xe8, 0xe9, 0x7d, 0xf8, 0xd5, 0xda, 0x84, 0x7a, 0x18, 0xc8,
+	0x93, 0xd5, 0xc3, 0x60, 0xe9, 0xab, 0xc6, 0x22, 0x7b, 0x22, 0x22, 0x5b, 0x93, 0x91, 0x09, 0xd1,
+	0x4e, 0x5d, 0xb3, 0x98, 0x3a, 0x73, 0xf2, 0x6a, 0x15, 0x26, 0x2f, 0x07, 0xd6, 0xd9, 0xf3, 0xd0,
+	0x7f, 0x2b, 0x3b, 0xa7, 0x12, 0xc5, 0x6e, 0xf9, 0xb8, 0xd6, 0xf6, 0x94, 0xc8, 0x2e, 0xe5, 0x74,
+	0xa8, 0xb7, 0xeb, 0x8a, 0xea, 0x99, 0x6b, 0x72, 0xa8, 0x7a, 0xa2, 0x03, 0x08, 0xa8, 0xf6, 0xa1,
+	0x2d, 0x9a, 0xf2, 0xd3, 0x79, 0xc4, 0x47, 0xb6, 0xa6, 0x97, 0x2b, 0x18, 0xc3, 0x32, 0x3c, 0xc1,
+	0x99, 0x76, 0xbb, 0x25, 0x18, 0x66, 0x29, 0x0b, 0xad, 0xbe, 0x5f, 0x6c, 0xf5, 0xa5, 0x82, 0xb3,
+	0xbd, 0xe0, 0x83, 0xd4, 0x33, 0x60, 0x59, 0xa1, 0x64, 0x58, 0x90, 0xaa, 0x92, 0xf1, 0x2d, 0x9f,
+	0xf2, 0xae, 0xa4, 0x7d, 0x55, 0xc5, 0xb0, 0xe2, 0x91, 0x15, 0x63, 0x0b, 0x7a, 0xcf, 0x09, 0xce,
+	0x46, 0xc9, 0x34, 0x99, 0xb3, 0xc2, 0xee, 0xde, 0x82, 0x4d, 0x53, 0x51, 0x71, 0xb1, 0x28, 0x74,
+	0xd9, 0xaa, 0x93, 0x78, 0x92, 0xf0, 0xc3, 0xed, 0x41, 0xcb, 0x7f, 0xe5, 0x53, 0x3f, 0x93, 0x77,
+	0x5d, 0x4a, 0x2c, 0x53, 0x61, 0x4c, 0xb3, 0x24, 0x98, 0x8f, 0x69, 0x98, 0xc4, 0x92, 0x7f, 0x96,
+	0xae, 0xaa, 0xe7, 0x67, 0xc9, 0x0c, 0x13, 0x67, 0xed, 0xa0, 0xc1, 0xb0, 0xe5, 0x82, 0xdb, 0x83,
+	0x8e, 0xda, 0x95, 0x85, 0x3a, 0xca, 0x83, 0x58, 0xb6, 0xcb, 0x99, 0xc1, 0xcb, 0x4c, 0x3c, 0x12,
+	0xde, 0x46, 0xc9, 0x34, 0x8c, 0x65, 0xd5, 0x9c, 0x13, 0x9c, 0x19, 0x05, 0x4c, 0xcb, 0xcc, 0x96,
+	0xfa, 0x84, 0xbc, 0x4e, 0xb2, 0x40, 0x5d, 0x29, 0x25, 0xbb, 0x1f, 0x40, 0x9b, 0xfb, 0xc8, 0x41,
+	0xbf, 0xc0, 0xb1, 0xf4, 0x20, 0x04, 0xf7, 0xb1, 0x4e, 0x3a, 0xdb, 0xaa, 0x22, 0xf2, 0x0f, 0xad,
+	0xc8, 0xb7, 0xf3, 0xfe, 0x2c, 0x7d, 0x8b, 0xb0, 0xef, 0xfc, 0x59, 0x83, 0xed, 0x52, 0x9d, 0x41,
+	0xfb, 0xe0, 0x94, 0x94, 0xcf, 0xe3, 0x8b, 0x38, 0x79, 0x1d, 0xf7, 0xdf, 0x41, 0x03, 0xd8, 0x2b,
+	0x59, 0xcf, 0xd8, 0xed, 0xe9, 0xd7, 0xd0, 0xfb, 0x70, 0xa3, 0x64, 0x3b, 0x3e, 0x3d, 0x89, 0xc5,
+	0xd5, 0xe8, 0xd7, 0x2b, 0x16, 0xa8, 0xbb, 0xd3, 0x6f, 0x2c, 0x5e, 0x30, 0xd4, 0x1e, 0xd6, 0x2a,
+	0x16, 0x68, 0x0f, 0xcd, 0x7b, 0xbf, 0xb6, 0x60, 0xfd, 0xc5, 0x77, 0x0f, 0x82, 0x28, 0x8c, 0xd1,
+	0x17, 0xd0, 0xd6, 0xb9, 0x42, 0x16, 0x7e, 0x0a, 0xa9, 0xc1, 0xb5, 0x05, 0x5a, 0x92, 0xb2, 0xc2,
+	0xac, 0x60, 0x46, 0x3b, 0x45, 0xe0, 0xd9, 0x7b, 0xbb, 0x65, 0x25, 0x49, 0xd1, 0x7d, 0x80, 0xfc,
+	0x02, 0xa0, 0xa2, 0x6f, 0x71, 0x4b, 0x06, 0x7b, 0x8b, 0xd4, 0x24, 0x45, 0x0f, 0xa0, 0x6b, 0xde,
+	0x50, 0xf4, 0xae, 0x9e, 0xc8, 0xed, 0x2e, 0x34, 0x70, 0x16, 0x1b, 0x48, 0x8a, 0x1e, 0xc3, 0x56,
+	0xa1, 0xbd, 0x21, 0xfd, 0x5f, 0xa2, 0xdc, 0x63, 0x07, 0x37, 0x2a, 0x6d, 0x24, 0x45, 0x43, 0x63,
+	0x6e, 0x61, 0x33, 0x06, 0x72, 0x4a, 0xd3, 0x83, 0x1c, 0xe8, 0x06, 0xd7, 0x2b, 0x2c, 0x66, 0x44,
+	0xda, 0x54, 0x8c, 0xc8, 0x1c, 0x37, 0x8a, 0x11, 0xd9, 0xc3, 0xc3, 0x63, 0xde, 0x90, 0xcd, 0x01,
+	0x35, 0xf7, 0x55, 0xfe, 0x40, 0xc9, 0x7d, 0x2d, 0x9a, 0x6a, 0xef, 0xf3, 0x64, 0xeb, 0x8f, 0xa4,
+	0x9c, 0x1d, 0xe6, 0x97, 0x6b, 0xce, 0x0e, 0xfb, 0x6b, 0xea, 0x81, 0xfc, 0xc0, 0x95, 0x3f, 0x0c,
+	0x73, 0xa4, 0x0a, 0x7f, 0x2b, 0x73, 0xa4, 0x4a, 0xff, 0x17, 0x05, 0xd8, 0xfa, 0xa3, 0xdb, 0x02,
+	0xdb, 0xfc, 0x43, 0x64, 0x81, 0x6d, 0x7f, 0xa3, 0x9f, 0x15, 0xff, 0x85, 0x71, 0x47, 0xef, 0x2d,
+	0xfe, 0x0f, 0xa5, 0xdc, 0xdd, 0xbc, 0xcc, 0x4c, 0xd2, 0x87, 0x9d, 0x17, 0xed, 0xa3, 0xbb, 0xf7,
+	0xc5, 0x9a, 0xf3, 0x16, 0xff, 0x1d, 0xfb, 0xd9, 0xbf, 0x01, 0x00, 0x00, 0xff, 0xff, 0x41, 0x69,
+	0x6e, 0xe0, 0xa6, 0x15, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -1566,6 +2773,10 @@ var ServiceMethodZWAdmin = []string{
 	"PromptBuyList",
 	"UpdatePromptBuy",
 	"GetLongLineList",
+	"GetFocusList",
+	"FocusConfirm",
+	"GetDailyList",
+	"ManualDecreaseList",
 }
 
 // Client API for ZWAdmin service
@@ -1582,6 +2793,10 @@ type ZWAdminClient interface {
 	PromptBuyList(ctx context.T, in *PromptBuyListReq, opts ...grpc1.CallOption) (*PromptBuyListResp, error)
 	UpdatePromptBuy(ctx context.T, in *UpdatePromptBuyReq, opts ...grpc1.CallOption) (*UpdatePromptBuyResp, error)
 	GetLongLineList(ctx context.T, in *GetLongLineListReq, opts ...grpc1.CallOption) (*GetLongLineListResp, error)
+	GetFocusList(ctx context.T, in *FocusListReq, opts ...grpc1.CallOption) (*FocusListResp, error)
+	FocusConfirm(ctx context.T, in *FocusConfirmReq, opts ...grpc1.CallOption) (*FocusConfirmResp, error)
+	GetDailyList(ctx context.T, in *GetDailyListReq, opts ...grpc1.CallOption) (*GetDailyListResp, error)
+	ManualDecreaseList(ctx context.T, in *ManualDecreaseListReq, opts ...grpc1.CallOption) (*ManualDecreaseListResp, error)
 }
 
 type zWAdminClient struct {
@@ -1688,6 +2903,42 @@ func (c *zWAdminClient) GetLongLineList(ctx context.T, in *GetLongLineListReq, o
 	return out, nil
 }
 
+func (c *zWAdminClient) GetFocusList(ctx context.T, in *FocusListReq, opts ...grpc1.CallOption) (*FocusListResp, error) {
+	out := new(FocusListResp)
+	err := c.cc.Invoke(ctx, "/digger.ZWAdmin/GetFocusList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *zWAdminClient) FocusConfirm(ctx context.T, in *FocusConfirmReq, opts ...grpc1.CallOption) (*FocusConfirmResp, error) {
+	out := new(FocusConfirmResp)
+	err := c.cc.Invoke(ctx, "/digger.ZWAdmin/FocusConfirm", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *zWAdminClient) GetDailyList(ctx context.T, in *GetDailyListReq, opts ...grpc1.CallOption) (*GetDailyListResp, error) {
+	out := new(GetDailyListResp)
+	err := c.cc.Invoke(ctx, "/digger.ZWAdmin/GetDailyList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *zWAdminClient) ManualDecreaseList(ctx context.T, in *ManualDecreaseListReq, opts ...grpc1.CallOption) (*ManualDecreaseListResp, error) {
+	out := new(ManualDecreaseListResp)
+	err := c.cc.Invoke(ctx, "/digger.ZWAdmin/ManualDecreaseList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ZWAdminServer is the server API for ZWAdmin service.
 type ZWAdminServer interface {
 	UserLogin(context.T, *UserLoginReq) (*UserLoginResp, error)
@@ -1698,6 +2949,10 @@ type ZWAdminServer interface {
 	PromptBuyList(context.T, *PromptBuyListReq) (*PromptBuyListResp, error)
 	UpdatePromptBuy(context.T, *UpdatePromptBuyReq) (*UpdatePromptBuyResp, error)
 	GetLongLineList(context.T, *GetLongLineListReq) (*GetLongLineListResp, error)
+	GetFocusList(context.T, *FocusListReq) (*FocusListResp, error)
+	FocusConfirm(context.T, *FocusConfirmReq) (*FocusConfirmResp, error)
+	GetDailyList(context.T, *GetDailyListReq) (*GetDailyListResp, error)
+	ManualDecreaseList(context.T, *ManualDecreaseListReq) (*ManualDecreaseListResp, error)
 }
 
 func RegisterZWAdminGrpc(s ZWAdminGrpcRegister) {
@@ -1737,6 +2992,18 @@ func (*UnimplementedZWAdminServer) UpdatePromptBuy(ctx context1.Context, req *Up
 }
 func (*UnimplementedZWAdminServer) GetLongLineList(ctx context1.Context, req *GetLongLineListReq) (*GetLongLineListResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLongLineList not implemented")
+}
+func (*UnimplementedZWAdminServer) GetFocusList(ctx context1.Context, req *FocusListReq) (*FocusListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFocusList not implemented")
+}
+func (*UnimplementedZWAdminServer) FocusConfirm(ctx context1.Context, req *FocusConfirmReq) (*FocusConfirmResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FocusConfirm not implemented")
+}
+func (*UnimplementedZWAdminServer) GetDailyList(ctx context1.Context, req *GetDailyListReq) (*GetDailyListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDailyList not implemented")
+}
+func (*UnimplementedZWAdminServer) ManualDecreaseList(ctx context1.Context, req *ManualDecreaseListReq) (*ManualDecreaseListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ManualDecreaseList not implemented")
 }
 
 func RegisterZWAdminServer(s *grpc1.Server, srv ZWAdminServer) {
@@ -1783,6 +3050,10 @@ func RegisterZWAdminWebApiImpl(s mservice.WebApiRegister, impl ZWAdminServer) {
 	s.WebApiRegister("/api/digger.ZWAdmin/PromptBuyList", wrap.PromptBuyList)
 	s.WebApiRegister("/api/digger.ZWAdmin/UpdatePromptBuy", wrap.UpdatePromptBuy)
 	s.WebApiRegister("/api/digger.ZWAdmin/GetLongLineList", wrap.GetLongLineList)
+	s.WebApiRegister("/api/digger.ZWAdmin/GetFocusList", wrap.GetFocusList)
+	s.WebApiRegister("/api/digger.ZWAdmin/FocusConfirm", wrap.FocusConfirm)
+	s.WebApiRegister("/api/digger.ZWAdmin/GetDailyList", wrap.GetDailyList)
+	s.WebApiRegister("/api/digger.ZWAdmin/ManualDecreaseList", wrap.ManualDecreaseList)
 }
 
 func RegisterZWAdminWebapiEx(s ZWAdminWebApiRegister) {
@@ -1796,6 +3067,10 @@ func RegisterZWAdminWebapiEx(s ZWAdminWebApiRegister) {
 	s.WebApiRegisterMethod("digger.ZWAdmin", "PromptBuyList", wrap.PromptBuyList)
 	s.WebApiRegisterMethod("digger.ZWAdmin", "UpdatePromptBuy", wrap.UpdatePromptBuy)
 	s.WebApiRegisterMethod("digger.ZWAdmin", "GetLongLineList", wrap.GetLongLineList)
+	s.WebApiRegisterMethod("digger.ZWAdmin", "GetFocusList", wrap.GetFocusList)
+	s.WebApiRegisterMethod("digger.ZWAdmin", "FocusConfirm", wrap.FocusConfirm)
+	s.WebApiRegisterMethod("digger.ZWAdmin", "GetDailyList", wrap.GetDailyList)
+	s.WebApiRegisterMethod("digger.ZWAdmin", "ManualDecreaseList", wrap.ManualDecreaseList)
 }
 
 type ZWAdminWebapi struct {
@@ -1880,6 +3155,46 @@ func (s *ZWAdminWebapi) GetLongLineList(ctx *context.T, w http.ResponseWriter, r
 		return
 	}
 	resp, err := s.server.GetLongLineList(*ctx, params)
+	s.register.WebApiHandleResp(ctx, w, resp, err)
+}
+
+func (s *ZWAdminWebapi) GetFocusList(ctx *context.T, w http.ResponseWriter, req *http.Request) {
+	params := new(FocusListReq)
+	if err := s.register.WebApiDecode(ctx, req, params); err != nil {
+		s.register.WebApiHandleResp(ctx, w, nil, err)
+		return
+	}
+	resp, err := s.server.GetFocusList(*ctx, params)
+	s.register.WebApiHandleResp(ctx, w, resp, err)
+}
+
+func (s *ZWAdminWebapi) FocusConfirm(ctx *context.T, w http.ResponseWriter, req *http.Request) {
+	params := new(FocusConfirmReq)
+	if err := s.register.WebApiDecode(ctx, req, params); err != nil {
+		s.register.WebApiHandleResp(ctx, w, nil, err)
+		return
+	}
+	resp, err := s.server.FocusConfirm(*ctx, params)
+	s.register.WebApiHandleResp(ctx, w, resp, err)
+}
+
+func (s *ZWAdminWebapi) GetDailyList(ctx *context.T, w http.ResponseWriter, req *http.Request) {
+	params := new(GetDailyListReq)
+	if err := s.register.WebApiDecode(ctx, req, params); err != nil {
+		s.register.WebApiHandleResp(ctx, w, nil, err)
+		return
+	}
+	resp, err := s.server.GetDailyList(*ctx, params)
+	s.register.WebApiHandleResp(ctx, w, resp, err)
+}
+
+func (s *ZWAdminWebapi) ManualDecreaseList(ctx *context.T, w http.ResponseWriter, req *http.Request) {
+	params := new(ManualDecreaseListReq)
+	if err := s.register.WebApiDecode(ctx, req, params); err != nil {
+		s.register.WebApiHandleResp(ctx, w, nil, err)
+		return
+	}
+	resp, err := s.server.ManualDecreaseList(*ctx, params)
 	s.register.WebApiHandleResp(ctx, w, resp, err)
 }
 
@@ -2067,6 +3382,90 @@ func _ZWAdmin_GetLongLineList_Handler(srv interface{}, ctx context1.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ZWAdmin_GetFocusList_Handler(srv interface{}, ctx context1.Context, dec func(interface{}) error, interceptor grpc1.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FocusListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if err := in.Validate(); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ZWAdminServer).GetFocusList(context.From(ctx), in)
+	}
+	info := &grpc1.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/digger.ZWAdmin/GetFocusList",
+	}
+	handler := func(ctx context1.Context, req interface{}) (interface{}, error) {
+		return srv.(ZWAdminServer).GetFocusList(context.From(ctx), req.(*FocusListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ZWAdmin_FocusConfirm_Handler(srv interface{}, ctx context1.Context, dec func(interface{}) error, interceptor grpc1.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FocusConfirmReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if err := in.Validate(); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ZWAdminServer).FocusConfirm(context.From(ctx), in)
+	}
+	info := &grpc1.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/digger.ZWAdmin/FocusConfirm",
+	}
+	handler := func(ctx context1.Context, req interface{}) (interface{}, error) {
+		return srv.(ZWAdminServer).FocusConfirm(context.From(ctx), req.(*FocusConfirmReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ZWAdmin_GetDailyList_Handler(srv interface{}, ctx context1.Context, dec func(interface{}) error, interceptor grpc1.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDailyListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if err := in.Validate(); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ZWAdminServer).GetDailyList(context.From(ctx), in)
+	}
+	info := &grpc1.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/digger.ZWAdmin/GetDailyList",
+	}
+	handler := func(ctx context1.Context, req interface{}) (interface{}, error) {
+		return srv.(ZWAdminServer).GetDailyList(context.From(ctx), req.(*GetDailyListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ZWAdmin_ManualDecreaseList_Handler(srv interface{}, ctx context1.Context, dec func(interface{}) error, interceptor grpc1.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ManualDecreaseListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if err := in.Validate(); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ZWAdminServer).ManualDecreaseList(context.From(ctx), in)
+	}
+	info := &grpc1.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/digger.ZWAdmin/ManualDecreaseList",
+	}
+	handler := func(ctx context1.Context, req interface{}) (interface{}, error) {
+		return srv.(ZWAdminServer).ManualDecreaseList(context.From(ctx), req.(*ManualDecreaseListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _ZWAdmin_serviceDesc = grpc1.ServiceDesc{
 	ServiceName: "digger.ZWAdmin",
 	HandlerType: (*ZWAdminServer)(nil),
@@ -2103,13 +3502,29 @@ var _ZWAdmin_serviceDesc = grpc1.ServiceDesc{
 			MethodName: "GetLongLineList",
 			Handler:    _ZWAdmin_GetLongLineList_Handler,
 		},
+		{
+			MethodName: "GetFocusList",
+			Handler:    _ZWAdmin_GetFocusList_Handler,
+		},
+		{
+			MethodName: "FocusConfirm",
+			Handler:    _ZWAdmin_FocusConfirm_Handler,
+		},
+		{
+			MethodName: "GetDailyList",
+			Handler:    _ZWAdmin_GetDailyList_Handler,
+		},
+		{
+			MethodName: "ManualDecreaseList",
+			Handler:    _ZWAdmin_ManualDecreaseList_Handler,
+		},
 	},
 	Streams:  []grpc1.StreamDesc{},
 	Metadata: "digger/zwadmin.proto",
 }
 
 var OptionZWAdmin = ezcommon.GenOption([]byte{
-	// 145 bytes of Option
+	// 215 bytes of Option
 	0x0a, 0x0e, 0x64, 0x69, 0x67, 0x67, 0x65, 0x72, 0x2e, 0x5a, 0x57, 0x41, 0x64, 0x6d, 0x69, 0x6e,
 	0x1a, 0x0b, 0x0a, 0x09, 0x55, 0x73, 0x65, 0x72, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x1a, 0x0a, 0x0a,
 	0x08, 0x55, 0x73, 0x65, 0x72, 0x49, 0x6e, 0x66, 0x6f, 0x1a, 0x0c, 0x0a, 0x0a, 0x55, 0x73, 0x65,
@@ -2119,5 +3534,9 @@ var OptionZWAdmin = ezcommon.GenOption([]byte{
 	0x6f, 0x6d, 0x70, 0x74, 0x42, 0x75, 0x79, 0x4c, 0x69, 0x73, 0x74, 0x1a, 0x11, 0x0a, 0x0f, 0x55,
 	0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x72, 0x6f, 0x6d, 0x70, 0x74, 0x42, 0x75, 0x79, 0x1a, 0x11,
 	0x0a, 0x0f, 0x47, 0x65, 0x74, 0x4c, 0x6f, 0x6e, 0x67, 0x4c, 0x69, 0x6e, 0x65, 0x4c, 0x69, 0x73,
-	0x74,
+	0x74, 0x1a, 0x0e, 0x0a, 0x0c, 0x47, 0x65, 0x74, 0x46, 0x6f, 0x63, 0x75, 0x73, 0x4c, 0x69, 0x73,
+	0x74, 0x1a, 0x0e, 0x0a, 0x0c, 0x46, 0x6f, 0x63, 0x75, 0x73, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x72,
+	0x6d, 0x1a, 0x0e, 0x0a, 0x0c, 0x47, 0x65, 0x74, 0x44, 0x61, 0x69, 0x6c, 0x79, 0x4c, 0x69, 0x73,
+	0x74, 0x1a, 0x14, 0x0a, 0x12, 0x4d, 0x61, 0x6e, 0x75, 0x61, 0x6c, 0x44, 0x65, 0x63, 0x72, 0x65,
+	0x61, 0x73, 0x65, 0x4c, 0x69, 0x73, 0x74,
 })

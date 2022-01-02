@@ -1,8 +1,8 @@
 package dawdle
 
 import (
-	"fmt"
 	"math"
+	"sort"
 	"sync"
 	"time"
 
@@ -59,7 +59,7 @@ func getShortRecommendedData(data *orm.GPShortLine, updateNum bool) error {
 	data.DecreaseTag = getDecreaseTag(data.Secucode, data.DecreaseTag)
 	decrease := math.Max(float64(data.MDecrease), float64(data.TDecrease))
 	if decrease >= float64(data.DecreaseTag)+5 {
-		result.State = int32(trpc.RMState_RMStateInProgress)
+		result.State = int32(trpc.RMState_RMStateFirst)
 	} else if decrease >= float64(data.DecreaseTag) {
 		result.State = int32(trpc.RMState_RMStateStarted)
 	} else if decrease >= float64(data.DecreaseTag)-5 {
@@ -99,7 +99,7 @@ func getShortRecommendedData(data *orm.GPShortLine, updateNum bool) error {
 
 func getRecommendIndex(data *orm.GPRecommend) int32 {
 	var rate, gd int32
-	if data.State == int32(trpc.RMState_RMStatePrepared) || data.State == int32(trpc.RMState_RMStateInProgress) {
+	if data.State >= int32(trpc.RMState_RMStatePrepared) && data.State <= int32(trpc.RMState_RMStateThird) {
 		rate = 70
 	}
 
@@ -119,14 +119,33 @@ func getRecommendIndex(data *orm.GPRecommend) int32 {
 	return rate
 }
 
-func calRecommendPrice(data *orm.GPRecommend) string {
+func calRecommendPrice(data *orm.GPRecommend) []float64 {
 	price := data.MaxPrice
 
 	tag := utils.Decimal(1 - utils.GetPercentum(data.DecreaseTag))
 	// log.Infof("==>>TODO 311: %+v|%+v", price, tag)
 	max, per, min := utils.Decimal(tag+0.03), utils.Decimal(tag-0.01), utils.Decimal(tag-0.05)
 	// log.Infof("==>>TODO 312: %+v|%+v|%+v", max, per, min)
-	return fmt.Sprintf("%.1f(1)-%.1f(2)-%.1f(3)", price*max, price*per, price*min)
+	data.RMPrice = append(data.RMPrice, price*max, price*per, price*min)
+	sort.Slice(data.RMPrice, func(i, j int) bool {
+		return data.RMPrice[i] > data.RMPrice[j]
+	})
+
+	if len(data.RMPrice) == 3 {
+		if data.RMPrice[0] > data.PresentPrice {
+			data.State = int32(trpc.RMState_RMStateFirst)
+		}
+		if data.RMPrice[1] > data.PresentPrice {
+			data.State = int32(trpc.RMState_RMStateSecond)
+		}
+		if data.RMPrice[2] > data.PresentPrice {
+			data.State = int32(trpc.RMState_RMStateThird)
+		}
+	}
+
+	return data.RMPrice
+
+	// return fmt.Sprintf("%.1f(1)-%.1f(2)-%.1f(3)", price*max, price*per, price*min)
 }
 
 func getGPRecommend(secucode string) *orm.GPRecommend {
@@ -193,7 +212,7 @@ func getGDDecrease(secucode string) int32 {
 }
 
 func getDecreaseTag(secucode string, tag int32) int32 {
-	result, err := orm.GPDelayMgr.FindOneBySecucodeDisabled(secucode, false)
+	result, err := orm.GPManualDecreaseMgr.FindOneBySecucodeDisabled(secucode, false)
 	if err != nil {
 		return tag
 	}

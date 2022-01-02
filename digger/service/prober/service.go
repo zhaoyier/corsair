@@ -9,9 +9,6 @@ import (
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
 	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
-
-	// "git.ezbuy.me/ezbuy/corsair/digger/service/prober/internal/dawdle"
-	// "git.ezbuy.me/ezbuy/corsair/digger/service/prober/internal/eastmoney"
 	"github.com/ezbuy/ezorm/db"
 
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/dawdle"
@@ -25,10 +22,10 @@ func Start() {
 	// go eastmoney.GetShareholderOnce()
 	// go dawdle.GenLongLineOnce()
 	// go dawdle.GenShortLineOnce()
-	// go dawdle.GenRecommendOnce()
+	go dawdle.GenRecommendOnce()
 
 	// dawdle.GenRecommendTmp("SZ.300741")
-	dawdle.GenLongLineTmp("SZ.002532")
+	// dawdle.GenLongLineTmp("SZ.002532")
 	// dawdle.GenShortLineTmp("SZ.300741")
 
 	for range tk.C {
