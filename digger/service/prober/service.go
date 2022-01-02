@@ -22,7 +22,7 @@ func Start() {
 	// go eastmoney.GetShareholderOnce()
 	// go dawdle.GenLongLineOnce()
 	// go dawdle.GenShortLineOnce()
-	go dawdle.GenRecommendOnce()
+	// go dawdle.GenRecommendOnce()
 
 	// dawdle.GenRecommendTmp("SZ.300741")
 	// dawdle.GenLongLineTmp("SZ.002532")

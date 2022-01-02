@@ -121,6 +121,7 @@ func getRecommendIndex(data *orm.GPRecommend) int32 {
 
 func calRecommendPrice(data *orm.GPRecommend) []float64 {
 	price := data.MaxPrice
+	data.RMPrice = []float64{}
 
 	tag := utils.Decimal(1 - utils.GetPercentum(data.DecreaseTag))
 	// log.Infof("==>>TODO 311: %+v|%+v", price, tag)
