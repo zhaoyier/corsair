@@ -36,13 +36,14 @@ func GetLongLineList(in *gin.Context) {
 		query["Secucode"] = req.GetSecucode()
 	}
 
-	sortField := []string{"-GDReduceRatio"}
+	sortField := []string{}
 	if req.GetGdRatio() > 0 {
+		sortField = append(sortField, "-GDReduceRatio")
 		query["GDReduceRatio"] = ezdb.M{"$gte": req.GetGdRatio()}
 	}
 
 	if req.GetGdRatio() < 0 {
-		sortField = []string{"-GDReduceRatio"}
+		sortField = append(sortField, "GDReduceRatio")
 		query["GDReduceRatio"] = ezdb.M{"$lte": req.GetGdRatio()}
 	}
 
