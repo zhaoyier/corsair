@@ -133,11 +133,11 @@ func (wv *WeightData) CalPrice() {
 	} else if rate >= 0.30 {
 		unit.Value = unit.Value * 0.75
 	} else if rate >= 0.25 {
-		unit.Value = unit.Value * 0.6
+		unit.Value = unit.Value * 0.5
 	} else if rate >= 0.20 {
-		unit.Value = unit.Value * 0.50
+		unit.Value = unit.Value * 0.3
 	} else {
-		unit.Value = unit.Value * 0.20
+		unit.Value = unit.Value * 0.2
 	}
 }
 
