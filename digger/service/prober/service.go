@@ -20,12 +20,12 @@ func Start() {
 
 	// go eastmoney.GetCodeListOnce()
 	// go eastmoney.GetShareholderOnce()
-	// go dawdle.GenLongLineOnce()
+	go dawdle.GenLongLineOnce()
 	// go dawdle.GenShortLineOnce()
 	// go dawdle.GenRecommendOnce()
 
 	// dawdle.GenRecommendTmp("SZ.300741")
-	// dawdle.GenLongLineTmp("SZ.002532")
+	// dawdle.GenLongLineTmp("SH.603136")
 	// dawdle.GenShortLineTmp("SZ.300741")
 
 	for range tk.C {
@@ -46,6 +46,7 @@ func Start() {
 		}
 
 		dawdle.UpdatePresentPrice()
+
 	}
 
 	go func(tk *time.Ticker) {

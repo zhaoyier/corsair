@@ -1,5 +1,14 @@
 import request from '@/utils/request'
 
+// 配置参数
+export function updateCNConfig(data) {
+  return request({
+    url: '/api/backend/updateCNConfig',
+    method: 'post',
+    data
+  })
+}
+
 export function getRecommendList(data) {
   return request({
     url: '/api/stock/GetRecommend',
@@ -54,9 +63,9 @@ export function manualDecreaseList(data) {
 }
 
 // 关注确认
-export function focusConfirm(data) {
+export function confirmFocus(data) {
   return request({
-    url: '/api/stock/FocusConfirm',
+    url: '/api/stock/ConfirmFocus',
     method: 'post',
     data
   })
@@ -66,6 +75,24 @@ export function focusConfirm(data) {
 export function getFocusList(data) {
   return request({
     url: '/api/stock/GetFocusList',
+    method: 'post',
+    data
+  })
+}
+
+// 取消关注
+export function cancelFocus(data) {
+  return request({
+    url: '/api/stock/CancelFocus',
+    method: 'post',
+    data
+  })
+}
+
+// 更新关注
+export function updateFocus(data) {
+  return request({
+    url: '/api/stock/updateFocus',
     method: 'post',
     data
   })

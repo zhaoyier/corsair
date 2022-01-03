@@ -196,7 +196,7 @@ func (o *_GDLongLineMgr) NQuery(query interface{}, limit, offset int, sortFields
 
 	return session, q
 }
-func (o *_GDLongLineMgr) FindOneBySecucodeEndDate(Secucode string, EndDate string) (result *GDLongLine, err error) {
+func (o *_GDLongLineMgr) FindOneBySecucodeEndDate(Secucode string, EndDate int64) (result *GDLongLine, err error) {
 	query := db.M{
 		"Secucode": Secucode,
 		"EndDate":  EndDate,
@@ -207,7 +207,7 @@ func (o *_GDLongLineMgr) FindOneBySecucodeEndDate(Secucode string, EndDate strin
 	return
 }
 
-func (o *_GDLongLineMgr) MustFindOneBySecucodeEndDate(Secucode string, EndDate string) (result *GDLongLine) {
+func (o *_GDLongLineMgr) MustFindOneBySecucodeEndDate(Secucode string, EndDate int64) (result *GDLongLine) {
 	result, _ = o.FindOneBySecucodeEndDate(Secucode, EndDate)
 	if result == nil {
 		result = GDLongLineMgr.NewGDLongLine()
@@ -218,7 +218,7 @@ func (o *_GDLongLineMgr) MustFindOneBySecucodeEndDate(Secucode string, EndDate s
 	return
 }
 
-func (o *_GDLongLineMgr) RemoveBySecucodeEndDate(Secucode string, EndDate string) (err error) {
+func (o *_GDLongLineMgr) RemoveBySecucodeEndDate(Secucode string, EndDate int64) (err error) {
 	session, col := GDLongLineMgr.GetCol()
 	defer session.Close()
 
@@ -237,7 +237,7 @@ func (o *_GDLongLineMgr) FindByValueIndex(ValueIndex int32, limit int, offset in
 	err = q.All(&result)
 	return
 }
-func (o *_GDLongLineMgr) FindByEndDate(EndDate string, limit int, offset int, sortFields ...string) (result []*GDLongLine, err error) {
+func (o *_GDLongLineMgr) FindByEndDate(EndDate int64, limit int, offset int, sortFields ...string) (result []*GDLongLine, err error) {
 	query := db.M{
 		"EndDate": EndDate,
 	}

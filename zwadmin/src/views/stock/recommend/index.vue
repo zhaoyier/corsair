@@ -62,7 +62,6 @@
       </template>
     </el-table-column>
     <el-table-column prop="updateDate" label="最近更新时间" width="120"> </el-table-column>
-
     <el-table-column fixed="right" label="操作" width="220">
       <template slot-scope="scope">
         <el-button
@@ -76,7 +75,7 @@
           @click.native.prevent="confirmFocus(scope.$index, tableData)"
           type="text"
           size="small">
-          关注
+          {{ scope.row.focused }}
         </el-button>
         <el-divider direction="vertical"></el-divider>
         <el-button
@@ -139,7 +138,7 @@
 </template>
 
 <script>
-import { getRecommendList,updateRecommend,focusConfirm } from '@/api/stock'
+import { getRecommendList,updateRecommend,confirmFocus } from '@/api/stock'
 
 export default {
   filters: {
@@ -202,7 +201,6 @@ export default {
       }
       getRecommendList(req).then(response => {
         console.log("===>>TODO 111: ", response)
-
         this.tableData = response.data.items
         this.pageInfo.total = response.data.total
         this.listLoading = false
@@ -223,9 +221,10 @@ export default {
         secucode: data.secucode,
         presentPrice: data.presentPrice,
       }
-      
-      focusConfirm(req).then(response=>{
+
+      confirmFocus(req).then(response=>{
         console.log("==>>TODO fucus:", response)
+        this.fetchData()
       })
     },
     klineChart(index, rows) {//日线图
@@ -263,19 +262,13 @@ export default {
     onQuerySubmit() {
       console.log('submit!', this.queryForm.state, this.queryForm.decrease);
       this.fetchData()
-      console.log("===>>TODO 212: ", this.tableData)
     },
     handleCurrentChange(val) {
-      console.log("===>>TODO 2131: ", val)
       this.pageInfo.pageNum = val
-      console.log("===>>TODO 2132: ", this.pageInfo.pageNum)
-      var req = {
-        limit: this.pageInfo.pageSize,
-        offset: (this.pageInfo.pageNum-1)*this.pageInfo.pageSize,
-      }
       this.fetchData()
     },
     handleSizeChange(val) {
+      this.pageInfo.pageSize = val
       console.log("===>>TODO 214: ", val)
     },
     selectTabClick(tab) {

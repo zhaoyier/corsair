@@ -16,7 +16,10 @@ func UpdatePresentPrice() {
 		return
 	}
 
+	// 更新推荐的价格
 	iterGPRecommend()
+	// 更新关注的价格
+	iterGPFocusPresentPrice()
 }
 
 func iterGPRecommend() {
@@ -31,6 +34,21 @@ func iterGPRecommend() {
 	for _, result := range results {
 		price := request.GetSinaDayPrice(result.Secucode)
 		updateRecommendPrice(result.Secucode, price)
+	}
+}
+
+func iterGPFocusPresentPrice() {
+	query := ezdb.M{}
+
+	results, err := orm.GPFocusMgr.FindAll(query)
+	if err != nil {
+		log.Infof("get recommend failed: %q", err)
+		return
+	}
+
+	for _, result := range results {
+		price := request.GetSinaDayPrice(result.Secucode)
+		updateFocusPrice(result, price)
 	}
 }
 
@@ -52,10 +70,20 @@ func updateRecommendPrice(secucode string, price float64) error {
 		result.MinPrice = price
 	}
 
-	if err := getShortRecommendedData(result, false); err != nil {
+	if err := genShortRecommendedData(result, false); err != nil {
 		log.Infof("gen recommend failed: %s|%q", secucode, err)
 		return err
 	}
 
+	return nil
+}
+
+func updateFocusPrice(data *orm.GPFocus, price float64) error {
+	data.PresentPrice = price
+	data.UpdateDate = time.Now().Unix()
+	if _, err := data.Save(); err != nil {
+		log.Errorf("update gp focus failed: %s|%q", data.Secucode, price)
+		return err
+	}
 	return nil
 }

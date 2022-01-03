@@ -15,10 +15,11 @@ enum EastMoneyType {
 message WeightUnit  {
     double value = 1;        //权重值
     double accum = 2;        //连续累加值
-    int32 consecutive = 3;  //连续计数
-    int32 counter = 4;      //计数器
-    double present = 5;     //现在的
-    bool subNew = 6;        //次新
+    int32 consecutive = 3;   //连续计数
+    int32 counter = 4;       //计数器
+    double present = 5;      //现在的
+    bool subNew = 6;         //次新
+    repeated int32 indexes = 7;   //索引值
 }
 
 // 权重规则
@@ -57,4 +58,5 @@ enum FunctionType {
     FunctionTypeLongLine = 3;
     FunctionTypeShortLine = 4;
     FunctionTypeRecommend = 5;
+    FunctionTypeFocus = 6;  //关注
 }

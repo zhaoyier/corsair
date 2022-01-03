@@ -76,10 +76,10 @@ func NewWeightData(secucode string) *WeightData {
 
 func defaultWeightRule() *trpc.WeightRule {
 	return &trpc.WeightRule{
-		TotalNumRatio:  &trpc.WeightUnit{Value: 60}, //人均持股变化
-		Focus:          &trpc.WeightUnit{Value: 10}, //集中度
-		Price:          &trpc.WeightUnit{Value: 20}, //价格
-		HoldRatioTotal: 10,
+		TotalNumRatio:  &trpc.WeightUnit{Value: 55},  //人均持股变化
+		Focus:          &trpc.WeightUnit{Value: 7.5}, //集中度
+		Price:          &trpc.WeightUnit{Value: 30},  //价格
+		HoldRatioTotal: 7.5,
 	}
 }
 
@@ -121,7 +121,7 @@ func (wv *WeightData) CalPrice() {
 	}
 	// log.Infof("==>>TODO 212: %+v|%+v", max, wv.Price[0])
 	// 与最近一次价格比较--越跌越好
-	rate := utils.GetRate(max, wv.Price[0])
+	rate := utils.GetRate(max, wv.GPDaily.Closing)
 	if rate >= 0.5 {
 		unit.Value = unit.Value * 1
 	} else if rate >= 0.45 {
@@ -131,11 +131,11 @@ func (wv *WeightData) CalPrice() {
 	} else if rate >= 0.35 {
 		unit.Value = unit.Value * 0.85
 	} else if rate >= 0.30 {
-		unit.Value = unit.Value * 0.8
-	} else if rate >= 0.25 {
 		unit.Value = unit.Value * 0.75
+	} else if rate >= 0.25 {
+		unit.Value = unit.Value * 0.6
 	} else if rate >= 0.20 {
-		unit.Value = unit.Value * 0.60
+		unit.Value = unit.Value * 0.50
 	} else {
 		unit.Value = unit.Value * 0.20
 	}
@@ -167,11 +167,11 @@ func checkTotalNumRatioConsecutive(accum, current float64) bool {
 		return true
 	}
 
-	if accum > 0 && current >= 0 {
+	if accum >= 0 && current > 0 {
 		return true
 	}
 
-	if accum < 0 && current <= 0 {
+	if accum <= 0 && current < 0 {
 		return true
 	}
 	return false
@@ -180,24 +180,33 @@ func checkTotalNumRatioConsecutive(accum, current float64) bool {
 func (wv *WeightData) CalTotalNumRatio() { //+-,越小越好
 	var rate float64
 	unit := wv.wr.TotalNumRatio
-	for _, val := range wv.TotalNumRatio {
+	for idx, val := range wv.TotalNumRatio {
 		if !checkTotalNumRatioConsecutive(unit.Accum, val) {
+			// log.Infof("==>>TODO 231:%+v|%+v", wv.Secucode, val)
 			break
 		}
+		// log.Infof("==>>TODO 232:%+v|%+v", wv.Secucode, val)
+		absVal := math.Abs(val)
+		if absVal <= 10 {
+			continue
+		}
 
+		if len(unit.Indexes) > 4 {
+			continue
+		}
+
+		unit.Indexes = append(unit.Indexes, int32(idx))
+		// log.Infof("==>>TODO 233:%+v|%+v|%+v", wv.Secucode, unit.Indexes, len(unit.Indexes))
+
+		// log.Infof("==>>TODO 234:%+v|%+v|%+v", wv.Secucode, unit.Indexes, len(unit.Indexes))
 		// 计数器
 		unit.Counter++
 		// 累加值
 		unit.Accum += val
-		// 股东人数减少35就退出
-		// if unit.Accum <= -45 || unit.Accum >= 45 {
-		// 	// log.Infof("==>>TODO 303:%+v", unit)
-		// 	break
-		// }
 	}
 
 	absAccum := math.Abs(unit.Accum)
-	// log.Infof("==>>TODO 224: %+v|%+v", absAccum, unit.Value)
+	// log.Infof("==>>TODO 235: %+v|%+v|%+v", wv.Secucode, absAccum, unit.Accum)
 	if absAccum >= 50 {
 		rate = 1
 	} else if absAccum >= 45 {
@@ -213,9 +222,10 @@ func (wv *WeightData) CalTotalNumRatio() { //+-,越小越好
 	} else {
 		rate = 0.2
 	}
-	// log.Infof("==>>TODO 225: %+v|%+v", absAccum, rate)
+	// log.Infof("==>>TODO 238:%+v|%+v|%+v", wv.Secucode, unit.Value, rate)
 	// 股东人数变化率
 	unit.Value = utils.Decimal(unit.Value * rate)
+	// log.Infof("==>>TODO 239:%+v|%+v|%+v", wv.Secucode, unit.Accum, unit.Value)
 }
 
 func (wv *WeightData) CalAvgFreesharesRatio() { //+-,越大越好
@@ -329,39 +339,64 @@ func (wv *WeightData) GetTotalNumRatio() int32 {
 }
 
 func (wv *WeightData) GetCumulantRatio() string {
-	num := wv.wr.TotalNumRatio.Counter
-	if len(wv.Date) < int(num) {
-		return utils.GetGDReduceRatio(wv.TotalNumRatio, "<-")
+	// num := wv.wr.TotalNumRatio.Counter
+	// if len(wv.Date) < int(num) {
+	// 	return utils.GetGDReduceRatio(wv.TotalNumRatio, "<-")
+	// }
+
+	// return utils.GetGDReduceRatio(wv.TotalNumRatio[:int(num)], "<-")
+
+	list := make([]float64, 0, 4)
+	indexes := wv.wr.TotalNumRatio.GetIndexes()
+	for _, idx := range indexes {
+		list = append(list, wv.TotalNumRatio[idx])
 	}
 
-	return utils.GetGDReduceRatio(wv.TotalNumRatio[:int(num)], "<-")
+	return utils.GetGDReduceRatio(list, "<-")
 }
 
 func (wv *WeightData) GetCumulantDate() string {
-	num := wv.wr.TotalNumRatio.Counter
-	if len(wv.Date) < int(num) {
-		return utils.GetDateStr(wv.Date, "<-")
+	// num := wv.wr.TotalNumRatio.Counter
+	// if len(wv.Date) < int(num) {
+	// 	return utils.GetDateStr(wv.Date, "<-")
+	// }
+
+	// return utils.GetDateStr(wv.Date[:int(num)], "<-")
+
+	list := make([]int64, 0, 4)
+	indexes := wv.wr.TotalNumRatio.GetIndexes()
+	for _, idx := range indexes {
+		list = append(list, wv.Date[idx])
 	}
 
-	return utils.GetDateStr(wv.Date[:int(num)], "<-")
+	return utils.GetDateStr(list, "<-")
 }
 
 func (wv *WeightData) GetCumulantFocus() string {
-	num := wv.wr.TotalNumRatio.Counter
-	if len(wv.Focus) < int(num) {
-		return utils.GetFocusStr(wv.Focus, "<-")
+	// num := wv.wr.TotalNumRatio.Counter
+	// if len(wv.Focus) < int(num) {
+	// 	return utils.GetFocusStr(wv.Focus, "<-")
+	// }
+
+	// return utils.GetFocusStr(wv.Focus[:int(num)], "<-")
+
+	list := make([]string, 0, 4)
+	indexes := wv.wr.TotalNumRatio.GetIndexes()
+	for _, idx := range indexes {
+		list = append(list, wv.Focus[idx])
 	}
 
-	return utils.GetFocusStr(wv.Focus[:int(num)], "<-")
+	return utils.GetFocusStr(list, "<-")
 }
 
 func (wv *WeightData) GetCumulantPrice() string {
-	num := wv.wr.TotalNumRatio.Counter
-	if len(wv.Focus) < int(num) {
-		return utils.FloatSlice2Str(wv.Price, "<-")
+	list := make([]float64, 0, 4)
+	indexes := wv.wr.TotalNumRatio.GetIndexes()
+	for _, idx := range indexes {
+		list = append(list, wv.Price[idx])
 	}
 
-	return utils.FloatSlice2Str(wv.Price[:int(num)], "<-")
+	return utils.FloatSlice2Str(list, "<-")
 }
 
 func (wv *WeightData) GetWeight() int32 {
@@ -383,7 +418,7 @@ func (wv *WeightData) GetWeight() int32 {
 		// 	return
 		// }
 
-		// log.Infof("==>>TODO 458: %+v|%+v|%+v|%+v|%+v|%+v", wr.Price, wr.Focus, wr.TotalNumRatio.Value, wr.AvgFreesharesRatio.Value, wr.HoldRatioTotal, wr.FreeholdRatioTotal)
+		log.Infof("==>>TODO 458: %+v|%+v|%+v|%+v", wr.Price.Value, wr.Focus.Value, wr.TotalNumRatio.Value, wr.HoldRatioTotal)
 		weight = wr.Price.Value + wr.Focus.Value + wr.TotalNumRatio.Value + wr.HoldRatioTotal
 		wv.Weight = int32(weight)
 		// log.Infof("==>>TODO 459: %+v", args ...interface{})

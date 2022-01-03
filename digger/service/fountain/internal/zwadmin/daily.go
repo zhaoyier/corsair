@@ -27,10 +27,6 @@ func GetDailyList(in *gin.Context) {
 	}
 
 	query := ezdb.M{}
-	// if req.GetName() == "" || req.GetSecucode() == "" {
-	// 	query["CreateDate"] = getCreateDate()
-	// }
-
 	var sortField string
 	if req.GetName() != "" {
 		query["Name"] = req.GetName()
@@ -38,7 +34,7 @@ func GetDailyList(in *gin.Context) {
 		query["Secucode"] = utils.GetSecucode(req.GetSecucode())
 	} else if req.GetStartDate() > 0 && req.GetEndDate() > 0 {
 		sortField = "CreateDate"
-		query["CreateDate"] = ezdb.M{"$gte": req.GetStartDate(), "$lte": req.GetEndDate()}
+		query["CreateDate"] = ezdb.M{"$gte": req.GetStartDate() / 1000, "$lte": req.GetEndDate() / 1000}
 	} else if req.GetDecrease() > 0 {
 		sortField = "-PRise"
 		query["PRise"] = ezdb.M{"$gte": req.GetDecrease()}
@@ -65,14 +61,14 @@ func GetDailyList(in *gin.Context) {
 			Secucode:   result.Secucode,
 			Opening:    result.Opening,
 			Closing:    result.Closing,
-			Prise:      result.PRise,
+			Prise:      utils.TruncateFloat(result.Rise),
 			Turnover:   result.Turnover,
 			Business:   result.Business,
 			Liangbi:    result.Liangbi,
 			MaxPrice:   result.MaxPrice,
 			MinPrice:   result.MinPrice,
-			Market:     result.Market,
-			Traded:     result.Traded,
+			Market:     result.Market / 100000000,
+			Traded:     result.Traded / 100000000,
 			BookRatio:  result.BookRatio,
 			CreateDate: time.Unix(result.CreateDate, 0).Format("2006-01-02"),
 		})

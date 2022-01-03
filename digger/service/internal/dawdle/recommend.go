@@ -37,7 +37,7 @@ func GenRecommendTmp(secucode string) {
 		log.Errorf("query short line failed: %s|%q", secucode, err)
 		return
 	}
-	getShortRecommendedData(result, true)
+	genShortRecommendedData(result, true)
 }
 
 func genRecommendData() error {
@@ -48,13 +48,13 @@ func genRecommendData() error {
 	iter := col.Find(ezdb.M{"Disabled": false}).Batch(100).Prefetch(0.25).Iter()
 	for iter.Next(&data) {
 		log.Infof("==>>TODO 101:%+v", data.Name)
-		getShortRecommendedData(data, true)
+		genShortRecommendedData(data, true)
 	}
 
 	return nil
 }
 
-func getShortRecommendedData(data *orm.GPShortLine, updateNum bool) error {
+func genShortRecommendedData(data *orm.GPShortLine, updateNum bool) error {
 	result := getGPRecommend(data.Secucode)
 	data.DecreaseTag = getDecreaseTag(data.Secucode, data.DecreaseTag)
 	decrease := math.Max(float64(data.MDecrease), float64(data.TDecrease))

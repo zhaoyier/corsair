@@ -39,6 +39,7 @@ func GenLongLine() error {
 	sess, col := orm.CNSecucodeMgr.GetCol()
 	defer sess.Close()
 
+	//查询最近6个月的数据
 	start := time.Now().AddDate(0, -6, 0).Unix()
 	var secucode *orm.CNSecucode
 	iter := col.Find(ezdb.M{"Disabled": false}).Batch(100).Prefetch(0.25).Iter()
@@ -58,9 +59,9 @@ func genLongLineData(secucode string, since int64) error {
 	}
 
 	dailyCode := codes[1]
-	query := ezdb.M{ //查询最近9个月的数据
+	query := ezdb.M{
 		"Secucode": secucode,
-		"EndDate":  ezdb.M{"$gte": time.Now().AddDate(0, -9, 0).Unix()},
+		"EndDate":  ezdb.M{"$gte": since},
 	}
 	// log.Infof("==>>TODO 501: %+v", query)
 	gdResults, err := orm.GDRenshuMgr.Find(query, 20, 0, "-EndDate")
@@ -99,7 +100,7 @@ func genLongLineData(secucode string, since int64) error {
 func applyLongLine(wv *WeightData) error {
 	// if wv.Date
 	// log.Infof("==>>TODO 312:%+v|%+v|%+v", wv.Date[0], len(wv.Date), wv.Secucode)
-	enddate := time.Unix(wv.Date[0], 0).Format("2006-01-02")
+	enddate := wv.Date[0] //time.Unix(wv.Date[0], 0).Format("2006-01-02")
 	result, err := orm.GDLongLineMgr.FindOneBySecucodeEndDate(wv.Secucode, enddate)
 	// log.Infof("==>>TODO 313:%+v|%+v|%+v", nil, result, err)
 	if err != nil && err != mgo.ErrNotFound {
@@ -146,7 +147,7 @@ func applyLongLine(wv *WeightData) error {
 	return nil
 }
 
-func disabledLongLine(secucode, enddate string) error {
+func disabledLongLine(secucode string, enddate int64) error {
 	query := ezdb.M{
 		"Secucode": secucode,
 	}

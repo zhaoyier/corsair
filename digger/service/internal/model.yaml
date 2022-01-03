@@ -1,3 +1,14 @@
+#中国股市配置
+CNConfig:
+  db: mongo
+  dbname: digger
+  fields:
+    - DecreaseTag: int32  #跌幅标准
+    - DecreasePeriod: int32 #跌幅周期
+    - PriceInterval: int32  #推荐价格间隔
+    - UpdateBy: string
+    - UpdateDate: datetime
+
 CNSecucode:
   db: mongo
   dbname: digger
@@ -74,7 +85,6 @@ GDsdlt:
   uniques: [[Secucode,EndDate,HolderName]]
   indexes: [[Secucode,EndDate],[CreateDate]]
 
-
 GDLongLine:
     db: mongo
     dbname: digger
@@ -89,7 +99,7 @@ GDLongLine:
       - GDReduceRatio: int32    #最近三次股东减少比例
       - Disabled: bool
       - Remark: string
-      - EndDate: string        #截止日期
+      - EndDate: int64          #截止日期
       - CreateDate: datetime
     uniques: [[Secucode,EndDate]]
     indexes: [[ValueIndex],[EndDate],[Disabled],[CreateDate]]
@@ -212,6 +222,7 @@ GPFocus:
     - Disabled: bool
     - FocusPrice: float64     #关注价格
     - PresentPrice: float64   #当前价格
+    - ExpectPrice: float64    #预期买入价格
     - CreateDate: datetime  
     - UpdateDate: datetime
   uniques: [[Secucode,Disabled]]

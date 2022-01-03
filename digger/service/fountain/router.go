@@ -25,11 +25,12 @@ func startRoute(router *gin.Engine) {
 	})
 	// 推荐列表
 	router.GET("/api/digger.Fountain/GPRecommendList", recommend.GPRecommendList)
-	userGroup := router.Group("/api/user")
+	adminGroup := router.Group("/api/backend")
 	{
-		userGroup.POST("/login", admin.Login)
-		userGroup.POST("/logout", admin.Logout)
-		userGroup.GET("/info", admin.UserInfo)
+		adminGroup.POST("/login", admin.Login)
+		adminGroup.POST("/logout", admin.Logout)
+		adminGroup.GET("/info", admin.UserInfo)
+		adminGroup.POST("/updateCNConfig", admin.UpdateCNConfig)
 	}
 	stockGroup := router.Group("/api/stock")
 	{
@@ -40,7 +41,9 @@ func startRoute(router *gin.Engine) {
 		stockGroup.POST("/GetDailyList", admin.GetDailyList)
 		stockGroup.POST("/ManualDecreaseList", admin.ManualDecreaseList)
 		stockGroup.POST("/GetFocusList", admin.GetFocusList)
-		stockGroup.POST("/FocusConfirm", admin.FocusConfirm)
+		stockGroup.POST("/ConfirmFocus", admin.ConfirmFocus)
+		stockGroup.POST("/CancelFocus", admin.CancelFocus)
+		stockGroup.POST("/updateFocus", admin.UpdateFocus)
 
 	}
 }

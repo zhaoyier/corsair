@@ -18,7 +18,7 @@ type GDLongLine struct {
 	GDReduceRatio int32         `bson:"GDReduceRatio" json:"GDReduceRatio"`
 	Disabled      bool          `bson:"Disabled" json:"Disabled"`
 	Remark        string        `bson:"Remark" json:"Remark"`
-	EndDate       string        `bson:"EndDate" json:"EndDate"`
+	EndDate       int64         `bson:"EndDate" json:"EndDate"`
 	CreateDate    int64         `bson:"CreateDate" json:"CreateDate"`
 	isNew         bool
 }

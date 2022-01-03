@@ -7,6 +7,7 @@ service ZWAdmin {
     rpc UserLogin(UserLoginReq) returns(UserLoginResp);
     rpc UserInfo(UserInfoReq) returns(UserInfoResp);
     rpc UserLogout(UserLogoutReq) returns(UserLogoutResp);
+    rpc UpdateCNConfig(UpdateCNConfigReq) returns(UpdateCNConfigResp);
     rpc GetRecommend(GetRecommendReq) returns(GetRecommendResp);
     rpc UpdateRecommend(UpdateRecommendReq) returns(UpdateRecommendResp);
     rpc PromptBuyList(PromptBuyListReq) returns(PromptBuyListResp);
@@ -14,9 +15,52 @@ service ZWAdmin {
     rpc GetLongLineList(GetLongLineListReq) returns(GetLongLineListResp);
     rpc GetFocusList(FocusListReq) returns(FocusListResp);
     rpc FocusConfirm(FocusConfirmReq) returns(FocusConfirmResp);
+    rpc CancelFocus(CancelFocusReq) returns(CancelFocusResp);
+    rpc UpdateFocus(UpdateFocusReq) returns(UpdateFocusResp);
     rpc GetDailyList(GetDailyListReq) returns(GetDailyListResp);
     rpc ManualDecreaseList(ManualDecreaseListReq) returns(ManualDecreaseListResp);
-    // rpc FocusList(FocusListReq) returns(FocusListResp);
+}
+
+enum RecommendSortType {
+    RecommendSortTypeUnknown = 0;
+    RecommendSortTypeState = 1;         //状态
+    RecommendSortTypeGPIncrease = 2;    //股票涨跌
+    RecommendSortTypeGPDecrease = 3;    //股票涨跌
+    RecommendSortTypeGDIncrease = 4;    //股东人数
+    RecommendSortTypeGDDecrease = 5;    //股东人数
+}
+
+enum DisabledType {
+    DisabledTypeUnknown = 0;
+    DisabledTypeValid = 1;      //有效的
+    DisabledTypeInvalid = 2;    //无效的
+}
+
+message UpdateFocusReq {
+    string secucode = 1;
+    double expectPrice = 2;
+}
+
+message UpdateFocusResp {
+    int32 code = 1;
+}
+
+message UpdateCNConfigReq {
+    int32 decreaseTag= 1;   //下跌幅度
+    int32 decreasePeriod= 2; //下跌周期
+}
+
+message UpdateCNConfigResp {
+    int32 code = 1;
+}
+
+message CancelFocusReq {
+    string name = 1;
+    string secucode = 2;
+}
+
+message CancelFocusResp{
+    int32 code = 1;
 }
 
 message FocusConfirmReq {
@@ -94,18 +138,10 @@ message GetDailyListResp {
     GPDailyData data = 2;
 }
 
-enum RecommendSortType {
-    RecommendSortTypeUnknown = 0;
-    RecommendSortTypeState = 1;         //状态
-    RecommendSortTypeGPIncrease = 2;    //股票涨跌
-    RecommendSortTypeGPDecrease = 3;    //股票涨跌
-    RecommendSortTypeGDIncrease = 4;    //股东人数
-    RecommendSortTypeGDDecrease = 5;    //股东人数
-}
-
 message FocusListReq {
     string name = 1;
     string secucode = 2;
+    DisabledType disabled = 3;
     int32 limit = 10;
     int32 offset = 11;
 }
@@ -115,8 +151,11 @@ message GPFocusItem {
     string secucode = 2;
     double focusPrice = 3;
     double presentPrice = 5;
+    double expectPrice = 6; //期望价格
+    double diffPrice = 7;   //当前价格和期望价格差
     string createDate = 9;
     string updateDate = 10;
+    string focused = 11;      //是否关注
 }
 
 message GPFocusData {
@@ -132,6 +171,9 @@ message FocusListResp {
 message GetLongLineListReq {
     string secucode = 2;
     int32 gdRatio = 3;
+    int32 valueIndex = 4;
+    int64 startDate = 5;
+    int64 endDate = 6;
     int32 limit = 10;
     int32 offset = 11;
 }
@@ -227,6 +269,7 @@ message RecommendItem {
     int32 referDecrease = 15;   //参照
     string updateDate=16;
     double presentPrice = 17;
+    string focused = 18;      //是否关注
 }
 
 message RecommendData {
@@ -238,24 +281,6 @@ message GetRecommendResp {
     int32 code = 1;
     RecommendData data = 2;
 }
-
-
-
-// type MyJsonName struct {
-// 	Code int64 `json:"code"`
-// 	Data struct {
-// 		Items []struct {
-// 			Author      string `json:"author"`
-// 			DisplayTime string `json:"display_time"`
-// 			ID          string `json:"id"`
-// 			Pageviews   int64  `json:"pageviews"`
-// 			Status      string `json:"status"`
-// 			Title       string `json:"title"`
-// 		} `json:"items"`
-// 		Total int64 `json:"total"`
-// 	} `json:"data"`
-// }
-
 
 message UserLogoutReq {
 

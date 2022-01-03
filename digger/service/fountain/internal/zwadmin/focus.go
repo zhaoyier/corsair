@@ -12,7 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func FocusConfirm(in *gin.Context) {
+func ConfirmFocus(in *gin.Context) {
 	var req trpc.FocusConfirmReq
 	resp := &trpc.FocusConfirmResp{
 		Code: 21000,
@@ -22,21 +22,28 @@ func FocusConfirm(in *gin.Context) {
 		return
 	}
 
-	data := orm.GPFocusMgr.MustFindOneBySecucodeDisabled(req.GetSecucode(), false)
-	if data.CreateDate <= 0 {
-		data.CreateDate = time.Now().Unix()
+	query := ezdb.M{
+		"Secucode": req.GetSecucode(),
 	}
 
-	data.Disabled = false
-	data.Name = req.GetName()
-	if data.FocusPrice <= 0 {
-		data.FocusPrice = req.GetPresentPrice()
+	result, _ := orm.GPFocusMgr.FindOne(query)
+	if result == nil {
+		result = orm.GPFocusMgr.NewGPFocus()
+		result.Secucode = req.GetSecucode()
+	} else {
+		result.Disabled = !result.Disabled
 	}
 
-	data.PresentPrice = 0
-	data.UpdateDate = time.Now().Unix()
+	result.Name = req.GetName()
+	if result.FocusPrice <= 0 {
+		result.FocusPrice = req.GetPresentPrice()
+	}
 
-	if _, err := data.Save(); err != nil {
+	result.PresentPrice = 0
+	result.CreateDate = time.Now().Unix()
+	result.UpdateDate = time.Now().Unix()
+
+	if _, err := result.Save(); err != nil {
 		log.Errorf("save focus failed: %q", err)
 		in.JSON(http.StatusForbidden, resp)
 		return
@@ -60,7 +67,18 @@ func GetFocusList(in *gin.Context) {
 	}
 
 	query := ezdb.M{}
-	var sortField string
+	sortField := "-CreateDate"
+	if req.GetName() != "" {
+		query["Name"] = req.GetName()
+	}
+	if req.GetSecucode() != "" {
+		query["Secucode"] = req.GetSecucode()
+	}
+	if req.GetDisabled() == trpc.DisabledType_DisabledTypeValid {
+		query["Disabled"] = false
+	} else if req.GetDisabled() == trpc.DisabledType_DisabledTypeInvalid {
+		query["Disabled"] = true
+	}
 
 	results, err := orm.GPFocusMgr.Find(query, int(req.GetLimit()), int(req.GetOffset()), sortField)
 	if err != nil {
@@ -78,6 +96,9 @@ func GetFocusList(in *gin.Context) {
 			Secucode:     result.Secucode,
 			FocusPrice:   result.FocusPrice,
 			PresentPrice: result.PresentPrice,
+			ExpectPrice:  result.ExpectPrice,
+			DiffPrice:    result.PresentPrice - result.ExpectPrice,
+			Focused:      getFocused(result.Disabled),
 			CreateDate:   time.Unix(result.CreateDate, 0).Format("2006-01-02"),
 			UpdateDate:   time.Unix(result.UpdateDate, 0).Format("2006-01-02"),
 		})
@@ -87,18 +108,80 @@ func GetFocusList(in *gin.Context) {
 	in.JSON(http.StatusOK, resp)
 }
 
-// func getFocusPrice(secucode string) float64 {
-// 	codes := strings.Split(secucode, ".")
-// 	secucode = codes[len(codes)-1]
-// 	orm.
-// }
+func CancelFocus(in *gin.Context) {
+	var req trpc.CancelFocusReq
+	resp := &trpc.CancelFocusResp{
+		Code: 21000,
+	}
+	if err := in.BindJSON(&req); err != nil {
+		log.Infof("==>>TODO 121: %+v", nil)
+		in.JSON(http.StatusBadRequest, resp)
+		return
+	}
 
-// func getFocusName(secucode string) string {
-// 	result, err := orm.CNSecucodeMgr.FindOneBySecucode(secucode)
-// 	if err != nil {
-// 		log.Errorf("get secucode failed: %s|%q", secucode, err)
-// 		return ""
-// 	}
+	if req.GetSecucode() == "" {
+		log.Infof("==>>TODO 122: %+v", nil)
+		in.JSON(http.StatusBadRequest, resp)
+		return
+	}
 
-// 	return result.Name
-// }
+	// query := ezdb.M{"Secucode": req.GetSecucode()}
+	result, err := orm.GPFocusMgr.FindOneBySecucodeDisabled(req.GetSecucode(), false)
+	if err != nil {
+		log.Infof("==>>TODO 123: %+v", nil)
+		in.JSON(http.StatusNotFound, resp)
+		return
+	}
+
+	result.Disabled = true
+	result.UpdateDate = time.Now().Unix()
+	if _, err := result.Save(); err != nil {
+		log.Infof("==>>TODO 124: %+v", nil)
+		in.JSON(http.StatusNotFound, resp)
+		return
+	}
+
+	resp.Code = 20000
+	in.JSON(http.StatusOK, resp)
+}
+
+func UpdateFocus(in *gin.Context) {
+	var req trpc.UpdateFocusReq
+	resp := &trpc.UpdateFocusResp{
+		Code: 21000,
+	}
+	if err := in.BindJSON(&req); err != nil {
+		log.Infof("==>>TODO 121: %+v", nil)
+		in.JSON(http.StatusBadRequest, resp)
+		return
+	}
+
+	if req.GetSecucode() == "" {
+		log.Infof("==>>TODO 122: %+v", nil)
+		in.JSON(http.StatusBadRequest, resp)
+		return
+	}
+
+	query := ezdb.M{"Secucode": req.GetSecucode()}
+	result, err := orm.GPFocusMgr.FindOne(query)
+	if err != nil {
+		in.JSON(http.StatusNotFound, resp)
+		return
+	}
+	result.ExpectPrice = req.GetExpectPrice()
+	result.UpdateDate = time.Now().Unix()
+	if _, err := result.Save(); err != nil {
+		in.JSON(http.StatusConflict, resp)
+		return
+	}
+
+	resp.Code = 20000
+	in.JSON(http.StatusOK, resp)
+}
+
+func getFocused(disabled bool) string {
+	if disabled {
+		return "关注"
+	}
+	return "取消关注"
+}

@@ -5,9 +5,23 @@
         <el-form-item label="代码">
           <el-input v-model="queryForm.secucode" placeholder="SZ.000001"></el-input>
         </el-form-item>
+        <el-form-item label="推荐指数">
+          <el-input v-model.number="queryForm.valueIndex" placeholder=50></el-input>
+        </el-form-item>
         <el-form-item label="股东增减">
           <el-input v-model.number="queryForm.reduceRatio" placeholder=20></el-input>
         </el-form-item>
+        <el-form-item label="截止日期">
+        <el-date-picker
+          @input="onSelectDate"
+          v-model="queryForm.dateRange"
+          value-format="timestamp"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期">
+        </el-date-picker>
+      </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onQuerySubmit">查询</el-button>
         </el-form-item>
@@ -17,10 +31,10 @@
       <el-table :data="tableData" stripe style="width: 100%" max-height="800">
       <el-table-column fixed="left" class-name="status-col" label="代码" width="150">
         <template slot-scope="scope">
-          <el-tag type="danger" effect="plain">{{ scope.row.secucode }}</el-tag>
+          <el-tag type="danger" effect="dark">{{ scope.row.name }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="名称" width="120"></el-table-column>
+      <el-table-column prop="secucode" label="名称" width="120"></el-table-column>
       <el-table-column class-name="status-col" label="推荐指数" width="110" align="center">
           <template slot-scope="scope">
             <el-tag type="success" effect="dark">{{ scope.row.valueIndex }}</el-tag>
@@ -40,7 +54,7 @@
       <el-table-column prop="price" label="价格变动" width="160"></el-table-column>
       <el-table-column prop="date" label="日期" width="160"></el-table-column>
       <el-table-column prop="focus" label="关注度" width="200"></el-table-column>
-      <el-table-column prop="updateDate" label="最近更新时间" width="120"> </el-table-column>
+      <el-table-column prop="endDate" label="最近更新时间" width="120"></el-table-column>
 
       <el-table-column fixed="right" label="操作" width="220">
         <template slot-scope="scope">
@@ -89,6 +103,8 @@ export default {
       queryForm: {
         secucode: '',
         reduceRatio: 0,
+        valueIndex: 50,
+        dateRange: '',
       },
       formLabelWidth: '120px',
       tableData: [],
@@ -110,6 +126,9 @@ export default {
         offset: (this.pageInfo.pageNum-1)*this.pageInfo.pageSize,
         gdRatio: this.queryForm.reduceRatio,
         secucode: this.queryForm.secucode,
+        valueIndex: this.queryForm.valueIndex,
+        startDate: this.queryForm.startDate,
+        endDate: this.queryForm.endDate,
       }
       getLongLineList(req).then(response => {
         console.log("===>>TODO 111: ", response)
@@ -141,7 +160,13 @@ export default {
     },
     handleSizeChange(val) {
 
-    }
+    },
+    onSelectDate(val) {
+      console.log("==>>TODO date is: ", val[0], val[1])
+      this.queryForm.startDate = val[0]
+      this.queryForm.endDate = val[1]
+    },
+
   }
 }
 </script>

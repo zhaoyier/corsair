@@ -10,7 +10,6 @@
       </el-form-item>
       <el-form-item label="跌幅">
         <el-input-number v-model="dailyForm.decrease" :step="2"  :min="2" :max="20"  step-strictly></el-input-number>
-        <!-- <el-input v-model.number="dailyForm.decrease" placeholder=20></el-input> -->
       </el-form-item>
       <el-form-item label="日期">
         <el-date-picker
@@ -78,7 +77,7 @@
           {{ scope.row.minPrice }}
         </template>
       </el-table-column>
-      <el-table-column label="流通市值" width="110" align="center">
+      <el-table-column label="流通市值(亿)" width="110" align="center">
         <template slot-scope="scope">
           {{ scope.row.traded }}
         </template>
@@ -176,16 +175,14 @@ export default {
         this.list = response.data.items
         this.listLoading = false
         this.dailyForm.total = response.data.total
-        this.dailyForm.name = ''
-        this.dailyForm.secucode = ''
-        this.dailyForm.decrease = 0
         this.dailyForm.startDate = 0
         this.dailyForm.endDate = 0
-        this.dailyForm.pageNum = 1
       })
     },
-    handleCurrentChange() {
+    handleCurrentChange(val) {
+      this.dailyForm.pageNum = val
 
+      this.fetchData()
     },
     handleSizeChange() {
 

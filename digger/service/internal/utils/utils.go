@@ -141,3 +141,12 @@ func String2Float64(data string) float64 {
 	}
 	return result
 }
+
+// uint 代表小数位数，格式位 0.000001 如果是几位就指定为几位
+func TruncateFloat(f float64) float64 {
+	str := fmt.Sprintf("%.2f", f)
+	result, _ := strconv.ParseFloat(str, 64)
+	return result
+
+	// return math.Trunc(f/unit) * unit
+}

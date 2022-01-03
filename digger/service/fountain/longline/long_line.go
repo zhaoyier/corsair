@@ -36,17 +36,27 @@ func GetLongLineList(in *gin.Context) {
 		query["Secucode"] = req.GetSecucode()
 	}
 
-	sortField := "-GDReduceRatio"
+	sortField := []string{"-GDReduceRatio"}
 	if req.GetGdRatio() > 0 {
 		query["GDReduceRatio"] = ezdb.M{"$gte": req.GetGdRatio()}
 	}
 
 	if req.GetGdRatio() < 0 {
-		sortField = "GDReduceRatio"
+		sortField = []string{"-GDReduceRatio"}
 		query["GDReduceRatio"] = ezdb.M{"$lte": req.GetGdRatio()}
 	}
 
-	results, err := orm.GDLongLineMgr.Find(query, int(req.GetLimit()), int(req.GetOffset()), sortField)
+	if req.GetValueIndex() > 0 {
+		sortField = append(sortField, "-ValueIndex")
+		query["ValueIndex"] = ezdb.M{"$gte": req.GetValueIndex()}
+	}
+
+	if req.GetStartDate() > 0 && req.GetEndDate() > 0 {
+		sortField = append(sortField, "-EndDate")
+		query["EndDate"] = ezdb.M{"$gte": req.GetStartDate() / 1000, "$lte": req.GetEndDate() / 1000}
+	}
+
+	results, err := orm.GDLongLineMgr.Find(query, int(req.GetLimit()), int(req.GetOffset()), sortField...)
 	if err != nil {
 		log.Errorf("get long line failed: %q", err)
 		in.JSON(http.StatusForbidden, resp)
