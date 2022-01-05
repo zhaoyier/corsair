@@ -44,6 +44,8 @@ func startRoute(router *gin.Engine) {
 		stockGroup.POST("/ConfirmFocus", admin.ConfirmFocus)
 		stockGroup.POST("/CancelFocus", admin.CancelFocus)
 		stockGroup.POST("/updateFocus", admin.UpdateFocus)
+		stockGroup.POST("/GDRenshuList", admin.GDRenshuList)
+		stockGroup.POST("/GDRenshuDetail", admin.GDRenshuDetail)
 
 	}
 }

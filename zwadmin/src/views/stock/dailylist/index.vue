@@ -190,7 +190,7 @@ export default {
     updateDaily(index, rows) {
       var data = rows[index]
       var secucode = data.secucode.toLowerCase()
-      console.log("==>>TODO secucode is: ", secucode)
+      console.log("==>>TODO secucode is 02: ", secucode)
     },
     selectDate(val) {
       console.log("==>>TODO date is: ", val[0], val[1])

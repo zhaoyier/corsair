@@ -2,10 +2,12 @@ package zwadmin
 
 import (
 	"net/http"
+	"strings"
 	"time"
 
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
 	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
+	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
 
 	log "github.com/Sirupsen/logrus"
 	ezdb "github.com/ezbuy/ezorm/db"
@@ -92,15 +94,18 @@ func GetFocusList(in *gin.Context) {
 
 	for _, result := range results {
 		resp.Data.Items = append(resp.Data.Items, &trpc.GPFocusItem{
-			Name:         result.Name,
-			Secucode:     result.Secucode,
-			FocusPrice:   result.FocusPrice,
-			PresentPrice: result.PresentPrice,
-			ExpectPrice:  result.ExpectPrice,
-			DiffPrice:    result.PresentPrice - result.ExpectPrice,
-			Focused:      getFocused(result.Disabled),
-			CreateDate:   time.Unix(result.CreateDate, 0).Format("2006-01-02"),
-			UpdateDate:   time.Unix(result.UpdateDate, 0).Format("2006-01-02"),
+			Name:          result.Name,
+			Secucode:      result.Secucode,
+			FocusPrice:    result.FocusPrice,
+			PresentPrice:  getPresentPrice(result.Secucode),
+			ExpectPrice:   result.ExpectPrice,
+			DiffPrice:     getDiffPrice(result),
+			Focused:       getFocused(result.Disabled),
+			CreateDate:    time.Unix(result.CreateDate, 0).Format("2006-01-02"),
+			UpdateDate:    time.Unix(result.UpdateDate, 0).Format("2006-01-02"),
+			HoldFocus:     getHoldFocus(result.Secucode),
+			TotalNumRatio: getTotalNumRatio(result.Secucode),
+			Traded:        getTraded(result.Secucode),
 		})
 	}
 
@@ -184,4 +189,47 @@ func getFocused(disabled bool) string {
 		return "关注"
 	}
 	return "取消关注"
+}
+
+func getHoldFocus(secucode string) string {
+	result, err := orm.GDRenshuMgr.FindOne(ezdb.M{"Secucode": secucode}, "-EndDate")
+	if err != nil {
+		return ""
+	}
+	return result.HoldFocus
+}
+
+func getTotalNumRatio(secucode string) float64 {
+	var ratio float64
+	start := time.Now().AddDate(0, -1, 0).Unix()
+	query := ezdb.M{
+		"Secucode": secucode,
+		"EndDate":  ezdb.M{"$gte": start},
+	}
+
+	results, err := orm.GDRenshuMgr.FindAll(query, "-EndDate")
+	if err != nil {
+		return ratio
+	}
+	for _, result := range results {
+		ratio += result.TotalNumRatio
+	}
+
+	return utils.TruncateFloat(ratio)
+}
+
+func getTraded(secucode string) int64 {
+	secucode = strings.Split(secucode, ".")[1]
+	result, err := orm.GPDailyMgr.FindOne(ezdb.M{"Secucode": secucode}, "-CreateDate")
+	if err != nil {
+		return 0
+	}
+	return result.Traded / 100000000
+}
+
+func getDiffPrice(data *orm.GPFocus) float64 {
+	if data.ExpectPrice > 0 {
+		return utils.TruncateFloat(data.PresentPrice - data.ExpectPrice)
+	}
+	return utils.TruncateFloat(data.PresentPrice - data.FocusPrice)
 }

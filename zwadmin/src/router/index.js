@@ -62,18 +62,6 @@ export const constantRoutes = [
     name: '基本数据',
     meta: { title: '基本数据', icon: 'el-icon-s-help' },
     children: [
-      // {
-      //   path: 'table',
-      //   name: 'Table',
-      //   component: () => import('@/views/table/index'),
-      //   meta: { title: 'Table', icon: 'table' }
-      // },
-      // {
-      //   path: 'tree',
-      //   name: 'Tree',
-      //   component: () => import('@/views/tree/index'),
-      //   meta: { title: 'Tree', icon: 'tree' }
-      // },
       {
         path: 'stock/recommend',
         name: '推荐列表',
@@ -92,10 +80,16 @@ export const constantRoutes = [
         component: () => import('@/views/stock/dailylist/index'),
         meta: { title: '股票列表', icon: 'tree' }
       },
+      // {
+      //   path: 'stock/shareholder',
+      //   name: '长线列表',
+      //   component: () => import('@/views/stock/shareholder/index'),
+      //   meta: { title: '长线列表', icon: 'tree' }
+      // },
       {
-        path: 'stock/shareholder',
+        path: 'stock/gdrenshu',
         name: '股东列表',
-        component: () => import('@/views/stock/shareholder/index'),
+        component: () => import('@/views/stock/gdrenshu/index'),
         meta: { title: '股东列表', icon: 'tree' }
       },
       {
@@ -104,7 +98,6 @@ export const constantRoutes = [
         component: () => import('@/views/stock/focuslist/index'),
         meta: { title: '关注列表', icon: 'tree' }
       },
-
     ]
   },
 

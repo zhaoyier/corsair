@@ -41,6 +41,11 @@
           <span>{{ scope.row.secucode }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="价格差" width="110" align="center">
+        <template slot-scope="scope">
+          <el-tag type="danger" effect="light">{{ scope.row.diffPrice }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="关注价格" width="110" align="center">
         <template slot-scope="scope">
           <el-tag effect="light">{{ scope.row.focusPrice }}</el-tag>
@@ -56,9 +61,19 @@
           {{ scope.row.presentPrice }}
         </template>
       </el-table-column>
-      <el-table-column label="价格差" width="110" align="center">
+      <el-table-column label="股东集中度" width="110" align="center">
         <template slot-scope="scope">
-          <el-tag type="danger" effect="light">{{ scope.row.diffPrice }}</el-tag>
+          {{ scope.row.holdFocus }}
+        </template>
+      </el-table-column>
+      <el-table-column label="股东人数" width="110" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.totalNumRatio }}
+        </template>
+      </el-table-column>
+      <el-table-column label="流通市值(亿)" width="110" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.traded }}
         </template>
       </el-table-column>
       <el-table-column label="创建日期" width="110" align="center">
@@ -109,7 +124,6 @@
     </div>
     <div>
       <el-dialog title="K线查询" :visible.sync="lineChartForm.lineChartVisible">
-        <!-- <el-image :src="lineChartForm.lineChartSrc"></el-image> -->
         <el-tabs v-model="lineChartForm.activeName" @tab-click="selectTabClick">
           <el-tab-pane label="日线" name="date">
             <el-image :src="lineChartForm.lineChartSrc"></el-image>

@@ -97,3 +97,21 @@ export function updateFocus(data) {
     data
   })
 }
+
+// 股东人数列表
+export function gdrenshuList(data) {
+  return request({
+    url: '/api/stock/GDRenshuList',
+    method: 'post',
+    data
+  })
+}
+
+// 个股股东列表
+export function gdrenshuDetail(data) {
+  return request({
+    url: '/api/stock/GDRenshuDetail',
+    method: 'post',
+    data
+  })
+}

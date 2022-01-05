@@ -19,8 +19,7 @@ CNSecucode:
     - Disabled: bool     #
     - CreateDate: datetime
     - UpdateDate: datetime
-  uniques: [[Secucode]]
-  indexes: [[Name]]
+  uniques: [[Secucode],[Name]]
 
 GDRenshu:
   db: mongo

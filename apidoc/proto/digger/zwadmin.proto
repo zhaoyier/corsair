@@ -19,6 +19,63 @@ service ZWAdmin {
     rpc UpdateFocus(UpdateFocusReq) returns(UpdateFocusResp);
     rpc GetDailyList(GetDailyListReq) returns(GetDailyListResp);
     rpc ManualDecreaseList(ManualDecreaseListReq) returns(ManualDecreaseListResp);
+    rpc GDRenshuList(GDRenshuListReq) returns(GDRenshuListResp);
+    rpc GDRenshuDetail(GDRenshuDetailReq) returns(GDRenshuDetailResp);
+}
+
+enum GDRenshuSortType {
+    GDRenshuSortTypeUnknown = 0;
+    GDRenshuSortTypeDecrease = 1;
+    GDRenshuSortTypeIncrease = 2;
+}
+
+message GDRenshuDetailReq {
+    string secucode = 1;
+}
+
+message GDRenshuDetailData {
+    int32 total = 1;
+    repeated GDRenshuItem items = 2;
+}
+
+message GDRenshuDetailResp {
+    int32 code = 1;
+    GDRenshuDetailData data = 2;
+}
+
+message GDRenshuListReq {
+    string name = 1;
+    string secucode = 2;
+    int64 releaseStart = 3;
+    int64 releaseEnd = 4;
+    int32 sortTyp = 5;
+    double totalRatio = 6;
+    int32 limit = 10;
+    int32 offset = 11;
+}
+
+message GDRenshuItem {
+    string name = 1;
+    string secucode = 2;
+    string releaseDate = 3;
+    int32  holderTotalNum = 4;      //人数
+    double totalNumRatio = 5;       //变化
+    string holdFocus = 6;           //集中度
+    double price = 10;              //价格
+    double presentPrice = 11;       //当前价
+    double holdRatioTotal = 15;     //top10
+    double freeholdRatioTotal = 16; //
+    string focused = 18;      //是否关注
+}
+
+message GDRenshuData {
+    int32 total = 1;
+    repeated GDRenshuItem items = 2;
+}
+
+message GDRenshuListResp {
+    int32 code = 1;
+    GDRenshuData data = 2;
 }
 
 enum RecommendSortType {
@@ -155,7 +212,10 @@ message GPFocusItem {
     double diffPrice = 7;   //当前价格和期望价格差
     string createDate = 9;
     string updateDate = 10;
-    string focused = 11;      //是否关注
+    string focused = 11;        //是否关注
+    string holdFocus = 15;      //最近集中度
+    double totalNumRatio = 16;  //最近一月股东人数变化
+    int64 traded = 17;      //流通市值
 }
 
 message GPFocusData {

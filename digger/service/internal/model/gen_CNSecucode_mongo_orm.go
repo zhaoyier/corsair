@@ -38,6 +38,7 @@ func initCNSecucodeIndex() {
 
 	if err := collection.EnsureIndex(mgo.Index{
 		Key:        []string{"Name"},
+		Unique:     true,
 		Background: true,
 		Sparse:     true,
 	}); err != nil {
@@ -201,14 +202,34 @@ func (o *_CNSecucodeMgr) RemoveBySecucode(Secucode string) (err error) {
 	}
 	return col.Remove(query)
 }
-func (o *_CNSecucodeMgr) FindByName(Name string, limit int, offset int, sortFields ...string) (result []*CNSecucode, err error) {
+func (o *_CNSecucodeMgr) FindOneByName(Name string) (result *CNSecucode, err error) {
 	query := db.M{
 		"Name": Name,
 	}
-	session, q := CNSecucodeMgr.Query(query, limit, offset, sortFields)
+	session, q := CNSecucodeMgr.NQuery(query, 1, 0, nil)
 	defer session.Close()
-	err = q.All(&result)
+	err = q.One(&result)
 	return
+}
+
+func (o *_CNSecucodeMgr) MustFindOneByName(Name string) (result *CNSecucode) {
+	result, _ = o.FindOneByName(Name)
+	if result == nil {
+		result = CNSecucodeMgr.NewCNSecucode()
+		result.Name = Name
+		result.Save()
+	}
+	return
+}
+
+func (o *_CNSecucodeMgr) RemoveByName(Name string) (err error) {
+	session, col := CNSecucodeMgr.GetCol()
+	defer session.Close()
+
+	query := db.M{
+		"Name": Name,
+	}
+	return col.Remove(query)
 }
 
 func (o *_CNSecucodeMgr) Find(query interface{}, limit int, offset int, sortFields ...string) (result []*CNSecucode, err error) {
