@@ -226,3 +226,21 @@ GPFocus:
     - UpdateDate: datetime
   uniques: [[Secucode,Disabled]]
   indexes: [[Secucode],[Name]]
+
+# 周期
+GPCycle:
+  db: mongo
+  dbname: digger
+  fields:
+    - Name: string
+    - Secucode: string
+    - Disabled: bool
+    - PresentPrice: float64   #当前价格
+    - ExpectMin: float64      #预期
+    - ExpectMax: float64      #预期
+    - ExpectStart: datetime
+    - ExpectEnd: datetime
+    - CreateDate: datetime  
+    - UpdateDate: datetime
+  uniques: [[Secucode,Disabled]]
+  indexes: [[Secucode],[Name]]

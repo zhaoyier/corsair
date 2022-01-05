@@ -21,6 +21,57 @@ service ZWAdmin {
     rpc ManualDecreaseList(ManualDecreaseListReq) returns(ManualDecreaseListResp);
     rpc GDRenshuList(GDRenshuListReq) returns(GDRenshuListResp);
     rpc GDRenshuDetail(GDRenshuDetailReq) returns(GDRenshuDetailResp);
+    rpc AddGPCycle(AddGPCycleReq) returns(AddGPCycleResp);
+    rpc UpdateGPCycle(UpdateGPCycleReq) returns(UpdateGPCycleResp);
+    rpc GetGPCycleList(GetGPCycleListReq) returns(GetGPCycleListResp);
+}
+
+message UpdateGPCycleReq {
+    GPCycleItem item = 1;
+}
+
+message UpdateGPCycleResp{
+    int32 code = 1;
+}
+
+message GPCycleItem {
+    string name = 1;
+    string secucode= 2;
+    double presentPrice= 4;
+    double expectMin= 5;
+    double expectMax= 6;
+    string expectStart= 7;
+    string expectEnd= 8;
+    string updateDate = 9;
+}
+
+message AddGPCycleReq {
+    GPCycleItem item = 1;
+}
+
+message AddGPCycleResp {
+    int32 code = 1;
+}
+
+message GetGPCycleListReq {
+    string name = 1;
+    string secucode = 2;
+    int64 releaseStart = 3;
+    int64 releaseEnd = 4;
+    int32 sortTyp = 5;
+    double totalRatio = 6;
+    int32 limit = 10;
+    int32 offset = 11;
+}
+
+message GPCycleData {
+    int32 total = 1;
+    repeated GPCycleItem items = 2;
+}
+
+message GetGPCycleListResp {
+    int32 code = 1;
+    GPCycleData data = 2;
 }
 
 enum GDRenshuSortType {

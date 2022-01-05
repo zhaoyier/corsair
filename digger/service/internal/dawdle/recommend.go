@@ -76,7 +76,6 @@ func genShortRecommendedData(data *orm.GPShortLine, updateNum bool) error {
 	result.MaxPDay = data.MaxPDay
 	result.PresentPrice = data.PresentPrice
 	result.RMPrice = calRecommendPrice(result)
-	result.UpdateDate = time.Now().Unix()
 	result.RMIndex = getRecommendIndex(result)
 	result.Disabled = data.Disabled
 	result.GDDecrease = getGDDecrease(data.Secucode)
@@ -156,7 +155,7 @@ func getGPRecommend(secucode string) *orm.GPRecommend {
 		result.Secucode = secucode
 		result.CreateDate = time.Now().Unix()
 	}
-
+	result.UpdateDate = time.Now().Unix()
 	return result
 }
 
