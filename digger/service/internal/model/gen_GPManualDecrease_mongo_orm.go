@@ -28,6 +28,15 @@ func initGPManualDecreaseIndex() {
 	defer session.Close()
 
 	if err := collection.EnsureIndex(mgo.Index{
+		Key:        []string{"Secucode", "Disabled"},
+		Unique:     true,
+		Background: true,
+		Sparse:     true,
+	}); err != nil {
+		panic("ensureIndex digger.GPManualDecrease SecucodeDisabled error:" + err.Error())
+	}
+
+	if err := collection.EnsureIndex(mgo.Index{
 		Key:        []string{"Secucode"},
 		Background: true,
 		Sparse:     true,
@@ -41,15 +50,6 @@ func initGPManualDecreaseIndex() {
 		Sparse:     true,
 	}); err != nil {
 		panic("ensureIndex digger.GPManualDecrease Name error:" + err.Error())
-	}
-
-	if err := collection.EnsureIndex(mgo.Index{
-		Key:        []string{"Secucode", "Disabled"},
-		Unique:     true,
-		Background: true,
-		Sparse:     true,
-	}); err != nil {
-		panic("ensureIndex digger.GPManualDecrease SecucodeDisabled error:" + err.Error())
 	}
 
 }
@@ -180,24 +180,6 @@ func (o *_GPManualDecreaseMgr) NQuery(query interface{}, limit, offset int, sort
 
 	return session, q
 }
-func (o *_GPManualDecreaseMgr) FindBySecucode(Secucode string, limit int, offset int, sortFields ...string) (result []*GPManualDecrease, err error) {
-	query := db.M{
-		"Secucode": Secucode,
-	}
-	session, q := GPManualDecreaseMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
-}
-func (o *_GPManualDecreaseMgr) FindByName(Name string, limit int, offset int, sortFields ...string) (result []*GPManualDecrease, err error) {
-	query := db.M{
-		"Name": Name,
-	}
-	session, q := GPManualDecreaseMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
-}
 func (o *_GPManualDecreaseMgr) FindOneBySecucodeDisabled(Secucode string, Disabled bool) (result *GPManualDecrease, err error) {
 	query := db.M{
 		"Secucode": Secucode,
@@ -229,6 +211,24 @@ func (o *_GPManualDecreaseMgr) RemoveBySecucodeDisabled(Secucode string, Disable
 		"Disabled": Disabled,
 	}
 	return col.Remove(query)
+}
+func (o *_GPManualDecreaseMgr) FindBySecucode(Secucode string, limit int, offset int, sortFields ...string) (result []*GPManualDecrease, err error) {
+	query := db.M{
+		"Secucode": Secucode,
+	}
+	session, q := GPManualDecreaseMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
+}
+func (o *_GPManualDecreaseMgr) FindByName(Name string, limit int, offset int, sortFields ...string) (result []*GPManualDecrease, err error) {
+	query := db.M{
+		"Name": Name,
+	}
+	session, q := GPManualDecreaseMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
 }
 
 func (o *_GPManualDecreaseMgr) Find(query interface{}, limit int, offset int, sortFields ...string) (result []*GPManualDecrease, err error) {

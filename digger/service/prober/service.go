@@ -44,6 +44,14 @@ func Start() {
 		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeRecommend) {
 			dawdle.GenRecommendTicker()
 		}
+		// 关注
+		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeFocus) {
+			dawdle.GenFocusTicker()
+		}
+		// 周期
+		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeZhouQi) {
+			dawdle.GenZhouQiTicker()
+		}
 
 		dawdle.UpdatePresentPrice()
 

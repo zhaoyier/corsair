@@ -46,6 +46,10 @@ func startRoute(router *gin.Engine) {
 		stockGroup.POST("/updateFocus", admin.UpdateFocus)
 		stockGroup.POST("/GDRenshuList", admin.GDRenshuList)
 		stockGroup.POST("/GDRenshuDetail", admin.GDRenshuDetail)
+		stockGroup.POST("/AddGPZhouQi", admin.AddGPZhouQi)
+		stockGroup.POST("/UpdateGPZhouQi", admin.UpdateGPZhouQi)
+		stockGroup.POST("/GPZhouQiList", admin.GPZhouQiList)
+		stockGroup.POST("/AddGPZhouQiRemark", admin.AddGPZhouQiRemark)
 
 	}
 }

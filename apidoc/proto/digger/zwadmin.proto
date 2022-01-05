@@ -21,57 +21,91 @@ service ZWAdmin {
     rpc ManualDecreaseList(ManualDecreaseListReq) returns(ManualDecreaseListResp);
     rpc GDRenshuList(GDRenshuListReq) returns(GDRenshuListResp);
     rpc GDRenshuDetail(GDRenshuDetailReq) returns(GDRenshuDetailResp);
-    rpc AddGPCycle(AddGPCycleReq) returns(AddGPCycleResp);
-    rpc UpdateGPCycle(UpdateGPCycleReq) returns(UpdateGPCycleResp);
-    rpc GetGPCycleList(GetGPCycleListReq) returns(GetGPCycleListResp);
+    rpc AddGPZhouQi(AddGPZhouQiReq) returns(AddGPZhouQiResp);
+    rpc UpdateGPZhouQi(UpdateGPZhouQiReq) returns(UpdateGPZhouQiResp);
+    rpc GPZhouQiList(GPZhouQiListReq) returns(GPZhouQiListResp);
+    rpc AddGPZhouQiRemark(AddGPZhouQiRemarkReq) returns(AddGPZhouQiRemarkResp);
 }
 
-message UpdateGPCycleReq {
-    GPCycleItem item = 1;
+enum GPZhouQiState {
+    GPZhouQiStateUnknown = 0;
+    GPZhouQiStateDate = 1;  //时间接近
+    GPZhouQiStatePrice = 2; //价格接近
 }
 
-message UpdateGPCycleResp{
+message AddGPZhouQiRemarkReq {
+    string secucode= 2;
+    string remark = 3;
+}
+
+message AddGPZhouQiRemarkResp{
     int32 code = 1;
 }
 
-message GPCycleItem {
+message UpdateGPZhouQiReq {
     string name = 1;
     string secucode= 2;
     double presentPrice= 4;
     double expectMin= 5;
     double expectMax= 6;
-    string expectStart= 7;
-    string expectEnd= 8;
-    string updateDate = 9;
+    int64 expectStart= 7;
+    int64 expectEnd= 8;
+    bool disabled = 9;
 }
 
-message AddGPCycleReq {
-    GPCycleItem item = 1;
-}
-
-message AddGPCycleResp {
+message UpdateGPZhouQiResp{
     int32 code = 1;
 }
 
-message GetGPCycleListReq {
+message GPZhouQiRemark {
+    string remark = 1;
+    string createDate = 2;
+}
+
+message GPZhouQiItem {
+    string name = 1;
+    string secucode= 2;
+    double presentPrice= 4;
+    double expectMin= 5;
+    double expectMax= 6;
+    int64 expectStart= 7;
+    int64 expectEnd= 8;
+    string updateDate = 9;
+    repeated GPZhouQiRemark remarks = 15;
+    string state = 16;   //状态
+}
+
+message AddGPZhouQiReq {
+    string name = 1;
+    string secucode= 2;
+    double presentPrice= 4;
+    double expectMin= 5;
+    double expectMax= 6;
+    int64 expectStart= 10;
+    int64 expectEnd= 11;
+}
+
+message AddGPZhouQiResp {
+    int32 code = 1;
+}
+
+message GPZhouQiListReq {
     string name = 1;
     string secucode = 2;
-    int64 releaseStart = 3;
-    int64 releaseEnd = 4;
-    int32 sortTyp = 5;
-    double totalRatio = 6;
+    int64 expectStart = 3;
+    int64 expectEnd = 4;
     int32 limit = 10;
     int32 offset = 11;
 }
 
-message GPCycleData {
+message GPZhouQiData {
     int32 total = 1;
-    repeated GPCycleItem items = 2;
+    repeated GPZhouQiItem items = 2;
 }
 
-message GetGPCycleListResp {
+message GPZhouQiListResp {
     int32 code = 1;
-    GPCycleData data = 2;
+    GPZhouQiData data = 2;
 }
 
 enum GDRenshuSortType {
@@ -244,6 +278,13 @@ message GPDailyData {
 message GetDailyListResp {
     int32 code = 1;
     GPDailyData data = 2;
+}
+
+enum FocusState {
+    FocusStateUnknown = 0;
+    FocusStatePrepare = 1;  //准备
+    FocusStateStart = 2;    //开始
+    FocusStateProgress = 3; //进行中
 }
 
 message FocusListReq {

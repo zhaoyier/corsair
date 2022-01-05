@@ -110,7 +110,7 @@ func GDRenshuList(in *gin.Context) {
 	}
 	// sortFields = append(sortFields, "-EndDate")
 	log.Infof("==>>TODO 123: %+v|%+v", query, sortFields)
-	results, err := orm.GDRenshuMgr.Find(query, int(req.GetLimit()), int(req.GetOffset()), sortFields...)
+	results, err := orm.GDRenshuMgr.Find(query, int(req.GetLimit()), int(req.GetOffset()), "TotalNumRatio")
 	// results, err := orm.GDRenshuMgr.Find(query, int(req.GetLimit()), int(req.GetOffset()), "TotalNumRatio")
 	if err != nil {
 		log.Errorf("save focus failed: %q", err)

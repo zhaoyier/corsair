@@ -23,7 +23,7 @@
         </el-form-item>
         <el-form-item label="日期">
             <el-date-picker
-            @input="selectDate"
+            @input="onSelectDate"
             v-model="queryForm.dateRange"
             value-format="timestamp"
             type="daterange"
@@ -60,7 +60,7 @@
           <el-tag type="warning" effect="dark">{{ scope.row.holderTotalNum }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="持仓变化率" width="110" align="center">
+      <el-table-column prop="totalNumRatio" label="持仓变化率" width="140" align="center" sortable>
         <template slot-scope="scope">
           {{ scope.row.totalNumRatio }}
         </template>
@@ -310,7 +310,7 @@ export default {
         this.fetchData()
       })
     },
-    selectDate(val) {
+    onSelectDate(val) {
       console.log("==>>TODO date is: ", val[0], val[1])
       this.queryForm.startDate = val[0]
       this.queryForm.endDate = val[1]

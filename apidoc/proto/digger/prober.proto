@@ -59,4 +59,10 @@ enum FunctionType {
     FunctionTypeShortLine = 4;
     FunctionTypeRecommend = 5;
     FunctionTypeFocus = 6;  //关注
+    FunctionTypeZhouQi = 7;  //周期股
+}
+
+message PresentPrice {
+    double price = 1;
+    int64 timestamp = 2;
 }

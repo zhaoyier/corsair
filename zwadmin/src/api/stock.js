@@ -115,3 +115,39 @@ export function gdrenshuDetail(data) {
     data
   })
 }
+
+// 新增周期
+export function addGPZhouQi(data) {
+  return request({
+    url: '/api/stock/AddGPZhouQi',
+    method: 'post',
+    data
+  })
+}
+
+// 更新周期
+export function updateGPZhouQi(data) {
+  return request({
+    url: '/api/stock/UpdateGPZhouQi',
+    method: 'post',
+    data
+  })
+}
+
+// 更新周期备注
+export function addGPZhouQiRemark(data) {
+  return request({
+    url: '/api/stock/AddGPZhouQiRemark',
+    method: 'post',
+    data
+  })
+}
+
+// 周期列表
+export function gpzhouQiList(data) {
+  return request({
+    url: '/api/stock/GPZhouQiList',
+    method: 'post',
+    data
+  })
+}

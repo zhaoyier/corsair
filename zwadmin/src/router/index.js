@@ -98,6 +98,12 @@ export const constantRoutes = [
         component: () => import('@/views/stock/focuslist/index'),
         meta: { title: '关注列表', icon: 'tree' }
       },
+      {
+        path: 'stock/zhouqi',
+        name: '周期列表',
+        component: () => import('@/views/stock/zhouqi/index'),
+        meta: { title: '周期列表', icon: 'tree' }
+      },
     ]
   },
 

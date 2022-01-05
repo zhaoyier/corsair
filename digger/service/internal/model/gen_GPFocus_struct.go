@@ -10,6 +10,7 @@ type GPFocus struct {
 	ID           bson.ObjectId `json:"id" bson:"_id,omitempty"`
 	Name         string        `bson:"Name" json:"Name"`
 	Secucode     string        `bson:"Secucode" json:"Secucode"`
+	State        int32         `bson:"State" json:"State"`
 	Disabled     bool          `bson:"Disabled" json:"Disabled"`
 	FocusPrice   float64       `bson:"FocusPrice" json:"FocusPrice"`
 	PresentPrice float64       `bson:"PresentPrice" json:"PresentPrice"`
@@ -23,6 +24,7 @@ const (
 	GPFocusMgoFieldID           = "_id"
 	GPFocusMgoFieldName         = "Name"
 	GPFocusMgoFieldSecucode     = "Secucode"
+	GPFocusMgoFieldState        = "State"
 	GPFocusMgoFieldDisabled     = "Disabled"
 	GPFocusMgoFieldFocusPrice   = "FocusPrice"
 	GPFocusMgoFieldPresentPrice = "PresentPrice"

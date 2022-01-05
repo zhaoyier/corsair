@@ -218,6 +218,7 @@ GPFocus:
   fields:
     - Name: string
     - Secucode: string 
+    - State: int32      #0未知,1准备,2开始,3进行中
     - Disabled: bool
     - FocusPrice: float64     #关注价格
     - PresentPrice: float64   #当前价格
@@ -228,19 +229,30 @@ GPFocus:
   indexes: [[Secucode],[Name]]
 
 # 周期
-GPCycle:
+GPZhouQi:
   db: mongo
   dbname: digger
   fields:
     - Name: string
     - Secucode: string
+    - State: int32      #1时间接近2价格接近
     - Disabled: bool
     - PresentPrice: float64   #当前价格
     - ExpectMin: float64      #预期
     - ExpectMax: float64      #预期
     - ExpectStart: datetime
     - ExpectEnd: datetime
+    - BuyingCount: int32
+    - Remarks: list<GPZhouQiRemark> 
     - CreateDate: datetime  
     - UpdateDate: datetime
-  uniques: [[Secucode,Disabled]]
+  uniques: [[Secucode]]
   indexes: [[Secucode],[Name]]
+
+# 备注
+GPZhouQiRemark:
+  db: mongo
+  dbname: ezseller
+  fields:
+    - Remark: string
+    - UpdateDate: datetime

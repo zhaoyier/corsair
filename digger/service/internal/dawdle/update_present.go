@@ -20,6 +20,8 @@ func UpdatePresentPrice() {
 	iterGPRecommend()
 	// 更新关注的价格
 	iterGPFocusPresentPrice()
+	// 更新周期的价格
+	iterGPZhouQiPresentPrice()
 }
 
 func iterGPRecommend() {
@@ -52,6 +54,31 @@ func iterGPFocusPresentPrice() {
 	}
 }
 
+func iterGPZhouQiPresentPrice() {
+	query := ezdb.M{}
+
+	results, err := orm.GPZhouQiMgr.FindAll(query)
+	if err != nil {
+		log.Infof("get recommend failed: %q", err)
+		return
+	}
+
+	for _, result := range results {
+		price := request.GetSinaDayPrice(result.Secucode)
+		updateZhouQiPrice(result, price)
+	}
+}
+
+func updateZhouQiPrice(data *orm.GPZhouQi, price float64) error {
+	data.PresentPrice = utils.TruncateFloat(price)
+	data.UpdateDate = time.Now().Unix()
+	if _, err := data.Save(); err != nil {
+		log.Errorf("update zhouqi failed: %s|%q", data.Secucode, price)
+		return err
+	}
+	return nil
+}
+
 func updateRecommendPrice(secucode string, price float64) error {
 	if price == 0 {
 		log.Infof("update price invalid: %s|%.1f", secucode, price)
@@ -79,7 +106,7 @@ func updateRecommendPrice(secucode string, price float64) error {
 }
 
 func updateFocusPrice(data *orm.GPFocus, price float64) error {
-	data.PresentPrice = price
+	data.PresentPrice = utils.TruncateFloat(price)
 	data.UpdateDate = time.Now().Unix()
 	if _, err := data.Save(); err != nil {
 		log.Errorf("update gp focus failed: %s|%q", data.Secucode, price)

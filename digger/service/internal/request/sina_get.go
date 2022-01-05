@@ -5,12 +5,18 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"sync"
+	"time"
 
+	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
 	log "github.com/Sirupsen/logrus"
 )
 
-// data[3] current p
+var (
+	presentPriceMap sync.Map
+)
+
 func GetSinaDayDetail(code string) ([]string, error) {
 	url := fmt.Sprintf("http://hq.sinajs.cn/list=%s", strings.ToLower(code))
 	method := "GET"
@@ -47,6 +53,18 @@ func GetSinaDayPrice(secucode string) float64 {
 	codes := strings.Split(secucode, ".")
 	secucode = strings.Join(codes, "")
 	secucode = strings.ToLower(secucode)
+
+	ts := time.Now().Unix()
+	result, ok := presentPriceMap.Load(secucode)
+	if ok {
+		data := result.(*trpc.PresentPrice)
+		if data.Timestamp > ts {
+			return data.Price
+		} else {
+			presentPriceMap.Delete(secucode)
+		}
+	}
+
 	results, err := GetSinaDayDetail(secucode)
 	if err != nil {
 		log.Errorf("get present price failed: %s|%q", secucode, err)
@@ -58,5 +76,10 @@ func GetSinaDayPrice(secucode string) float64 {
 		return 0
 	}
 	price := results[3]
-	return utils.String2Float64(price)
+	pp := utils.String2Float64(price)
+	presentPriceMap.Store(secucode, &trpc.PresentPrice{
+		Timestamp: ts + 15*60,
+		Price:     pp,
+	})
+	return pp
 }
