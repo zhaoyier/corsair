@@ -7,7 +7,7 @@ import (
 
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
 	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
-	"git.ezbuy.me/ezbuy/lib/log"
+	log "github.com/Sirupsen/logrus"
 
 	ezdb "github.com/ezbuy/ezorm/db"
 	"github.com/gin-gonic/gin"
