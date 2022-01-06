@@ -87,6 +87,10 @@ func GetFocusList(in *gin.Context) {
 		query["Disabled"] = true
 	}
 
+	if req.GetExpectDateStart() > 0 && req.GetExpectDateEnd() > 0 {
+		query["ExpectDate"] = ezdb.M{"$gte": req.GetExpectDateStart() / 1000, "$lte": req.GetExpectDateEnd() / 1000}
+	}
+
 	sortFields = append(sortFields, "-CreateDate")
 	results, err := orm.GPFocusMgr.Find(query, int(req.GetLimit()), int(req.GetOffset()), sortFields...)
 	if err != nil {
@@ -113,6 +117,7 @@ func GetFocusList(in *gin.Context) {
 			TotalNumRatio: getTotalNumRatio(result.Secucode),
 			Traded:        getTraded(result.Secucode),
 			State:         getFocusState(result.State),
+			ExpectDate:    result.ExpectDate,
 		})
 	}
 
@@ -182,6 +187,7 @@ func UpdateFocus(in *gin.Context) {
 	}
 	result.ExpectPrice = req.GetExpectPrice()
 	result.UpdateDate = time.Now().Unix()
+	result.ExpectDate = req.GetExpectDate() / 1000
 	if _, err := result.Save(); err != nil {
 		in.JSON(http.StatusConflict, resp)
 		return

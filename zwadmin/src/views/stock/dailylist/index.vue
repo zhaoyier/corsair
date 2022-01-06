@@ -19,7 +19,7 @@
       </el-form-item>
       <el-form-item label="日期">
         <el-date-picker
-          @input="selectDate"
+          @input="onSelectDate"
           v-model="queryForm.dateRange"
           value-format="timestamp"
           type="daterange"
@@ -113,6 +113,13 @@
           size="small">
           编辑
         </el-button>
+        <el-divider direction="vertical"></el-divider>
+        <el-button
+          @click.native.prevent="klineChart(scope.$index, tableData)"
+          type="text"
+          size="small">
+          K线图
+        </el-button>
       </template>
     </el-table-column>
     </el-table>
@@ -126,6 +133,21 @@
         @current-change="handleCurrentChange"
         @size-change="handleSizeChange"
       />
+    </div>
+    <div>
+      <el-dialog title="K线查询" :visible.sync="lineChartForm.lineChartVisible">
+        <el-tabs v-model="lineChartForm.activeName" @tab-click="onSelectTabClick">
+          <el-tab-pane label="日线" name="date">
+            <el-image :src="lineChartForm.lineChartSrc"></el-image>
+          </el-tab-pane>
+          <el-tab-pane label="周线" name="contour">
+            <el-image :src="lineChartForm.lineChartSrc"></el-image>
+          </el-tab-pane>
+          <el-tab-pane label="分时线" name="minute">
+            <el-image :src="lineChartForm.lineChartSrc"></el-image>
+          </el-tab-pane>
+        </el-tabs>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -149,6 +171,12 @@ export default {
       list: null,
       timer:null,
       listLoading: true,
+      lineChartForm:{
+        activeName: 'date',
+        lineChartVisible: false,
+        lineChartSrc: '',
+        secucode: '',
+      },
       queryForm: {
         pageNum: 1,
         pageSize: 20,
@@ -205,7 +233,7 @@ export default {
       var secucode = data.secucode.toLowerCase()
       console.log("==>>TODO secucode is 02: ", secucode)
     },
-    selectDate(val) {
+    onSelectDate(val) {
       this.queryForm.startDate = val[0]
       this.queryForm.endDate = val[1]
     },
@@ -223,6 +251,24 @@ export default {
       confirmFocus(req).then(response=>{
         this.fetchData()
       })
+    },
+    onKlineChart(index, rows) {//日线图
+      var data = rows[index]
+      var secucode = data.secucode.split('.').join("").toLowerCase()
+      this.lineChartForm.secucode = secucode
+      this.lineChartForm.lineChartVisible = !this.lineChartForm.lineChartVisible
+      this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/daily/n/'+secucode+'.gif'
+    },
+    onSelectTabClick(tab) {
+      var secucode = this.lineChartForm.secucode
+      if (tab.name === "date") {
+        this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/daily/n/'+secucode+'.gif'
+      } else if (tab.name == "contour") { //contour
+        this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/weekly/n/'+secucode+'.gif'
+      } else { //分时线
+        this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/min/n/'+secucode+'.gif'
+      }
+      this.lineChartForm.activeName = "date"
     },
   }
 }

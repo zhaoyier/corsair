@@ -28,6 +28,17 @@
           </el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="期望日期">
+        <el-date-picker
+          @input="onSelectDate"
+          v-model="queryForm.dateRange"
+          value-format="timestamp"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期">
+        </el-date-picker>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onQuerySubmit">查询</el-button>
       </el-form-item>
@@ -69,6 +80,12 @@
       <el-table-column label="期望价格" width="110" align="center">
         <template slot-scope="scope">
           <el-tag type="warning" effect="light">{{ scope.row.expectPrice }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="期望日期" width="110" align="center">
+        <template slot-scope="scope">
+          <!-- <el-tag type="warning" effect="light">{{ scope.row.expectDate }}</el-tag> -->
+          <el-tag type="success" effect="light">{{ scope.row.expectDate|dateFilter }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="当前价格" width="110" align="center">
@@ -125,7 +142,7 @@
         </el-button>
         <el-divider direction="vertical"></el-divider>
         <el-button
-          @click.native.prevent="klineChart(scope.$index, tableData)"
+          @click.native.prevent="onKlineChart(scope.$index, tableData)"
           type="text"
           size="small">
           K线图
@@ -146,7 +163,7 @@
     </div>
     <div>
       <el-dialog title="K线查询" :visible.sync="lineChartForm.lineChartVisible">
-        <el-tabs v-model="lineChartForm.activeName" @tab-click="selectTabClick">
+        <el-tabs v-model="lineChartForm.activeName" @tab-click="onSelectTabClick">
           <el-tab-pane label="日线" name="date">
             <el-image :src="lineChartForm.lineChartSrc"></el-image>
           </el-tab-pane>
@@ -161,7 +178,7 @@
     </div>
     <div>
       <el-drawer
-        title="我是标题"
+        title="修改关注信息"
         :visible.sync="updateForm.updateFocusDrawer"
         :with-header="true">
         <el-form :model="updateForm" ref="updateForm" label-width="100px" class="demo-ruleForm">
@@ -173,7 +190,16 @@
               { type: 'number', message: '价格必须为数字值'}
             ]"
           >
-            <el-input type="expectPrice" v-model.number="updateForm.expectPrice" autocomplete="off"></el-input>
+            <!-- <el-input type="expectPrice" v-model.number="updateForm.expectPrice" autocomplete="off"></el-input> -->
+            <el-input-number v-model="updateForm.expectPrice" :precision="2" :step="0.5" :max="10000"></el-input-number>
+          </el-form-item>
+          <el-form-item label="预期日期">
+            <el-date-picker
+              v-model="updateForm.expectDate"
+              value-format="timestamp"
+              type="date"
+              placeholder="选择日期">
+            </el-date-picker>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmitForm('updateForm')">提交</el-button>
@@ -244,6 +270,7 @@
 
 <script>
 import { getFocusList, cancelFocus, updateFocus,gdrenshuDetail } from '@/api/stock'
+import { parseTime } from '@/utils/index'
 
 export default {
   filters: {
@@ -255,6 +282,9 @@ export default {
         "进行中": 'danger',
       }
       return statusMap[status]
+    },
+    dateFilter(time) {
+        return parseTime(time)
     }
   },
   data() {
@@ -273,6 +303,9 @@ export default {
         secucode: '',
         disabled: 0,
         state: 0,
+        dateRange:'',
+        startDate: 0,
+        endDate: 0,
         focusOpts: [{
           value: 0,
           label: '全部'
@@ -300,6 +333,7 @@ export default {
       updateForm: {
         secucode: '',
         expectPrice: 0,
+        expectDate: Date.parse(new Date()),
         updateFocusDrawer: false,
       },
       paginationForm: {
@@ -327,6 +361,8 @@ export default {
         name: this.queryForm.name,
         secucode: this.queryForm.secucode,
         disabled: this.queryForm.disabled,
+        expectDateStart: this.queryForm.startDate,
+        expectDateEnd: this.queryForm.endDate,
         state: this.queryForm.state,
         limit: this.paginationForm.pageSize,
         offset: (this.paginationForm.pageNum-1)*this.paginationForm.pageSize,
@@ -364,14 +400,14 @@ export default {
     onQuerySubmit(val) {
       this.fetchData()
     },
-    klineChart(index, rows) {//日线图
+    onKlineChart(index, rows) {//日线图
       var data = rows[index]
       var secucode = data.secucode.split('.').join("").toLowerCase()
       this.lineChartForm.secucode = secucode
       this.lineChartForm.lineChartVisible = !this.lineChartForm.lineChartVisible
       this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/daily/n/'+secucode+'.gif'
     },
-    selectTabClick(tab) {
+    onSelectTabClick(tab) {
       var secucode = this.lineChartForm.secucode
       if (tab.name === "date") {
         this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/daily/n/'+secucode+'.gif'
@@ -385,6 +421,7 @@ export default {
     onUpdateFocus(index, rows) {
       var data = rows[index]
       this.updateForm.secucode = data.secucode
+      // this.updateForm.expectDate = 
       this.updateForm.updateFocusDrawer = true
     },
     onResetForm(formName) {
@@ -401,6 +438,7 @@ export default {
 
         var req = {
           secucode: this.updateForm.secucode,
+          expectDate: this.updateForm.expectDate,
           expectPrice: this.updateForm.expectPrice,
         }
         updateFocus(req).then(response=>{
@@ -427,7 +465,17 @@ export default {
             this.operateForm.gudongHistory = response.data.items
       })
     },
-
+    onSelectDate(val) {
+      if (!!val) {
+        this.queryForm.startDate = val[0]
+        this.queryForm.endDate = val[1]
+      } else {
+        this.queryForm.startDate = 0
+      this.queryForm.endDate = 0
+      }
+      
+      console.log('===>>TODO 332: ', this.queryForm.startDate, this.queryForm.endDate)
+    },
   }
 }
 

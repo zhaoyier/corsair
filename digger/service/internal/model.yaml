@@ -223,6 +223,7 @@ GPFocus:
     - FocusPrice: float64     #关注价格
     - PresentPrice: float64   #当前价格
     - ExpectPrice: float64    #预期买入价格
+    - ExpectDate: int64       #期望日期
     - CreateDate: datetime  
     - UpdateDate: datetime
   uniques: [[Secucode],[Name]]

@@ -15,6 +15,7 @@ type GPFocus struct {
 	FocusPrice   float64       `bson:"FocusPrice" json:"FocusPrice"`
 	PresentPrice float64       `bson:"PresentPrice" json:"PresentPrice"`
 	ExpectPrice  float64       `bson:"ExpectPrice" json:"ExpectPrice"`
+	ExpectDate   int64         `bson:"ExpectDate" json:"ExpectDate"`
 	CreateDate   int64         `bson:"CreateDate" json:"CreateDate"`
 	UpdateDate   int64         `bson:"UpdateDate" json:"UpdateDate"`
 	isNew        bool
@@ -29,6 +30,7 @@ const (
 	GPFocusMgoFieldFocusPrice   = "FocusPrice"
 	GPFocusMgoFieldPresentPrice = "PresentPrice"
 	GPFocusMgoFieldExpectPrice  = "ExpectPrice"
+	GPFocusMgoFieldExpectDate   = "ExpectDate"
 	GPFocusMgoFieldCreateDate   = "CreateDate"
 	GPFocusMgoFieldUpdateDate   = "UpdateDate"
 )

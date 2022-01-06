@@ -184,6 +184,7 @@ enum DisabledType {
 message UpdateFocusReq {
     string secucode = 1;
     double expectPrice = 2;
+    int64 expectDate = 3;
 }
 
 message UpdateFocusResp {
@@ -298,6 +299,8 @@ message FocusListReq {
     string secucode = 2;
     DisabledType disabled = 3;
     int32 state = 4;
+    int64 expectDateStart = 5;
+    int64 expectDateEnd = 6;
     int32 limit = 10;
     int32 offset = 11;
 }
@@ -316,6 +319,7 @@ message GPFocusItem {
     double totalNumRatio = 16;  //最近一月股东人数变化
     int64 traded = 17;      //流通市值
     string state = 20;      //状态
+    int64 expectDate = 21;  //期望日期
 }
 
 message GPFocusData {

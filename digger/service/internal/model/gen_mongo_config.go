@@ -31,11 +31,11 @@ func MgoSetup(config *db.MongoConfig) {
 }
 
 func Col(col string) (*mgo.Session, *mgo.Collection) {
-	return getCol("ezseller", col)
+	return getCol("digger", col)
 }
 
 func DbName() string {
-	return "ezseller"
+	return "digger"
 }
 
 func getCol(dbName, col string) (*mgo.Session, *mgo.Collection) {
