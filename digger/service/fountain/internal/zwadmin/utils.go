@@ -1,4 +1,4 @@
-package recommend
+package zwadmin
 
 import (
 	"fmt"
@@ -28,4 +28,40 @@ func getRMPrice(data []float64) string {
 		list = append(list, fmt.Sprintf("%.1f(%d)", val, idx+1))
 	}
 	return strings.Join(list, "->")
+}
+
+func getFocusBySecucode(secucode string) string {
+	result, err := orm.GPFocusMgr.FindOneBySecucode(secucode)
+	if err != nil {
+		return "关注"
+	}
+	if result == nil {
+		return "关注"
+	}
+	return "取消关注"
+}
+
+func getFocusByName(name string) string {
+	result, err := orm.GPFocusMgr.FindOneByName(name)
+	if err != nil {
+		return "关注"
+	}
+	if result == nil {
+		return "关注"
+	}
+	return "取消关注"
+}
+
+func getSecucodeWithExchange(secucode string) string {
+	var exchange string
+	prefix := secucode[0:3]
+	switch prefix {
+	case "600", "601", "603", "688":
+		exchange = "SH"
+	case "835", "836":
+		exchange = "BJ"
+	default:
+		exchange = "SZ"
+	}
+	return fmt.Sprintf("%s.%s", exchange, secucode)
 }

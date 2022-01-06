@@ -28,15 +28,6 @@ func initGDLongLineIndex() {
 	defer session.Close()
 
 	if err := collection.EnsureIndex(mgo.Index{
-		Key:        []string{"Secucode", "EndDate"},
-		Unique:     true,
-		Background: true,
-		Sparse:     true,
-	}); err != nil {
-		panic("ensureIndex digger.GDLongLine SecucodeEndDate error:" + err.Error())
-	}
-
-	if err := collection.EnsureIndex(mgo.Index{
 		Key:        []string{"ValueIndex"},
 		Background: true,
 		Sparse:     true,
@@ -66,6 +57,15 @@ func initGDLongLineIndex() {
 		Sparse:     true,
 	}); err != nil {
 		panic("ensureIndex digger.GDLongLine CreateDate error:" + err.Error())
+	}
+
+	if err := collection.EnsureIndex(mgo.Index{
+		Key:        []string{"Secucode", "EndDate"},
+		Unique:     true,
+		Background: true,
+		Sparse:     true,
+	}); err != nil {
+		panic("ensureIndex digger.GDLongLine SecucodeEndDate error:" + err.Error())
 	}
 
 }
@@ -196,38 +196,6 @@ func (o *_GDLongLineMgr) NQuery(query interface{}, limit, offset int, sortFields
 
 	return session, q
 }
-func (o *_GDLongLineMgr) FindOneBySecucodeEndDate(Secucode string, EndDate int64) (result *GDLongLine, err error) {
-	query := db.M{
-		"Secucode": Secucode,
-		"EndDate":  EndDate,
-	}
-	session, q := GDLongLineMgr.NQuery(query, 1, 0, nil)
-	defer session.Close()
-	err = q.One(&result)
-	return
-}
-
-func (o *_GDLongLineMgr) MustFindOneBySecucodeEndDate(Secucode string, EndDate int64) (result *GDLongLine) {
-	result, _ = o.FindOneBySecucodeEndDate(Secucode, EndDate)
-	if result == nil {
-		result = GDLongLineMgr.NewGDLongLine()
-		result.Secucode = Secucode
-		result.EndDate = EndDate
-		result.Save()
-	}
-	return
-}
-
-func (o *_GDLongLineMgr) RemoveBySecucodeEndDate(Secucode string, EndDate int64) (err error) {
-	session, col := GDLongLineMgr.GetCol()
-	defer session.Close()
-
-	query := db.M{
-		"Secucode": Secucode,
-		"EndDate":  EndDate,
-	}
-	return col.Remove(query)
-}
 func (o *_GDLongLineMgr) FindByValueIndex(ValueIndex int32, limit int, offset int, sortFields ...string) (result []*GDLongLine, err error) {
 	query := db.M{
 		"ValueIndex": ValueIndex,
@@ -263,6 +231,38 @@ func (o *_GDLongLineMgr) FindByCreateDate(CreateDate int64, limit int, offset in
 	defer session.Close()
 	err = q.All(&result)
 	return
+}
+func (o *_GDLongLineMgr) FindOneBySecucodeEndDate(Secucode string, EndDate int64) (result *GDLongLine, err error) {
+	query := db.M{
+		"Secucode": Secucode,
+		"EndDate":  EndDate,
+	}
+	session, q := GDLongLineMgr.NQuery(query, 1, 0, nil)
+	defer session.Close()
+	err = q.One(&result)
+	return
+}
+
+func (o *_GDLongLineMgr) MustFindOneBySecucodeEndDate(Secucode string, EndDate int64) (result *GDLongLine) {
+	result, _ = o.FindOneBySecucodeEndDate(Secucode, EndDate)
+	if result == nil {
+		result = GDLongLineMgr.NewGDLongLine()
+		result.Secucode = Secucode
+		result.EndDate = EndDate
+		result.Save()
+	}
+	return
+}
+
+func (o *_GDLongLineMgr) RemoveBySecucodeEndDate(Secucode string, EndDate int64) (err error) {
+	session, col := GDLongLineMgr.GetCol()
+	defer session.Close()
+
+	query := db.M{
+		"Secucode": Secucode,
+		"EndDate":  EndDate,
+	}
+	return col.Remove(query)
 }
 
 func (o *_GDLongLineMgr) Find(query interface{}, limit int, offset int, sortFields ...string) (result []*GDLongLine, err error) {

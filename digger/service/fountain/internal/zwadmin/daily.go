@@ -26,26 +26,45 @@ func GetDailyList(in *gin.Context) {
 		return
 	}
 
-	query := ezdb.M{}
-	var sortField string
+	query := ezdb.M{"CreateDate": getCreateDate()}
+	sortFields := []string{}
 	if req.GetName() != "" {
 		query["Name"] = req.GetName()
-	} else if req.GetSecucode() != "" {
+	}
+	if req.GetSecucode() != "" {
 		query["Secucode"] = utils.GetSecucode(req.GetSecucode())
-	} else if req.GetStartDate() > 0 && req.GetEndDate() > 0 {
-		sortField = "CreateDate"
+	}
+	if req.GetStartDate() > 0 && req.GetEndDate() > 0 {
+		sortFields = append(sortFields, "CreateDate")
 		query["CreateDate"] = ezdb.M{"$gte": req.GetStartDate() / 1000, "$lte": req.GetEndDate() / 1000}
-	} else if req.GetDecrease() > 0 {
-		sortField = "-PRise"
+	}
+	if req.GetDecrease() > 0 {
+		sortFields = append(sortFields, "-PRise")
 		query["PRise"] = ezdb.M{"$gte": req.GetDecrease()}
-	} else if req.GetDecrease() < 0 {
-		sortField = "PRise"
+	}
+	if req.GetDecrease() < 0 {
+		sortFields = append(sortFields, "PRise")
 		query["PRise"] = ezdb.M{"$lte": req.GetDecrease()}
-	} else {
-		query["CreateDate"] = getCreateDate()
+	}
+	if req.GetClosing() > 0 {
+		sortFields = append(sortFields, "Closing")
+		query["Closing"] = ezdb.M{"$gt": 0, "$lte": req.GetClosing()}
 	}
 
-	results, err := orm.GPDailyMgr.Find(query, int(req.GetLimit()), int(req.GetOffset()), sortField)
+	if req.GetMarket() > 0 {
+		sortFields = append(sortFields, "-Market")
+		query["$or"] = []ezdb.M{
+			{
+				"Market": ezdb.M{"$gt": 0, "$lte": req.GetMarket() * 100000000},
+			},
+			{
+				"Traded": ezdb.M{"$gt": 0, "$lte": req.GetMarket() * 100000000},
+			},
+		}
+	}
+
+	log.Infof("==>>TODO 232: %+v|%+v", query, sortFields)
+	results, err := orm.GPDailyMgr.Find(query, int(req.GetLimit()), int(req.GetOffset()), sortFields...)
 	if err != nil {
 		log.Errorf("get prompt buy failed: %q", err)
 		in.JSON(http.StatusForbidden, resp)
@@ -58,7 +77,7 @@ func GetDailyList(in *gin.Context) {
 	for _, result := range results {
 		resp.Data.Items = append(resp.Data.Items, &trpc.GPDailyItem{
 			Name:       result.Name,
-			Secucode:   result.Secucode,
+			Secucode:   getSecucodeWithExchange(result.Secucode),
 			Opening:    result.Opening,
 			Closing:    result.Closing,
 			Prise:      utils.TruncateFloat(result.Rise),
@@ -71,6 +90,7 @@ func GetDailyList(in *gin.Context) {
 			Traded:     result.Traded / 100000000,
 			BookRatio:  result.BookRatio,
 			CreateDate: time.Unix(result.CreateDate, 0).Format("2006-01-02"),
+			Focused:    getFocusByName(result.Name),
 		})
 	}
 

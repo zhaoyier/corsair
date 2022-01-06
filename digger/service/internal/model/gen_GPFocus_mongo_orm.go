@@ -28,16 +28,8 @@ func initGPFocusIndex() {
 	defer session.Close()
 
 	if err := collection.EnsureIndex(mgo.Index{
-		Key:        []string{"Secucode", "Disabled"},
-		Unique:     true,
-		Background: true,
-		Sparse:     true,
-	}); err != nil {
-		panic("ensureIndex digger.GPFocus SecucodeDisabled error:" + err.Error())
-	}
-
-	if err := collection.EnsureIndex(mgo.Index{
 		Key:        []string{"Secucode"},
+		Unique:     true,
 		Background: true,
 		Sparse:     true,
 	}); err != nil {
@@ -46,6 +38,7 @@ func initGPFocusIndex() {
 
 	if err := collection.EnsureIndex(mgo.Index{
 		Key:        []string{"Name"},
+		Unique:     true,
 		Background: true,
 		Sparse:     true,
 	}); err != nil {
@@ -180,10 +173,9 @@ func (o *_GPFocusMgr) NQuery(query interface{}, limit, offset int, sortFields []
 
 	return session, q
 }
-func (o *_GPFocusMgr) FindOneBySecucodeDisabled(Secucode string, Disabled bool) (result *GPFocus, err error) {
+func (o *_GPFocusMgr) FindOneBySecucode(Secucode string) (result *GPFocus, err error) {
 	query := db.M{
 		"Secucode": Secucode,
-		"Disabled": Disabled,
 	}
 	session, q := GPFocusMgr.NQuery(query, 1, 0, nil)
 	defer session.Close()
@@ -191,44 +183,53 @@ func (o *_GPFocusMgr) FindOneBySecucodeDisabled(Secucode string, Disabled bool) 
 	return
 }
 
-func (o *_GPFocusMgr) MustFindOneBySecucodeDisabled(Secucode string, Disabled bool) (result *GPFocus) {
-	result, _ = o.FindOneBySecucodeDisabled(Secucode, Disabled)
+func (o *_GPFocusMgr) MustFindOneBySecucode(Secucode string) (result *GPFocus) {
+	result, _ = o.FindOneBySecucode(Secucode)
 	if result == nil {
 		result = GPFocusMgr.NewGPFocus()
 		result.Secucode = Secucode
-		result.Disabled = Disabled
 		result.Save()
 	}
 	return
 }
 
-func (o *_GPFocusMgr) RemoveBySecucodeDisabled(Secucode string, Disabled bool) (err error) {
+func (o *_GPFocusMgr) RemoveBySecucode(Secucode string) (err error) {
 	session, col := GPFocusMgr.GetCol()
 	defer session.Close()
 
 	query := db.M{
 		"Secucode": Secucode,
-		"Disabled": Disabled,
 	}
 	return col.Remove(query)
 }
-func (o *_GPFocusMgr) FindBySecucode(Secucode string, limit int, offset int, sortFields ...string) (result []*GPFocus, err error) {
-	query := db.M{
-		"Secucode": Secucode,
-	}
-	session, q := GPFocusMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
-}
-func (o *_GPFocusMgr) FindByName(Name string, limit int, offset int, sortFields ...string) (result []*GPFocus, err error) {
+func (o *_GPFocusMgr) FindOneByName(Name string) (result *GPFocus, err error) {
 	query := db.M{
 		"Name": Name,
 	}
-	session, q := GPFocusMgr.Query(query, limit, offset, sortFields)
+	session, q := GPFocusMgr.NQuery(query, 1, 0, nil)
 	defer session.Close()
-	err = q.All(&result)
+	err = q.One(&result)
 	return
+}
+
+func (o *_GPFocusMgr) MustFindOneByName(Name string) (result *GPFocus) {
+	result, _ = o.FindOneByName(Name)
+	if result == nil {
+		result = GPFocusMgr.NewGPFocus()
+		result.Name = Name
+		result.Save()
+	}
+	return
+}
+
+func (o *_GPFocusMgr) RemoveByName(Name string) (err error) {
+	session, col := GPFocusMgr.GetCol()
+	defer session.Close()
+
+	query := db.M{
+		"Name": Name,
+	}
+	return col.Remove(query)
 }
 
 func (o *_GPFocusMgr) Find(query interface{}, limit int, offset int, sortFields ...string) (result []*GPFocus, err error) {

@@ -20,13 +20,23 @@ var (
 func GenZhouQiTicker() {
 	genZhouQiData()
 	// 更新任务
-	job.UpdateJob(trpc.FunctionType_FunctionTypeRecommend)
+	job.UpdateJob(trpc.FunctionType_FunctionTypeZhouQi)
 }
 
 func GenZhouQiOnce() {
 	zhouqiOnce.Do(func() {
 		genZhouQiData()
 	})
+}
+
+func GenZhouQiTemp(secucode string) {
+	result, err := orm.GPZhouQiMgr.FindOneBySecucode(secucode)
+	if err != nil {
+		log.Errorf("get zhouqi failed: %s|%q", secucode, err)
+		return
+	}
+
+	updateZhouQiState(result)
 }
 
 func genZhouQiData() {
@@ -36,14 +46,20 @@ func genZhouQiData() {
 	var data orm.GPZhouQi
 	iter := c.Find(ezdb.M{}).Batch(1000).Prefetch(0.25).Iter()
 	for iter.Next(&data) {
-		data.UpdateDate = time.Now().Unix()
-		data.PresentPrice = getPresentPrice(data.Secucode)
-		data.State = genZhouQiState(&data)
-
-		if _, err := (&data).Save(); err != nil {
-			log.Errorf("update zhouqi price failed: %s|%q", data.Secucode, err)
-		}
+		updateZhouQiState(&data)
 	}
+}
+
+func updateZhouQiState(data *orm.GPZhouQi) error {
+	data.UpdateDate = time.Now().Unix()
+	data.PresentPrice = getPresentPrice(data.Secucode)
+	data.State = genZhouQiState(data)
+
+	if _, err := (data).Save(); err != nil {
+		log.Errorf("update zhouqi price failed: %s|%q", data.Secucode, err)
+		return err
+	}
+	return nil
 }
 
 func getPresentPrice(secucode string) float64 {

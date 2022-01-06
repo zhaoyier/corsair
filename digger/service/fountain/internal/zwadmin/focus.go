@@ -69,20 +69,26 @@ func GetFocusList(in *gin.Context) {
 	}
 
 	query := ezdb.M{}
-	sortField := "-CreateDate"
+	sortFields := []string{}
 	if req.GetName() != "" {
 		query["Name"] = req.GetName()
 	}
 	if req.GetSecucode() != "" {
 		query["Secucode"] = req.GetSecucode()
 	}
+	if req.GetState() > 0 {
+		sortFields = append(sortFields, "-State")
+		query["State"] = ezdb.M{"$gte": req.GetState()}
+	}
+
 	if req.GetDisabled() == trpc.DisabledType_DisabledTypeValid {
 		query["Disabled"] = false
 	} else if req.GetDisabled() == trpc.DisabledType_DisabledTypeInvalid {
 		query["Disabled"] = true
 	}
 
-	results, err := orm.GPFocusMgr.Find(query, int(req.GetLimit()), int(req.GetOffset()), sortField)
+	sortFields = append(sortFields, "-CreateDate")
+	results, err := orm.GPFocusMgr.Find(query, int(req.GetLimit()), int(req.GetOffset()), sortFields...)
 	if err != nil {
 		log.Errorf("get prompt buy failed: %q", err)
 		in.JSON(http.StatusForbidden, resp)
@@ -106,6 +112,7 @@ func GetFocusList(in *gin.Context) {
 			HoldFocus:     getHoldFocus(result.Secucode),
 			TotalNumRatio: getTotalNumRatio(result.Secucode),
 			Traded:        getTraded(result.Secucode),
+			State:         getFocusState(result.State),
 		})
 	}
 
@@ -131,7 +138,7 @@ func CancelFocus(in *gin.Context) {
 	}
 
 	// query := ezdb.M{"Secucode": req.GetSecucode()}
-	result, err := orm.GPFocusMgr.FindOneBySecucodeDisabled(req.GetSecucode(), false)
+	result, err := orm.GPFocusMgr.FindOneBySecucode(req.GetSecucode())
 	if err != nil {
 		log.Infof("==>>TODO 123: %+v", nil)
 		in.JSON(http.StatusNotFound, resp)
@@ -232,4 +239,17 @@ func getDiffPrice(data *orm.GPFocus) float64 {
 		return utils.TruncateFloat(data.PresentPrice - data.ExpectPrice)
 	}
 	return utils.TruncateFloat(data.PresentPrice - data.FocusPrice)
+}
+
+func getFocusState(state int32) string {
+	switch trpc.GPFocusState(state) {
+	case trpc.GPFocusState_FocusStatePrepare:
+		return "准备"
+	case trpc.GPFocusState_FocusStateStart:
+		return "开始"
+	case trpc.GPFocusState_FocusStateProgress:
+		return "进行中"
+	default:
+		return "待定"
+	}
 }

@@ -138,7 +138,7 @@ func GDRenshuList(in *gin.Context) {
 				HoldRatioTotal:     result.HoldRatioTotal,
 				FreeholdRatioTotal: result.FreeholdRatioTotal,
 				PresentPrice:       getPresentPrice(result.Secucode),
-				Focused:            getFocus(result.Secucode),
+				Focused:            getFocusBySecucode(result.Secucode),
 			})
 			wg.Done()
 		}(&wg)
@@ -160,14 +160,6 @@ func GDRenshuList(in *gin.Context) {
 	in.JSON(http.StatusOK, resp)
 }
 
-func getName(secucode string) string {
-	result, err := orm.CNSecucodeMgr.FindOneBySecucode(secucode)
-	if err != nil {
-		return ""
-	}
-	return result.Name
-}
-
 func getSecucode(name string) string {
 	result, err := orm.CNSecucodeMgr.FindOneByName(name)
 	if err != nil {
@@ -183,15 +175,4 @@ func getPresentPrice(secucode string) float64 {
 		return 0
 	}
 	return utils.TruncateFloat(result.Closing)
-}
-
-func getFocus(secucode string) string {
-	result, err := orm.GPFocusMgr.FindOneBySecucodeDisabled(secucode, false)
-	if err != nil {
-		return "关注"
-	}
-	if result == nil {
-		return "关注"
-	}
-	return "取消关注"
 }

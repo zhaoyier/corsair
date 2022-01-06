@@ -225,8 +225,7 @@ GPFocus:
     - ExpectPrice: float64    #预期买入价格
     - CreateDate: datetime  
     - UpdateDate: datetime
-  uniques: [[Secucode,Disabled]]
-  indexes: [[Secucode],[Name]]
+  uniques: [[Secucode],[Name]]
 
 # 周期
 GPZhouQi:

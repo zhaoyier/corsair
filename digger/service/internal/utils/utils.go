@@ -134,6 +134,18 @@ func GetSecucode(secucode string) string {
 	return ""
 }
 
+func GetPercent(a, b float64) float64 {
+	if b < 0 {
+		return 0
+	}
+	ratio := a / b
+	if ratio > 1 {
+		return 0
+	}
+	result := TruncateFloat(ratio) * 100
+	return result
+}
+
 func String2Float64(data string) float64 {
 	result, err := strconv.ParseFloat(data, 64)
 	if err != nil {

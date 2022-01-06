@@ -1,4 +1,4 @@
-package recommend
+package zwadmin
 
 import (
 	"net/http"
@@ -127,7 +127,7 @@ func GetRecommend(in *gin.Context) {
 				UpdateDate:    utils.TS2Date(result.UpdateDate),
 				PresentPrice:  result.PresentPrice,
 				ReferDecrease: getReferDecrease(result.Secucode),
-				Focused:       getFocus(result.Secucode),
+				Focused:       getFocusBySecucode(result.Secucode),
 			})
 
 			wg.Done()
@@ -258,15 +258,4 @@ func getRMPriceRation(price string, present float64) int32 {
 		return 100
 	}
 	return int32(((present - rmPrice) / rmPrice) * 100)
-}
-
-func getFocus(secucode string) string {
-	result, err := orm.GPFocusMgr.FindOneBySecucodeDisabled(secucode, false)
-	if err != nil {
-		return "关注"
-	}
-	if result == nil {
-		return "关注"
-	}
-	return "取消关注"
 }

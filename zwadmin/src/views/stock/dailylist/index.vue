@@ -1,20 +1,26 @@
 <template>
   <div class="dashboard-container">
     <div class="app-container">
-    <el-form :inline="true" :model="dailyForm" class="demo-form-inline">
+    <el-form :inline="true" :model="queryForm" class="demo-form-inline">
       <el-form-item label="名称">
-        <el-input v-model="dailyForm.name" placeholder="茅台股份"></el-input>
+        <el-input v-model="queryForm.name" placeholder="茅台股份"></el-input>
       </el-form-item>
       <el-form-item label="代码">
-        <el-input v-model="dailyForm.secucode" placeholder="000001"></el-input>
+        <el-input v-model="queryForm.secucode" placeholder="000001"></el-input>
       </el-form-item>
       <el-form-item label="跌幅">
-        <el-input-number v-model="dailyForm.decrease" :step="2"  :min="2" :max="20"  step-strictly></el-input-number>
+        <el-input-number v-model="queryForm.decrease" :step="2"  :min="2" :max="20"  step-strictly></el-input-number>
+      </el-form-item>
+      <el-form-item label="收盘价">
+        <el-input-number v-model="queryForm.closing" :precision="2" :step="0.5" :max="10000"></el-input-number>
+      </el-form-item>
+      <el-form-item label="市值">
+        <el-input-number v-model="queryForm.market" :precision="2" :step="5" :max="10000"></el-input-number>
       </el-form-item>
       <el-form-item label="日期">
         <el-date-picker
           @input="selectDate"
-          v-model="dailyForm.dateRange"
+          v-model="queryForm.dateRange"
           value-format="timestamp"
           type="daterange"
           range-separator="至"
@@ -77,6 +83,11 @@
           {{ scope.row.minPrice }}
         </template>
       </el-table-column>
+      <el-table-column label="市值(亿)" width="110" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.market }}
+        </template>
+      </el-table-column>
       <el-table-column label="流通市值(亿)" width="110" align="center">
         <template slot-scope="scope">
           {{ scope.row.traded }}
@@ -89,12 +100,12 @@
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="220">
       <template slot-scope="scope">
-        <!-- <el-button
-          @click.native.prevent="modifyRow(scope.$index, tableData)"
+        <el-button
+          @click.native.prevent="onConfirmFocus(scope.$index, tableData)"
           type="text"
           size="small">
-          修改
-        </el-button> -->
+          {{ scope.row.focused }}
+        </el-button>
         <el-divider direction="vertical"></el-divider>
         <el-button
           @click.native.prevent="updateDaily(scope.$index, tableData)"
@@ -107,10 +118,10 @@
     </el-table>
     <div class="gva-pagination">
       <el-pagination
-        :current-page=dailyForm.pageNum
-        :page-size=dailyForm.pageSize
+        :current-page=queryForm.pageNum
+        :page-size=queryForm.pageSize
         :page-sizes="[10, 30, 50, 100]"
-        :total=dailyForm.total
+        :total=queryForm.total
         layout="total, sizes, prev, pager, next, jumper"
         @current-change="handleCurrentChange"
         @size-change="handleSizeChange"
@@ -120,7 +131,7 @@
 </template>
 
 <script>
-import { getDailyList } from '@/api/stock'
+import { getDailyList, confirmFocus } from '@/api/stock'
 
 export default {
   filters: {
@@ -138,7 +149,7 @@ export default {
       list: null,
       timer:null,
       listLoading: true,
-      dailyForm: {
+      queryForm: {
         pageNum: 1,
         pageSize: 20,
         total: 0,
@@ -149,6 +160,8 @@ export default {
         dateRange: '',
         startDate: 0,
         endDate: 0,
+        closing: 0,
+        market: 0,
       }
     }
   },
@@ -163,29 +176,29 @@ export default {
     fetchData() {
       this.listLoading = true
       var req = {
-        name: this.dailyForm.name,
-        secucode: this.dailyForm.secucode,
-        decrease: this.dailyForm.decrease,
-        startDate: this.dailyForm.startDate,
-        endDate: this.dailyForm.endDate,
-        limit: this.dailyForm.pageSize,
-        offset: (this.dailyForm.pageNum-1)*this.dailyForm.pageSize,
+        name: this.queryForm.name,
+        secucode: this.queryForm.secucode,
+        decrease: this.queryForm.decrease,
+        startDate: this.queryForm.startDate,
+        endDate: this.queryForm.endDate,
+        closing: this.queryForm.closing,
+        limit: this.queryForm.pageSize,
+        market: this.queryForm.market,
+        offset: (this.queryForm.pageNum-1)*this.queryForm.pageSize,
       }
       getDailyList(req).then(response => {
         this.list = response.data.items
         this.listLoading = false
-        this.dailyForm.total = response.data.total
-        this.dailyForm.startDate = 0
-        this.dailyForm.endDate = 0
+        this.queryForm.total = response.data.total
       })
     },
     handleCurrentChange(val) {
-      this.dailyForm.pageNum = val
-
+      this.queryForm.pageNum = val
       this.fetchData()
     },
-    handleSizeChange() {
-
+    handleSizeChange(val) {
+      this.queryForm.pageSize = val
+      this.fetchData()
     },
     updateDaily(index, rows) {
       var data = rows[index]
@@ -193,16 +206,24 @@ export default {
       console.log("==>>TODO secucode is 02: ", secucode)
     },
     selectDate(val) {
-      console.log("==>>TODO date is: ", val[0], val[1])
-      this.dailyForm.startDate = val[0]
-      this.dailyForm.endDate = val[1]
+      this.queryForm.startDate = val[0]
+      this.queryForm.endDate = val[1]
     },
     onQuerySubmit(val) {
-      console.log("==>>TODO query is: ", val)
       this.fetchData()
-    }
+    },
+    onConfirmFocus(index, rows) {
+      var data = rows[index]
+      var req = {
+        name : data.name,
+        secucode: data.secucode,
+        presentPrice: data.closing,
+      }
 
-
+      confirmFocus(req).then(response=>{
+        this.fetchData()
+      })
+    },
   }
 }
 

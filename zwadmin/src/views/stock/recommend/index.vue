@@ -34,10 +34,10 @@
     <el-table-column prop="secucode" label="代码" width="120"></el-table-column>
     <el-table-column prop="rMIndex" label="推荐指数" width="120"></el-table-column>
     <el-table-column class-name="status-col" label="状态" width="110" align="center">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.state | statusFilter" effect="dark">{{ scope.row.state }}</el-tag>
-        </template>
-      </el-table-column>
+      <template slot-scope="scope">
+        <el-tag :type="scope.row.state | statusFilter" effect="dark">{{ scope.row.state }}</el-tag>
+      </template>
+    </el-table-column>
     <el-table-column prop="pDecrease" label="最近跌幅" width="120"></el-table-column>
     <el-table-column class-name="status-col" label="推荐价格" width="160">
       <template slot-scope="scope">
@@ -72,7 +72,7 @@
         </el-button>
         <el-divider direction="vertical"></el-divider>
         <el-button
-          @click.native.prevent="confirmFocus(scope.$index, tableData)"
+          @click.native.prevent="onConfirmFocus(scope.$index, tableData)"
           type="text"
           size="small">
           {{ scope.row.focused }}
@@ -214,7 +214,7 @@ export default {
       this.modifyForm.priceDecrease = data.pDecrease
       this.modifyForm.name = data.name
     },
-    confirmFocus(index, rows) {
+    onConfirmFocus(index, rows) {
       var data = rows[index]
       var req = {
         name : data.name,

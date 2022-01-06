@@ -8,10 +8,20 @@
       <el-form-item label="代码">
         <el-input v-model="queryForm.secucode" placeholder="000001"></el-input>
       </el-form-item>
-      <el-form-item label="状态">
+      <el-form-item label="关注">
         <el-select v-model="queryForm.disabled" clearable placeholder="全部">
           <el-option
-            v-for="item in queryForm.options"
+            v-for="item in queryForm.focusOpts"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="状态">
+        <el-select v-model="queryForm.state" clearable placeholder="全部">
+          <el-option
+            v-for="item in queryForm.stateOpts"
             :key="item.value"
             :label="item.label"
             :value="item.value">
@@ -41,6 +51,11 @@
           <span>{{ scope.row.secucode }}</span>
         </template>
       </el-table-column>
+      <el-table-column class-name="status-col" label="状态" width="110" align="center">
+      <template slot-scope="scope">
+        <el-tag :type="scope.row.state | statusFilter" effect="dark">{{ scope.row.state }}</el-tag>
+      </template>
+    </el-table-column>
       <el-table-column label="价格差" width="110" align="center">
         <template slot-scope="scope">
           <el-tag type="danger" effect="light">{{ scope.row.diffPrice }}</el-tag>
@@ -234,9 +249,10 @@ export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
+        "待定": 'success',
+        "准备": 'info',
+        "开始": 'warning',
+        "进行中": 'danger',
       }
       return statusMap[status]
     }
@@ -256,7 +272,8 @@ export default {
         name:'',
         secucode: '',
         disabled: 0,
-        options: [{
+        state: 0,
+        focusOpts: [{
           value: 0,
           label: '全部'
         }, {
@@ -265,6 +282,19 @@ export default {
         }, {
           value: 2,
           label: '取消关注'
+        }],
+        stateOpts: [{
+          value: 0,
+          label: '全部'
+        }, {
+          value: 1,
+          label: '准备'
+        }, {
+          value: 2,
+          label: '开始'
+        }, {
+          value: 3,
+          label: '进行中'
         }],
       },
       updateForm: {
@@ -297,6 +327,7 @@ export default {
         name: this.queryForm.name,
         secucode: this.queryForm.secucode,
         disabled: this.queryForm.disabled,
+        state: this.queryForm.state,
         limit: this.paginationForm.pageSize,
         offset: (this.paginationForm.pageNum-1)*this.paginationForm.pageSize,
       }

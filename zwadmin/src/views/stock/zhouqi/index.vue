@@ -8,15 +8,32 @@
         <el-form-item label="代码">
             <el-input v-model="queryForm.secucode" placeholder="SZ.000001"></el-input>
         </el-form-item>
+        <el-form-item label="关注">
+        <el-select v-model="queryForm.disabled" clearable placeholder="全部">
+          <el-option
+            v-for="item in queryForm.focusOpts"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+        <el-form-item label="状态">
+        <el-select v-model="queryForm.state" clearable placeholder="全部">
+          <el-option
+            v-for="item in queryForm.options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="onQuerySubmit">查询</el-button>
         </el-form-item>
         </el-form>
         <el-button style="float:right" type="primary" @click="onCreateSubmit">新建周期</el-button>
     </div>
-    <!-- <div style="float:right">
-        <el-button type="primary" @click="onQuerySubmit">新建周期</el-button>
-    </div> -->
     <el-table
       v-loading="listLoading"
       :data="tableData"
@@ -36,7 +53,7 @@
       </el-table-column>
       <el-table-column label="状态" width="110" align="center">
         <template slot-scope="scope">
-          <el-tag type="danger" effect="dark">{{ scope.row.state }}</el-tag>
+          <el-tag :type="scope.row.state | statusFilter" effect="dark">{{ scope.row.state }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="当前价格" width="110" align="center">
@@ -79,7 +96,7 @@
         </el-button>
         <el-divider direction="vertical"></el-divider>
         <el-button
-          @click.native.prevent="klineChart(scope.$index, tableData)"
+          @click.native.prevent="onKlineChart(scope.$index, tableData)"
           type="text"
           size="small">
           K线图
@@ -100,7 +117,7 @@
     </div>
     <div>
       <el-dialog title="K线查询" :visible.sync="lineChartForm.lineChartVisible">
-        <el-tabs v-model="lineChartForm.activeName" @tab-click="selectTabClick">
+        <el-tabs v-model="lineChartForm.activeName" @tab-click="onSelectTabClick">
           <el-tab-pane label="日线" name="date">
             <el-image :src="lineChartForm.lineChartSrc"></el-image>
           </el-tab-pane>
@@ -112,10 +129,19 @@
           </el-tab-pane>
         </el-tabs>
       </el-dialog>
+      <!-- <el-dialog title="K线查询" :visible.sync="lineChartForm.lineChartVisible">
+        <el-tabs @tab-click="onSelectTabClick">
+          <el-tab-pane label="用户管理" name="first">用户管理</el-tab-pane>
+          <el-tab-pane label="配置管理" name="second">配置管理</el-tab-pane>
+          <el-tab-pane label="角色管理" name="third">角色管理</el-tab-pane>
+          <el-tab-pane label="定时任务补偿" name="fourth">定时任务补偿</el-tab-pane>
+        </el-tabs>
+      </el-dialog> -->
+
     </div>
     <div>
       <el-drawer
-        title="我是标题"
+        title="更新周期信息"
         :visible.sync="updateForm.updateZhouQiDrawer"
         :with-header="true">
         <el-form :model="updateForm" ref="updateForm" label-width="100px" class="demo-ruleForm">
@@ -137,7 +163,7 @@
               { type: 'number', message: '价格必须为数字值'}
             ]"
           >
-            <el-input type="expectMin" v-model.number="updateForm.expectMin" autocomplete="off"></el-input>
+            <el-input-number type="expectMin" v-model="updateForm.expectMin" :precision="2" :step="0.5" :max="10"></el-input-number>
           </el-form-item>
           <el-form-item
             label="预期最高价"
@@ -147,10 +173,9 @@
               { type: 'number', message: '价格必须为数字值'}
             ]"
           >
-            <el-input type="expectMax" v-model.number="updateForm.expectMax" autocomplete="off"></el-input>
+            <el-input-number type="expectMax" v-model="updateForm.expectMax" :precision="2" :step="0.5" :max="10"></el-input-number>
           </el-form-item>
-          <el-form-item label="是否删除">
-            <!-- <el-switch v-model="updateForm.disabled"></el-switch> -->
+          <el-form-item label="取消关注">
             <el-switch
              v-model="updateForm.disabled"
              active-color="#13ce66"
@@ -180,7 +205,7 @@
 </template>
 
 <script>
-import { gpzhouQiList, cancelFocus, updateGPZhouQi } from '@/api/stock'
+import { gpzhouQiList, updateGPZhouQi } from '@/api/stock'
 import { parseTime } from '@/utils/index'
 
 
@@ -188,9 +213,9 @@ export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
+        "已达时间": 'danger',
+        "已达价格": 'warning',
+        "待定": 'success'
       }
       return statusMap[status]
     },
@@ -200,6 +225,7 @@ export default {
   },
   data() {
     return {
+      activeName: 'second',
       tableData: null,
       timer:null,
       listLoading: true,
@@ -212,6 +238,28 @@ export default {
       queryForm: {
         name:'',
         secucode: '',
+        state:0,
+        disabled: 0,
+        options: [{
+          value: 0,
+          label: '全部'
+        }, {
+          value: 1,
+          label: '已达时间'
+        }, {
+          value: 2,
+          label: '已达价格'
+        }],
+        focusOpts: [{
+          value: 0,
+          label: '全部'
+        }, {
+          value: 1,
+          label: '已关注'
+        }, {
+          value: 2,
+          label: '取消关注'
+        }],
       },
       updateForm: {
         secucode: '',
@@ -232,9 +280,6 @@ export default {
   },
   mounted(){
     this.fetchData();
-    // this.timer = setInterval(() => {
-    //     setTimeout(this.fetchData, 0)
-    // }, 1000*600)
   },
 
   methods: {
@@ -243,6 +288,8 @@ export default {
       var req = {
         name: this.queryForm.name,
         secucode: this.queryForm.secucode,
+        state: this.queryForm.state,
+        disabled: this.queryForm.disabled,
         limit: this.paginationForm.pageSize,
         offset: (this.paginationForm.pageNum-1)*this.paginationForm.pageSize,
       }
@@ -262,14 +309,15 @@ export default {
     onQuerySubmit(val) {
       this.fetchData()
     },
-    klineChart(index, rows) {//日线图
+    onKlineChart(index, rows) {//日线图
       var data = rows[index]
       var secucode = data.secucode.split('.').join("").toLowerCase()
       this.lineChartForm.secucode = secucode
+      this.lineChartForm.activeName = 'date'
       this.lineChartForm.lineChartVisible = !this.lineChartForm.lineChartVisible
       this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/daily/n/'+secucode+'.gif'
     },
-    selectTabClick(tab) {
+    onSelectTabClick(tab, event) {
       var secucode = this.lineChartForm.secucode
       if (tab.name === "date") {
         this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/daily/n/'+secucode+'.gif'
@@ -290,11 +338,7 @@ export default {
       this.updateForm.expectStart = data.expectStart*1000
       this.updateForm.expectEnd = data.expectEnd*1000
 
-    //   var tt = new Date(data.expectStart*1000)
-      console.log("==>>TODO 321: ",data.disabled, this.updateForm.disabled)
-      console.log("==>>TODO 322: ", parseTime(data.expectStart*1000))
-    //   this.updateForm.expectDate = [data.expectStart*1000, data.expectEnd*1000]
-       this.updateForm.expectDate =  [new Date(data.expectStart*1000), new Date(data.expectEnd*1000)]
+      this.updateForm.expectDate =  [new Date(data.expectStart*1000), new Date(data.expectEnd*1000)]
     },
     onResetForm(formName) {
       this.$refs[formName].resetFields();
@@ -332,7 +376,6 @@ export default {
         this.updateForm.updateZhouQiDrawer = true
     },
     onSelectDate(val) {
-      console.log("==>>TODO date is: ", val[0], val[1])
       this.updateForm.expectStart = val[0]
       this.updateForm.expectEnd = val[1]
     },

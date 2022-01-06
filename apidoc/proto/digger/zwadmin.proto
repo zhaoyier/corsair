@@ -73,6 +73,7 @@ message GPZhouQiItem {
     string updateDate = 9;
     repeated GPZhouQiRemark remarks = 15;
     string state = 16;   //状态
+    bool disabled = 20;
 }
 
 message AddGPZhouQiReq {
@@ -94,6 +95,8 @@ message GPZhouQiListReq {
     string secucode = 2;
     int64 expectStart = 3;
     int64 expectEnd = 4;
+    int32 state = 5;
+    DisabledType disabled = 6;
     int32 limit = 10;
     int32 offset = 11;
 }
@@ -249,6 +252,8 @@ message GetDailyListReq {
     double decrease = 3;
     int64 startDate = 5;
     int64 endDate = 6;
+    double closing = 7;
+    int64 market = 8;
     int32 limit = 10;
     int32 offset = 11;
 }
@@ -268,6 +273,7 @@ message GPDailyItem {
     int64 traded = 14;      //流通市值
     double bookRatio = 16;  //市净率
     string createDate = 20; //创建日期
+    string focused = 21;    //关注
 }
 
 message GPDailyData {
@@ -280,7 +286,7 @@ message GetDailyListResp {
     GPDailyData data = 2;
 }
 
-enum FocusState {
+enum GPFocusState {
     FocusStateUnknown = 0;
     FocusStatePrepare = 1;  //准备
     FocusStateStart = 2;    //开始
@@ -291,6 +297,7 @@ message FocusListReq {
     string name = 1;
     string secucode = 2;
     DisabledType disabled = 3;
+    int32 state = 4;
     int32 limit = 10;
     int32 offset = 11;
 }
@@ -308,6 +315,7 @@ message GPFocusItem {
     string holdFocus = 15;      //最近集中度
     double totalNumRatio = 16;  //最近一月股东人数变化
     int64 traded = 17;      //流通市值
+    string state = 20;      //状态
 }
 
 message GPFocusData {

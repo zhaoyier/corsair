@@ -46,7 +46,7 @@ func Start() {
 		}
 		// 关注
 		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeFocus) {
-			dawdle.GenFocusTicker()
+			dawdle.GenFocusStateTicker()
 		}
 		// 周期
 		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeZhouQi) {

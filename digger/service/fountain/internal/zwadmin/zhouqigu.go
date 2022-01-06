@@ -104,7 +104,17 @@ func GPZhouQiList(in *gin.Context) {
 	if req.GetExpectStart() > 0 && req.GetExpectEnd() > 0 {
 		query["ExpectStart"] = ezdb.M{"$gte": req.GetExpectStart() / 1000, "$lte": req.GetExpectEnd() / 1000}
 	}
+	if req.GetState() > 0 {
+		sortFields = append(sortFields, "-State")
+		query["State"] = ezdb.M{"$gte": req.GetState()}
+	}
+	if req.GetDisabled() == trpc.DisabledType_DisabledTypeValid {
+		query["Disabled"] = false
+	} else if req.GetDisabled() == trpc.DisabledType_DisabledTypeInvalid {
+		query["Disabled"] = true
+	}
 
+	sortFields = append(sortFields, "-CreateDate")
 	results, err := orm.GPZhouQiMgr.Find(query, int(req.GetLimit()), int(req.GetOffset()), sortFields...)
 	if err != nil {
 		log.Errorf("get prompt buy failed: %q", err)
@@ -131,7 +141,8 @@ func GPZhouQiList(in *gin.Context) {
 				ExpectEnd:    result.ExpectEnd,
 				UpdateDate:   time.Unix(result.UpdateDate, 0).Format("2006-01-02"),
 				Remarks:      make([]*trpc.GPZhouQiRemark, 0),
-				State:        "result.State",
+				Disabled:     result.Disabled,
+				State:        getZhouQiState(result.State),
 			}
 
 			for _, val := range result.Remarks {
@@ -183,4 +194,15 @@ func AddGPZhouQiRemark(in *gin.Context) {
 
 	resp.Code = 20000
 	in.JSON(http.StatusOK, resp)
+}
+
+func getZhouQiState(state int32) string {
+	switch trpc.GPZhouQiState(state) {
+	case trpc.GPZhouQiState_GPZhouQiStateDate:
+		return "已达时间"
+	case trpc.GPZhouQiState_GPZhouQiStatePrice:
+		return "已达价格"
+	default:
+		return "待定"
+	}
 }
