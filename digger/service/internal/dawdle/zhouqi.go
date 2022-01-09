@@ -77,7 +77,7 @@ func getPresentPrice(secucode string) float64 {
 func genZhouQiState(data *orm.GPZhouQi) int32 {
 	state := trpc.GPZhouQiState_GPZhouQiStateUnknown
 	now := time.Now().Unix()
-	if now > data.ExpectStart {
+	if data.ExpectStart > 0 && now > data.ExpectStart {
 		state = trpc.GPZhouQiState_GPZhouQiStateDate
 	}
 

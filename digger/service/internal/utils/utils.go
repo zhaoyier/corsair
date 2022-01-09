@@ -135,7 +135,7 @@ func GetSecucode(secucode string) string {
 }
 
 func GetPercent(a, b float64) float64 {
-	if b < 0 {
+	if b <= 0 {
 		return 0
 	}
 	ratio := a / b

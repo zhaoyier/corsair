@@ -1,7 +1,6 @@
 package zwadmin
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
@@ -23,8 +22,6 @@ func Login(in *gin.Context) {
 }
 
 func UserInfo(in *gin.Context) {
-	fmt.Printf("==>>TODO 201: %+v\n", nil)
-
 	resp := &trpc.UserInfoResp{
 		Code: 20000,
 		Data: &trpc.UserInfoData{

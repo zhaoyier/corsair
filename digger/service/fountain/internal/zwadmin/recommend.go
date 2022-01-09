@@ -71,7 +71,6 @@ func GetRecommend(in *gin.Context) {
 		},
 	}
 	if err := in.BindJSON(&req); err != nil {
-		log.Infof("==>>TODO 1011: %+v|%+v", req, err)
 		in.JSON(http.StatusBadRequest, resp)
 		return
 	}
@@ -96,8 +95,6 @@ func GetRecommend(in *gin.Context) {
 	if req.GetLimit() <= 0 {
 		req.Limit = 20
 	}
-
-	log.Infof("==>>TODO 1012: %+v", req)
 
 	results, err := orm.GPRecommendMgr.Find(query, int(req.Limit), int(req.GetOffset()), "-PDecrease", "-State", "GDDecrease")
 	if err != nil {
@@ -143,17 +140,14 @@ func GetRecommend(in *gin.Context) {
 }
 
 func UpdateRecommend(in *gin.Context) {
-	log.Infof("==>>TODO 1010: %+v", nil)
 	var req trpc.UpdateRecommendReq
 	resp := &trpc.UpdateRecommendResp{
 		Code: 21000,
 	}
 	if err := in.BindJSON(&req); err != nil {
-		log.Infof("==>>TODO 1011: %+v", req)
 		in.JSON(http.StatusBadRequest, resp)
 		return
 	}
-	log.Infof("==>>TODO 1012: %+v", req)
 	result := orm.GPManualDecreaseMgr.MustFindOneBySecucodeDisabled(req.GetSecucode(), false)
 	result.Name = req.GetName()
 	result.DecreaseTag = req.GetPriceDecrease()

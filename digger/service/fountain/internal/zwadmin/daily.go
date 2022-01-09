@@ -63,7 +63,6 @@ func GetDailyList(in *gin.Context) {
 		}
 	}
 
-	log.Infof("==>>TODO 232: %+v|%+v", query, sortFields)
 	results, err := orm.GPDailyMgr.Find(query, int(req.GetLimit()), int(req.GetOffset()), sortFields...)
 	if err != nil {
 		log.Errorf("get prompt buy failed: %q", err)

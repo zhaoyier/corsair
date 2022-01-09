@@ -1,6 +1,7 @@
 <template>
   <div class="dashboard-container">
-    <div class="app-container">
+    <el-row type="flex">
+        <el-col :span="18">
         <el-form :inline="true" :model="queryForm" class="demo-form-inline">
         <el-form-item label="名称">
             <el-input v-model="queryForm.name" placeholder=""></el-input>
@@ -8,22 +9,18 @@
         <el-form-item label="代码">
             <el-input v-model="queryForm.secucode" placeholder="000001"></el-input>
         </el-form-item>
-        <el-form-item label="增减率">
-            <el-input-number v-model="queryForm.totalRatio" :step="2"  :min="-100" :max="100"  step-strictly></el-input-number>
+        <el-form-item label="股东增减">
+            <el-input-number v-model="queryForm.totalNumRatio" :step="2"  :min="-100" :max="1000"  step-strictly></el-input-number>
         </el-form-item>
-        <el-form-item label="排序">
-            <el-select v-model="queryForm.sortTyp" clearable placeholder="全部" @change='onSelectValue'>
-            <el-option
-                v-for="item in queryForm.options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-            </el-option>
-            </el-select>
+        <el-form-item label="价格增减">
+            <el-input-number v-model="queryForm.priceRatio" :step="2"  :min="-100" :max="1000"  step-strictly></el-input-number>
         </el-form-item>
-        <el-form-item label="日期">
+        <el-form-item label="十大股东增减">
+            <el-input-number v-model="queryForm.holdRatio" :step="2"  :min="-100" :max="1000"  step-strictly></el-input-number>
+        </el-form-item>
+        <el-form-item label="发布日期">
             <el-date-picker
-            @input="onSelectDate"
+            @input="onSelectQueryDate"
             v-model="queryForm.dateRange"
             value-format="timestamp"
             type="daterange"
@@ -36,8 +33,13 @@
             <el-button type="primary" @click="onQuerySubmit">查询</el-button>
         </el-form-item>
         </el-form>
-    </div>
-    <el-divider></el-divider>
+        </el-col>
+        <el-col :offset="1" :span="5" align="middle">
+        <div>
+            <el-button type="primary" @click="onResetSubmit">重建数据</el-button>
+        </div>
+        </el-col>
+    </el-row>
     <el-table
       v-loading="listLoading"
       :data="tableData"
@@ -55,44 +57,54 @@
           <span>{{ scope.row.secucode }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="持仓人数" width="110" align="center">
+      <el-table-column label="股东增减率" width="110" align="center" sortable>
         <template slot-scope="scope">
-          <el-tag type="warning" effect="dark">{{ scope.row.holderTotalNum }}</el-tag>
+          <el-tag type="warning" effect="dark">{{ scope.row.holderRatio }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="totalNumRatio" label="持仓变化率" width="140" align="center" sortable>
+      <el-table-column label="价格变化率(%)" width="140" align="center" sortable>
         <template slot-scope="scope">
-          {{ scope.row.totalNumRatio }}
-        </template>
-      </el-table-column>
-      <el-table-column label="发布时间" width="110" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.releaseDate }}
-        </template>
-      </el-table-column>
-      <el-table-column label="集中度" width="110" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.holdFocus }}
+          {{ scope.row.priceRatio }}
         </template>
       </el-table-column>
       <el-table-column label="当前价" width="110" align="center">
         <template slot-scope="scope">
-            <el-tag type="danger" effect="light">{{ scope.row.presentPrice }}</el-tag>
+          {{ scope.row.priceMin }}
         </template>
       </el-table-column>
-      <el-table-column label="收盘价" width="110" align="center">
+      <el-table-column label="最高价" width="110" align="center">
         <template slot-scope="scope">
-          <el-tag type="warning" effect="light">{{ scope.row.price }}</el-tag>
+          {{ scope.row.priceMax }}
         </template>
       </el-table-column>
-      <el-table-column label="非流通股东率" width="110" align="center">
+      <el-table-column label="最近发布日期" width="110" align="center">
         <template slot-scope="scope">
-          {{ scope.row.holdRatioTotal }}
+          <el-tag type="success" effect="light">{{ scope.row.endDate|dateFilter }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="流通股东率" width="110" align="center">
+      <el-table-column label="股东人数" width="110" align="center">
         <template slot-scope="scope">
-          {{ scope.row.freeholdRatioTotal }}
+          {{ scope.row.holderNum }}
+        </template>
+      </el-table-column>
+      <el-table-column label="筹码集中度" width="110" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.holdFocus }}
+        </template>
+      </el-table-column>
+      <el-table-column label="TOP10股东" width="110" align="center">
+        <template slot-scope="scope">
+            <el-tag type="danger" effect="light">{{ scope.row.holdRatio }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="TOP10流通" width="110" align="center">
+        <template slot-scope="scope">
+          <el-tag type="warning" effect="light">{{ scope.row.freeholdRatio }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="更新时间" width="110" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.updateDate|dateFilter  }}
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="220">
@@ -112,7 +124,7 @@
         </el-button>
         <el-divider direction="vertical"></el-divider>
         <el-button
-          @click.native.prevent="klineChart(scope.$index, tableData)"
+          @click.native.prevent="onKlineChart(scope.$index, tableData)"
           type="text"
           size="small">
           K线图
@@ -203,11 +215,77 @@
     </el-table>
     </el-dialog>
   </div>
+  <div>
+      <!-- focusDrawer -->
+      <el-drawer
+        title="关注信息"
+        :visible.sync="focusForm.focusDrawer"
+        :with-header="true">
+        <el-form :model="focusForm" ref="focusForm" label-width="100px" class="demo-ruleForm">
+          <el-form-item label="名称">
+            <el-input
+                placeholder="请输入内容"
+                v-model="focusForm.name"
+                clearable>
+            </el-input>
+          </el-form-item>
+          <el-form-item label="代码">
+            <el-input
+                placeholder="请输入内容"
+                v-model="focusForm.secucode"
+                clearable>
+            </el-input>
+          </el-form-item>
+          <el-form-item label="预期价格">
+            <el-input-number v-model="focusForm.expectPrice" :step="0.5"  :min="0" :max="1000"  step-strictly></el-input-number>
+          </el-form-item>
+          <el-form-item label="备注信息">
+            <el-input placeholder="请输入备注信息" v-model="focusForm.remark" clearable> </el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmitFocusForm('focusForm')">提交</el-button>
+            <el-button @click="onResetFocusForm('focusForm')">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </el-drawer>
+  </div>
+  <div>
+      <el-drawer
+        title="重建数据"
+        :visible.sync="updateForm.resetGDAggregationDrawer"
+        :with-header="true">
+        <el-form :model="updateForm" ref="updateForm" label-width="100px" class="demo-ruleForm">
+          <el-form-item label="代码">
+            <el-input
+                placeholder="请输入内容"
+                v-model="updateForm.secucode"
+                clearable>
+            </el-input>
+          </el-form-item>
+          <el-form-item label="预期时间">
+            <el-date-picker
+                @input="onSelectResetDate"
+                v-model="updateForm.releaseDate"
+                value-format="timestamp"
+                type="daterange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期">
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmitForm('updateForm')">提交</el-button>
+            <el-button @click="onResetForm('updateForm')">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </el-drawer>
+    </div>
   </div>
 </template>
 
 <script>
-import { gdrenshuList, gdrenshuDetail,confirmFocus } from '@/api/stock'
+import { gdaggregationReset, gdaggregationList,gdrenshuDetail,confirmFocus,cancelFocus } from '@/api/stock'
+import { parseTime } from '@/utils/index'
 
 export default {
   filters: {
@@ -218,6 +296,9 @@ export default {
         deleted: 'danger'
       }
       return statusMap[status]
+    },
+    dateFilter(time) {
+        return parseTime(time)
     }
   },
   data() {
@@ -231,8 +312,23 @@ export default {
         lineChartSrc: '',
         secucode: '',
       },
+      updateForm: {
+          releaseDate: '',
+          releaseStart:0,
+          releaseEnd:0,
+          secucode: '',
+          resetGDAggregation: false,
+          resetGDAggregationDrawer: false,
+      },
       detailForm: {
           dialogVisible: false
+      },
+      focusForm:{
+          name: '',
+          secucode: '',
+          focusDrawer: false,
+          remark: '',
+          expectPrice: 0,
       },
       queryForm: {
         pageNum: 1,
@@ -241,10 +337,12 @@ export default {
         name:'',
         secucode: '',
         dateRange: '',
-        startDate: 0,
-        endDate: 0,
-        totalRatio:0, 
-        sortTyp: 0,
+        releaseStart: 0,
+        releaseEnd: 0,
+        totalNumRatio:0, 
+        priceRatio: 0,
+        holdRatio: 0,
+        holderRatio:0,
         options: [{
           value: 0,
           label: '全部'
@@ -270,15 +368,15 @@ export default {
       var req = {
         name: this.queryForm.name,
         secucode: this.queryForm.secucode,
-        decrease: this.queryForm.decrease,
-        releaseStart: this.queryForm.startDate,
-        releaseEnd: this.queryForm.endDate,
-        totalRatio: this.queryForm.totalRatio,
+        totalNumRatio: this.queryForm.totalNumRatio,
+        releaseStart: this.queryForm.releaseStart,
+        releaseEnd: this.queryForm.releaseEnd,
+        priceRatio: this.queryForm.priceRatio,
+        holdRatio: this.queryForm.holdRatio,
         limit: this.queryForm.pageSize,
-        sortTyp: this.queryForm.sortTyp,
         offset: (this.queryForm.pageNum-1)*this.queryForm.pageSize,
       }
-      gdrenshuList(req).then(response => {
+      gdaggregationList(req).then(response => {
         this.tableData = response.data.items
         this.listLoading = false
         this.queryForm.total = response.data.total
@@ -290,30 +388,45 @@ export default {
       this.fetchData()
     },
     handleSizeChange() {
+        this.queryForm.pageSize = val
 
-    },
-    onSelectValue: function(){
-        console.log('您选择了', this.queryForm.sortTyp)
+      this.fetchData()
     },
     onConfirmFocus(index, rows) {
-      var data = rows[index]
-      var req = {
-        name : data.name,
-        secucode: data.secucode,
-        expectPrice: data.presentPrice,
-      }
+        var data = rows[index]
+        
+        if (data.focused==="取消关注") {
+            this.focusForm.name = ''
+            this.focusForm.secucode = ''
+            this.focusForm.focusDrawer = false
+            var req = {
+                name: data.name,
+                secucode: data.secucode
+            }
+            cancelFocus(req).then(response=>{
+                this.fetchData()
+            })
+        } else {
+            this.focusForm.name = data.name
+            this.focusForm.secucode = data.secucode
+            this.focusForm.focusDrawer = true
+        }
 
-      console.log("==>>TODO fucus 01:", req)
 
-      confirmFocus(req).then(response=>{
-        console.log("==>>TODO fucus 02:", response)
-        this.fetchData()
-      })
+        console.log("==>>TODO fucus 0111:", data.focused)
     },
-    onSelectDate(val) {
+    onResetSubmit() {
+        console.log("==>>TODO 351:")
+        this.updateForm.resetGDAggregationDrawer = true
+    },
+    onSelectQueryDate(val) {
+        this.updateForm.releaseStart = val[0]
+        this.updateForm.releaseEnd = val[1]
+    },
+    onSelectResetDate(val) {
       console.log("==>>TODO date is: ", val[0], val[1])
-      this.queryForm.startDate = val[0]
-      this.queryForm.endDate = val[1]
+      this.updateForm.releaseStart = val[0]
+      this.updateForm.releaseEnd = val[1]
     },
     onQuerySubmit(val) {
       console.log("==>>TODO query is: ", val)
@@ -332,7 +445,7 @@ export default {
             this.detailData = response.data.items
       })
     },
-    klineChart(index, rows) {//日线图
+    onKlineChart(index, rows) {//日线图
       var data = rows[index]
       var secucode = data.secucode.split('.').join("").toLowerCase()
       this.lineChartForm.secucode = secucode
@@ -350,14 +463,51 @@ export default {
       }
       this.lineChartForm.activeName = "date"
     },
+    onSubmitForm(formName) {
+        var req = {
+            secucode: this.updateForm.secucode,
+            periodEnd: this.updateForm.releaseEnd,
+            periodStart: this.updateForm.releaseStart,
+        }
 
+        gdaggregationReset(req).then(response=>{
+
+        })
+    },
+    onResetForm(formName) {
+        
+    },
+    onSubmitFocusForm(formName) {
+        var req = {
+            name : this.focusForm.name,
+            secucode: this.focusForm.secucode,
+            expectPrice: this.focusForm.expectPrice,
+            remark: this.focusForm.remark,
+        }
+        console.log("==>>TODO 3035: ", req)
+        confirmFocus(req).then(response=>{
+            console.log("==>>TODO fucus 02:", response)
+            this.focusForm.focusDrawer = false
+            this.fetchData()
+        })
+    
+    },
+    onResetFocusForm(formName) {
+        console.log("==>>TODO 3036: ", this.$refs[formName])
+        this.focusForm.name = ''
+        this.focusForm.secucode = ''
+        this.focusForm.presentPrice = ''
+    }
   }
 }
 
 </script>
 
 <style lang="scss" scoped>
-.dashboard {
+.el-col {
+    border-radius: 4px;
+  }
+.app {
   &-container {
     margin: 30px;
   }

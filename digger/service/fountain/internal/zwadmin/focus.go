@@ -15,6 +15,7 @@ import (
 )
 
 func ConfirmFocus(in *gin.Context) {
+	now := time.Now().Unix()
 	var req trpc.FocusConfirmReq
 	resp := &trpc.FocusConfirmResp{
 		Code: 21000,
@@ -36,14 +37,18 @@ func ConfirmFocus(in *gin.Context) {
 		result.Disabled = !result.Disabled
 	}
 
-	result.Name = req.GetName()
-	if result.FocusPrice <= 0 {
-		result.FocusPrice = req.GetPresentPrice()
+	result.Name = getName(req.GetSecucode())
+	if result.ExpectPrice <= 0 {
+		result.ExpectPrice = req.GetExpectPrice()
 	}
 
 	result.PresentPrice = 0
-	result.CreateDate = time.Now().Unix()
-	result.UpdateDate = time.Now().Unix()
+	result.CreateDate = now
+	result.UpdateDate = now
+	result.Remarks = append(result.Remarks, orm.GPRemark{
+		Content:    req.GetRemark(),
+		UpdateDate: now,
+	})
 
 	if _, err := result.Save(); err != nil {
 		log.Errorf("save focus failed: %q", err)
@@ -103,13 +108,11 @@ func GetFocusList(in *gin.Context) {
 	resp.Data.Total = int32(total)
 
 	for _, result := range results {
-		resp.Data.Items = append(resp.Data.Items, &trpc.GPFocusItem{
+		item := &trpc.GPFocusItem{
 			Name:          result.Name,
 			Secucode:      result.Secucode,
-			FocusPrice:    result.FocusPrice,
 			PresentPrice:  getPresentPrice(result.Secucode),
 			ExpectPrice:   result.ExpectPrice,
-			DiffPrice:     getDiffPrice(result),
 			Focused:       getFocused(result.Disabled),
 			CreateDate:    time.Unix(result.CreateDate, 0).Format("2006-01-02"),
 			UpdateDate:    time.Unix(result.UpdateDate, 0).Format("2006-01-02"),
@@ -118,7 +121,18 @@ func GetFocusList(in *gin.Context) {
 			Traded:        getTraded(result.Secucode),
 			State:         getFocusState(result.State),
 			ExpectDate:    result.ExpectDate,
-		})
+		}
+
+		item.DiffPrice = getDiffPrice(item.PresentPrice, item.ExpectPrice)
+		for _, remark := range result.Remarks {
+			item.Remarks = append(item.Remarks, &trpc.GPRemark{
+				Content:    remark.Content,
+				UpdateDate: remark.UpdateDate,
+			})
+			item.Remark = remark.Content
+		}
+
+		resp.Data.Items = append(resp.Data.Items, item)
 	}
 
 	resp.Code = 20000
@@ -131,13 +145,11 @@ func CancelFocus(in *gin.Context) {
 		Code: 21000,
 	}
 	if err := in.BindJSON(&req); err != nil {
-		log.Infof("==>>TODO 121: %+v", nil)
 		in.JSON(http.StatusBadRequest, resp)
 		return
 	}
 
 	if req.GetSecucode() == "" {
-		log.Infof("==>>TODO 122: %+v", nil)
 		in.JSON(http.StatusBadRequest, resp)
 		return
 	}
@@ -145,7 +157,6 @@ func CancelFocus(in *gin.Context) {
 	// query := ezdb.M{"Secucode": req.GetSecucode()}
 	result, err := orm.GPFocusMgr.FindOneBySecucode(req.GetSecucode())
 	if err != nil {
-		log.Infof("==>>TODO 123: %+v", nil)
 		in.JSON(http.StatusNotFound, resp)
 		return
 	}
@@ -153,7 +164,6 @@ func CancelFocus(in *gin.Context) {
 	result.Disabled = true
 	result.UpdateDate = time.Now().Unix()
 	if _, err := result.Save(); err != nil {
-		log.Infof("==>>TODO 124: %+v", nil)
 		in.JSON(http.StatusNotFound, resp)
 		return
 	}
@@ -168,13 +178,11 @@ func UpdateFocus(in *gin.Context) {
 		Code: 21000,
 	}
 	if err := in.BindJSON(&req); err != nil {
-		log.Infof("==>>TODO 121: %+v", nil)
 		in.JSON(http.StatusBadRequest, resp)
 		return
 	}
 
 	if req.GetSecucode() == "" {
-		log.Infof("==>>TODO 122: %+v", nil)
 		in.JSON(http.StatusBadRequest, resp)
 		return
 	}
@@ -240,11 +248,12 @@ func getTraded(secucode string) int64 {
 	return result.Traded / 100000000
 }
 
-func getDiffPrice(data *orm.GPFocus) float64 {
-	if data.ExpectPrice > 0 {
-		return utils.TruncateFloat(data.PresentPrice - data.ExpectPrice)
+func getDiffPrice(present, expect float64) float64 {
+	// log.Infof("==>>441: %+v|%+v", data.PresentPrice, data.ExpectPrice)
+	if expect > 0 {
+		return utils.TruncateFloat(present - expect)
 	}
-	return utils.TruncateFloat(data.PresentPrice - data.FocusPrice)
+	return utils.TruncateFloat(present - expect)
 }
 
 func getFocusState(state int32) string {

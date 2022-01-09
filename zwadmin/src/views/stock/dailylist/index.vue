@@ -245,7 +245,7 @@ export default {
       var req = {
         name : data.name,
         secucode: data.secucode,
-        presentPrice: data.closing,
+        expectPrice: data.closing,
       }
 
       confirmFocus(req).then(response=>{

@@ -12,10 +12,10 @@ type GPFocus struct {
 	Secucode     string        `bson:"Secucode" json:"Secucode"`
 	State        int32         `bson:"State" json:"State"`
 	Disabled     bool          `bson:"Disabled" json:"Disabled"`
-	FocusPrice   float64       `bson:"FocusPrice" json:"FocusPrice"`
 	PresentPrice float64       `bson:"PresentPrice" json:"PresentPrice"`
 	ExpectPrice  float64       `bson:"ExpectPrice" json:"ExpectPrice"`
 	ExpectDate   int64         `bson:"ExpectDate" json:"ExpectDate"`
+	Remarks      []GPRemark    `bson:"Remarks" json:"Remarks"`
 	CreateDate   int64         `bson:"CreateDate" json:"CreateDate"`
 	UpdateDate   int64         `bson:"UpdateDate" json:"UpdateDate"`
 	isNew        bool
@@ -27,10 +27,10 @@ const (
 	GPFocusMgoFieldSecucode     = "Secucode"
 	GPFocusMgoFieldState        = "State"
 	GPFocusMgoFieldDisabled     = "Disabled"
-	GPFocusMgoFieldFocusPrice   = "FocusPrice"
 	GPFocusMgoFieldPresentPrice = "PresentPrice"
 	GPFocusMgoFieldExpectPrice  = "ExpectPrice"
 	GPFocusMgoFieldExpectDate   = "ExpectDate"
+	GPFocusMgoFieldRemarks      = "Remarks"
 	GPFocusMgoFieldCreateDate   = "CreateDate"
 	GPFocusMgoFieldUpdateDate   = "UpdateDate"
 )

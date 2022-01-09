@@ -27,7 +27,7 @@ GDRenshu:
   fields:
     - Secucode: string
     - SecurityCode: string
-    - EndDate: int64             #截止时间
+    - EndDate: int64              #截止时间
     - HolderTotalNum: float64     #股东人数
     - TotalNumRatio: float64      #较上期变化
     - AvgFreeShares: float64      #人均流通股
@@ -220,10 +220,11 @@ GPFocus:
     - Secucode: string 
     - State: int32      #0未知,1准备,2开始,3进行中
     - Disabled: bool
-    - FocusPrice: float64     #关注价格
+    # - FocusPrice: float64     #关注价格
     - PresentPrice: float64   #当前价格
     - ExpectPrice: float64    #预期买入价格
     - ExpectDate: int64       #期望日期
+    - Remarks: list<GPRemark> #备注
     - CreateDate: datetime  
     - UpdateDate: datetime
   uniques: [[Secucode],[Name]]
@@ -243,16 +244,35 @@ GPZhouQi:
     - ExpectStart: datetime
     - ExpectEnd: datetime
     - BuyingCount: int32
-    - Remarks: list<GPZhouQiRemark> 
+    - Remarks: list<GPRemark> 
     - CreateDate: datetime  
     - UpdateDate: datetime
   uniques: [[Secucode]]
   indexes: [[Secucode],[Name]]
 
 # 备注
-GPZhouQiRemark:
+GPRemark:
   db: mongo
-  dbname: ezseller
   fields:
-    - Remark: string
+    - Content: string
     - UpdateDate: datetime
+  
+# 股东人数聚合    
+GDAggregation:
+  db: mongo
+  dbname: digger
+  fields:
+    - Name: string
+    - Secucode: string
+    - EndDate: int64              #截止时间
+    - TotalRatioAccum: int32          #累计值
+    - PriceRatio: int32            #价格差率
+    - PriceMax: float64
+    - PriceMin: float64
+    - HolderTotalNum: int32       #股东人数
+    - HoldFocus: string           #筹码集中度
+    - HoldRatioTotal: int32       #top10合计
+    - FreeholdRatioTotal: int32   #top10流通合计
+    - UpdateDate: datetime
+  uniques: [[Secucode]]
+  indexes: [[Secucode],[TotalRatioAccum],[PriceRatio],[HoldRatioTotal],[FreeholdRatioTotal]]

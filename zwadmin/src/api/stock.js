@@ -151,3 +151,21 @@ export function gpzhouQiList(data) {
     data
   })
 }
+
+// 股东聚合设置
+export function gdaggregationReset(data) {
+  return request({
+    url: '/api/stock/GDAggregationReset',
+    method: 'post',
+    data
+  })
+}
+
+// 股东聚合设置
+export function gdaggregationList(data) {
+  return request({
+    url: '/api/stock/GDAggregationList',
+    method: 'post',
+    data
+  })
+}

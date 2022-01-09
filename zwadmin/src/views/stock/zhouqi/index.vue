@@ -81,6 +81,11 @@
           <el-tag type="warning" effect="light">{{ scope.row.expectEnd|dateFilter }}</el-tag>
         </template>
       </el-table-column>
+      <el-table-column label="最近备注" width="110" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.remark }}
+        </template>
+      </el-table-column>
       <el-table-column label="更新日期" width="110" align="center">
         <template slot-scope="scope">
           {{ scope.row.updateDate }}
@@ -93,6 +98,13 @@
           type="text"
           size="small">
           修改
+        </el-button>
+        <el-divider direction="vertical"></el-divider>
+        <el-button
+          @click.native.prevent="onRemarkZhouQi(scope.$index, tableData)"
+          type="text"
+          size="small">
+          备注
         </el-button>
         <el-divider direction="vertical"></el-divider>
         <el-button
@@ -129,15 +141,6 @@
           </el-tab-pane>
         </el-tabs>
       </el-dialog>
-      <!-- <el-dialog title="K线查询" :visible.sync="lineChartForm.lineChartVisible">
-        <el-tabs @tab-click="onSelectTabClick">
-          <el-tab-pane label="用户管理" name="first">用户管理</el-tab-pane>
-          <el-tab-pane label="配置管理" name="second">配置管理</el-tab-pane>
-          <el-tab-pane label="角色管理" name="third">角色管理</el-tab-pane>
-          <el-tab-pane label="定时任务补偿" name="fourth">定时任务补偿</el-tab-pane>
-        </el-tabs>
-      </el-dialog> -->
-
     </div>
     <div>
       <el-drawer
@@ -163,7 +166,7 @@
               { type: 'number', message: '价格必须为数字值'}
             ]"
           >
-            <el-input-number type="expectMin" v-model="updateForm.expectMin" :precision="2" :step="0.5" :max="10"></el-input-number>
+            <el-input-number type="expectMin" v-model="updateForm.expectMin" :precision="2" :step="0.5" :max="10000"></el-input-number>
           </el-form-item>
           <el-form-item
             label="预期最高价"
@@ -173,7 +176,7 @@
               { type: 'number', message: '价格必须为数字值'}
             ]"
           >
-            <el-input-number type="expectMax" v-model="updateForm.expectMax" :precision="2" :step="0.5" :max="10"></el-input-number>
+            <el-input-number type="expectMax" v-model="updateForm.expectMax" :precision="2" :step="0.5" :max="10000"></el-input-number>
           </el-form-item>
           <el-form-item label="取消关注">
             <el-switch
@@ -201,11 +204,66 @@
         </el-form>
       </el-drawer>
     </div>
+    <div>
+      <!-- remarkZhouQiDrawer -->
+      <el-drawer
+        title="备注信息"
+        :visible.sync="remarkForm.remarkZhouQiDrawer"
+        :with-header="true">
+        <el-row :gutter="20">
+              <el-col :span="18" :offset="1">
+        <el-tabs v-model="remarkForm.activeName" @tab-click="onSelectRemarkTab">
+          <el-tab-pane label="备注列表" name="list">
+            
+                <el-table
+                  :data="remarkForm.remarkList"
+                  stripe
+                  style="width: 100%"
+                  >
+                  <el-table-column
+                    prop="remark"
+                    label="备注"
+                    width="180">
+                  </el-table-column>
+                  <el-table-column
+                    prop="createDate"
+                    label="日期"
+                    width="180">
+                  </el-table-column>
+                </el-table>
+              
+            
+          </el-tab-pane>
+          <el-tab-pane label="新增备注" name="create">
+            <el-form :label-position="remarkForm.labelPosition" label-width="80px" :model="remarkForm">
+              <el-form-item label="名称">
+                <el-input v-model="remarkForm.content"></el-input>
+              </el-form-item>
+              <el-form-item label="活动区域">
+                <!-- <el-input v-model="remarkForm.region"></el-input> -->
+                <el-date-picker
+                  v-model="remarkForm.createDate"
+                  value-format="timestamp"
+                  type="date"
+                  placeholder="选择日期">
+                </el-date-picker>
+              </el-form-item>
+              <el-form-item>
+              <el-button type="primary" @click="onCreateRemark('remarkForm')">提交</el-button>
+              <el-button @click="onResetRemark('remarkForm')">重置</el-button>
+            </el-form-item>
+            </el-form>
+          </el-tab-pane>
+        </el-tabs>
+        </el-col>
+            </el-row>
+      </el-drawer>
+    </div>
   </div>
 </template>
 
 <script>
-import { gpzhouQiList, updateGPZhouQi } from '@/api/stock'
+import { gpzhouQiList, updateGPZhouQi, addGPZhouQiRemark } from '@/api/stock'
 import { parseTime } from '@/utils/index'
 
 
@@ -269,7 +327,16 @@ export default {
         expectEnd: 0,
         expectDate: [],
         disabled: 0,
+        remark: '',
         updateZhouQiDrawer: false,
+      },
+      remarkForm: {
+        content: '',
+        createDate: '',
+        labelPosition: 'right',
+        remarkZhouQiDrawer: false,
+        remarkList: null,
+        activeName: 'list',
       },
       paginationForm: {
         pageNum: 1,
@@ -337,8 +404,20 @@ export default {
       this.updateForm.updateZhouQiDrawer = true
       this.updateForm.expectStart = data.expectStart*1000
       this.updateForm.expectEnd = data.expectEnd*1000
-
-      this.updateForm.expectDate =  [new Date(data.expectStart*1000), new Date(data.expectEnd*1000)]
+      if (this.updateForm.expectStart==0) {
+        this.updateForm.expectStart = Date.parse(new Date())
+      }
+      if (this.updateForm.expectEnd == 0) {
+        this.updateForm.expectEnd = Date.parse(new Date())
+      }
+      console.log("==>>TODO 221: ", this.updateForm.expectStart)
+      this.updateForm.expectDate =  [new Date(this.updateForm.expectStart), this.updateForm.expectEnd]
+    },
+    onRemarkZhouQi(index, rows) {
+      var data = rows[index]
+      this.remarkForm.secucode = data.secucode
+      this.remarkForm.remarkList = data.remarks
+      this.remarkForm.remarkZhouQiDrawer = true
     },
     onResetForm(formName) {
       this.$refs[formName].resetFields();
@@ -376,10 +455,39 @@ export default {
         this.updateForm.updateZhouQiDrawer = true
     },
     onSelectDate(val) {
-      this.updateForm.expectStart = val[0]
-      this.updateForm.expectEnd = val[1]
+      if (!val) {
+        this.updateForm.expectStart = 0
+        this.updateForm.expectEnd = 0
+      } else {
+        this.updateForm.expectStart = val[0]
+        this.updateForm.expectEnd = val[1]
+      }
     },
+    onSelectRemarkTab(tab) {
+      if (tab.name === 'list') {
+        this.remarkForm.activeName = 'list'
+        // this.remarkForm.remarkList = [{"remark": "111", "createDate": 111}]
+        // this.remarkForm.remarkList = [{"remark": "111", "createDate": 111}]
+      } else {
+        // this.remarkForm
+        this.remarkForm.activeName = 'create'
+      }
+    },
+    onCreateRemark() {
+      console.log("==>>551: ", this.remarkForm.secucode, this.remarkForm.createDate)
+      console.log("==>>551: ", this.remarkForm.content, this.remarkForm.createDate)
+      var req = {
+        secucode: this.remarkForm.secucode,
+        content: this.remarkForm.content,
+        createDate: this.remarkForm.createDate,
+      }
+      addGPZhouQiRemark(req).then(response=>{
 
+      })
+    },
+    onResetRemark() {
+
+    }
   }
 }
 

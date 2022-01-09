@@ -80,17 +80,17 @@ export const constantRoutes = [
         component: () => import('@/views/stock/dailylist/index'),
         meta: { title: '股票列表', icon: 'tree' }
       },
-      // {
-      //   path: 'stock/shareholder',
-      //   name: '长线列表',
-      //   component: () => import('@/views/stock/shareholder/index'),
-      //   meta: { title: '长线列表', icon: 'tree' }
-      // },
       {
         path: 'stock/gdrenshu',
         name: '股东列表',
         component: () => import('@/views/stock/gdrenshu/index'),
         meta: { title: '股东列表', icon: 'tree' }
+      },
+      {
+        path: 'stock/gdaggregation',
+        name: '股东增减',
+        component: () => import('@/views/stock/gdaggregation/index'),
+        meta: { title: '股东增减', icon: 'tree' }
       },
       {
         path: 'stock/focuslist',

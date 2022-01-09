@@ -25,6 +25,56 @@ service ZWAdmin {
     rpc UpdateGPZhouQi(UpdateGPZhouQiReq) returns(UpdateGPZhouQiResp);
     rpc GPZhouQiList(GPZhouQiListReq) returns(GPZhouQiListResp);
     rpc AddGPZhouQiRemark(AddGPZhouQiRemarkReq) returns(AddGPZhouQiRemarkResp);
+    rpc GDAggregationReset(GDAggregationResetReq) returns(GDAggregationResetResp);
+    rpc GDAggregationList(GDAggregationListReq) returns(GDAggregationListResp);
+}
+
+message GDAggregationListReq {
+    string name = 1;
+    string secucode= 2;
+    int32 totalNumRatio= 3;   //股东人数变化率
+    int64 releaseStart = 5; //截止时间
+    int64 releaseEnd = 6;
+    double priceRatio= 10;      //股价变化率
+    int32 holdRatio= 12;   //十大股东占比
+    int32 limit = 20;
+    int32 offset = 21;
+}
+
+message GDAggregationItem {
+    string name = 1;
+    string secucode = 2;
+    int64 endDate = 3;
+    int32 holderRatio = 5;   //股东人数变化率
+    int32 priceRatio = 6;    //股价变化率
+    double priceMax = 10;
+    double priceMin = 11;
+    string holdFocus = 12;
+    int32 holderNum = 15;     //股东人数
+    int32 holdRatio=16;     //TOP10
+    int32 freeholdRatio = 17;
+    int64 updateDate = 18;
+    string focused = 20;      //是否关注
+}
+
+message GDAggregationData {
+    int32 total = 1;
+    repeated GDAggregationItem items = 2;
+}
+
+message GDAggregationListResp {
+    int32 code = 1;
+    GDAggregationData data = 2;
+}
+
+message GDAggregationResetReq {
+    string secucode= 1;
+    int64 periodStart = 10;
+    int64 periodEnd = 11;
+}
+
+message GDAggregationResetResp {
+    int32 code = 1;
 }
 
 enum GPZhouQiState {
@@ -35,7 +85,8 @@ enum GPZhouQiState {
 
 message AddGPZhouQiRemarkReq {
     string secucode= 2;
-    string remark = 3;
+    string content = 3;
+    int64 createDate = 4;
 }
 
 message AddGPZhouQiRemarkResp{
@@ -71,6 +122,7 @@ message GPZhouQiItem {
     int64 expectStart= 7;
     int64 expectEnd= 8;
     string updateDate = 9;
+    string remark = 10;     //备注
     repeated GPZhouQiRemark remarks = 15;
     string state = 16;   //状态
     bool disabled = 20;
@@ -212,7 +264,8 @@ message CancelFocusResp{
 message FocusConfirmReq {
     string name = 1;
     string secucode = 2;
-    double presentPrice = 3;
+    double expectPrice = 3;
+    string remark = 4;
 }
 
 message FocusConfirmResp {
@@ -305,10 +358,15 @@ message FocusListReq {
     int32 offset = 11;
 }
 
+message GPRemark {
+    string content = 1;
+    int64 updateDate = 2;
+}
+
 message GPFocusItem {
     string name = 1;
     string secucode = 2;
-    double focusPrice = 3;
+    // double focusPrice = 3;
     double presentPrice = 5;
     double expectPrice = 6; //期望价格
     double diffPrice = 7;   //当前价格和期望价格差
@@ -320,6 +378,8 @@ message GPFocusItem {
     int64 traded = 17;      //流通市值
     string state = 20;      //状态
     int64 expectDate = 21;  //期望日期
+    string remark = 22;
+    repeated GPRemark remarks = 23; //备注
 }
 
 message GPFocusData {

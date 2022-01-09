@@ -72,25 +72,24 @@
           <el-tag type="danger" effect="light">{{ scope.row.diffPrice }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="关注价格" width="110" align="center">
-        <template slot-scope="scope">
-          <el-tag effect="light">{{ scope.row.focusPrice }}</el-tag>
-        </template>
-      </el-table-column>
       <el-table-column label="期望价格" width="110" align="center">
         <template slot-scope="scope">
           <el-tag type="warning" effect="light">{{ scope.row.expectPrice }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="期望日期" width="110" align="center">
-        <template slot-scope="scope">
-          <!-- <el-tag type="warning" effect="light">{{ scope.row.expectDate }}</el-tag> -->
-          <el-tag type="success" effect="light">{{ scope.row.expectDate|dateFilter }}</el-tag>
-        </template>
-      </el-table-column>
       <el-table-column label="当前价格" width="110" align="center">
         <template slot-scope="scope">
           {{ scope.row.presentPrice }}
+        </template>
+      </el-table-column>
+      <el-table-column label="期望日期" width="110" align="center">
+        <template slot-scope="scope">
+          <el-tag type="success" effect="light">{{ scope.row.expectDate|dateFilter }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="最近备注" width="110" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.remark }}
         </template>
       </el-table-column>
       <el-table-column label="股东集中度" width="110" align="center">

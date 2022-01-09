@@ -54,7 +54,6 @@ func UpdateGPZhouQi(in *gin.Context) {
 		in.JSON(http.StatusBadRequest, resp)
 		return
 	}
-	log.Infof("==>>TODO 210: %+v", req)
 	result := orm.GPZhouQiMgr.MustFindOneBySecucode(req.GetSecucode())
 	result.Name = getName(req.GetSecucode())
 	result.Secucode = req.GetSecucode()
@@ -146,8 +145,9 @@ func GPZhouQiList(in *gin.Context) {
 			}
 
 			for _, val := range result.Remarks {
+				item.Remark = val.Content
 				item.Remarks = append(item.Remarks, &trpc.GPZhouQiRemark{
-					Remark:     val.Remark,
+					Remark:     val.Content,
 					CreateDate: time.Unix(val.UpdateDate, 0).Format("2006-01-02"),
 				})
 			}
@@ -181,8 +181,8 @@ func AddGPZhouQiRemark(in *gin.Context) {
 		return
 	}
 
-	result.Remarks = append(result.Remarks, orm.GPZhouQiRemark{
-		Remark:     req.GetRemark(),
+	result.Remarks = append(result.Remarks, orm.GPRemark{
+		Content:    req.GetContent(),
 		UpdateDate: time.Now().Unix(),
 	})
 	result.UpdateDate = time.Now().Unix()

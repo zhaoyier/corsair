@@ -219,7 +219,7 @@ export default {
       var req = {
         name : data.name,
         secucode: data.secucode,
-        presentPrice: data.presentPrice,
+        expectPrice: data.presentPrice,
       }
 
       confirmFocus(req).then(response=>{
