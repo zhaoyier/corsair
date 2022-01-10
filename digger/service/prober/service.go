@@ -27,6 +27,7 @@ func Start() {
 	// dawdle.GenRecommendTmp("SZ.300741")
 	// dawdle.GenLongLineTmp("SH.603136")
 	// dawdle.GenShortLineTmp("SZ.300741")
+	dawdle.GenZhouQiOnce()
 
 	for range tk.C {
 		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeCodeList) {

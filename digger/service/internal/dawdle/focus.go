@@ -53,7 +53,7 @@ func updateFocusState(data *orm.GPFocus) error {
 	data.PresentPrice = getPresentPrice(data.Secucode)
 	data.State = getFocusState(data)
 	data.UpdateDate = time.Now().Unix()
-	if _, err := (data).Save(); err != nil {
+	if _, err := data.Save(); err != nil {
 		log.Errorf("update zhouqi price failed: %s|%q", data.Secucode, err)
 		return err
 	}
