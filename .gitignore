@@ -4,3 +4,4 @@ farmer/node_modules/*
 */.DS_Store
 */export
 zwadmin/node_modules/*
+.git/hooks/*
