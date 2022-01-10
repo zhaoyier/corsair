@@ -102,6 +102,7 @@ message UpdateGPZhouQiReq {
     int64 expectStart= 7;
     int64 expectEnd= 8;
     bool disabled = 9;
+    string mainBusiness = 15;   //主营业务
 }
 
 message UpdateGPZhouQiResp{
@@ -126,6 +127,7 @@ message GPZhouQiItem {
     repeated GPZhouQiRemark remarks = 15;
     string state = 16;   //状态
     bool disabled = 20;
+    string mainBusiness = 21;   //主营业务
 }
 
 message AddGPZhouQiReq {
@@ -237,6 +239,7 @@ message UpdateFocusReq {
     string secucode = 1;
     double expectPrice = 2;
     int64 expectDate = 3;
+    string mainBusiness = 4;
 }
 
 message UpdateFocusResp {
@@ -266,6 +269,7 @@ message FocusConfirmReq {
     string secucode = 2;
     double expectPrice = 3;
     string remark = 4;
+    string mainBusiness = 5;
 }
 
 message FocusConfirmResp {
@@ -380,6 +384,7 @@ message GPFocusItem {
     int64 expectDate = 21;  //期望日期
     string remark = 22;
     repeated GPRemark remarks = 23; //备注
+    string mainBusiness = 24;   //主营业务
 }
 
 message GPFocusData {

@@ -16,7 +16,8 @@ CNSecucode:
     - Name: string        #名称
     - Secucode: string
     - Focus: bool         #关注   
-    - Disabled: bool     #
+    - Disabled: bool      #
+    - MainBusiness: string #主营业务
     - CreateDate: datetime
     - UpdateDate: datetime
   uniques: [[Secucode],[Name]]
@@ -220,11 +221,11 @@ GPFocus:
     - Secucode: string 
     - State: int32      #0未知,1准备,2开始,3进行中
     - Disabled: bool
-    # - FocusPrice: float64     #关注价格
     - PresentPrice: float64   #当前价格
     - ExpectPrice: float64    #预期买入价格
     - ExpectDate: int64       #期望日期
     - Remarks: list<GPRemark> #备注
+    - MainBusiness: string    #主营业务
     - CreateDate: datetime  
     - UpdateDate: datetime
   uniques: [[Secucode],[Name]]
@@ -245,6 +246,7 @@ GPZhouQi:
     - ExpectEnd: datetime
     - BuyingCount: int32
     - Remarks: list<GPRemark> 
+    - MainBusiness: string     #主营业务
     - CreateDate: datetime  
     - UpdateDate: datetime
   uniques: [[Secucode]]

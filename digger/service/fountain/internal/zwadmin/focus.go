@@ -41,10 +41,17 @@ func ConfirmFocus(in *gin.Context) {
 	if result.ExpectPrice <= 0 {
 		result.ExpectPrice = req.GetExpectPrice()
 	}
+	if result.CreateDate <= 0 {
+		result.CreateDate = now
+	}
 
-	result.PresentPrice = 0
-	result.CreateDate = now
 	result.UpdateDate = now
+	result.MainBusiness = req.GetMainBusiness()
+	result.PresentPrice = getPresentPrice(req.GetSecucode())
+	if req.GetMainBusiness() != "" {
+		result.MainBusiness = req.GetMainBusiness()
+	}
+
 	result.Remarks = append(result.Remarks, orm.GPRemark{
 		Content:    req.GetRemark(),
 		UpdateDate: now,
@@ -121,6 +128,7 @@ func GetFocusList(in *gin.Context) {
 			Traded:        getTraded(result.Secucode),
 			State:         getFocusState(result.State),
 			ExpectDate:    result.ExpectDate,
+			MainBusiness:  result.MainBusiness,
 		}
 
 		item.DiffPrice = getDiffPrice(item.PresentPrice, item.ExpectPrice)
@@ -196,6 +204,10 @@ func UpdateFocus(in *gin.Context) {
 	result.ExpectPrice = req.GetExpectPrice()
 	result.UpdateDate = time.Now().Unix()
 	result.ExpectDate = req.GetExpectDate() / 1000
+	if req.GetMainBusiness() != "" {
+		result.MainBusiness = req.GetMainBusiness()
+	}
+
 	if _, err := result.Save(); err != nil {
 		in.JSON(http.StatusConflict, resp)
 		return

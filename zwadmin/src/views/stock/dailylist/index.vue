@@ -36,7 +36,7 @@
     <el-divider></el-divider>
     <el-table
       v-loading="listLoading"
-      :data="list"
+      :data="tableData"
       element-loading-text="Loading"
       fit
       highlight-current-row
@@ -115,7 +115,7 @@
         </el-button>
         <el-divider direction="vertical"></el-divider>
         <el-button
-          @click.native.prevent="klineChart(scope.$index, tableData)"
+          @click.native.prevent="onKlineChart(scope.$index, tableData)"
           type="text"
           size="small">
           K线图
@@ -168,7 +168,7 @@ export default {
   },
   data() {
     return {
-      list: null,
+      tableData: null,
       timer:null,
       listLoading: true,
       lineChartForm:{
@@ -215,7 +215,7 @@ export default {
         offset: (this.queryForm.pageNum-1)*this.queryForm.pageSize,
       }
       getDailyList(req).then(response => {
-        this.list = response.data.items
+        this.tableData = response.data.items
         this.listLoading = false
         this.queryForm.total = response.data.total
       })

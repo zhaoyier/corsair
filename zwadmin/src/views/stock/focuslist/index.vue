@@ -97,7 +97,12 @@
           {{ scope.row.holdFocus }}
         </template>
       </el-table-column>
-      <el-table-column prop="totalNumRatio" label="股东人数" width="110" align="center" sortable>
+      <el-table-column label="主营业务" width="110" align="center">
+        <template slot-scope="scope">
+          <el-tag type="warning" effect="light">{{ scope.row.mainBusiness }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="股东人数" width="110" align="center" sortable>
         <template slot-scope="scope">
           {{ scope.row.totalNumRatio }}
         </template>
@@ -189,7 +194,6 @@
               { type: 'number', message: '价格必须为数字值'}
             ]"
           >
-            <!-- <el-input type="expectPrice" v-model.number="updateForm.expectPrice" autocomplete="off"></el-input> -->
             <el-input-number v-model="updateForm.expectPrice" :precision="2" :step="0.5" :max="10000"></el-input-number>
           </el-form-item>
           <el-form-item label="预期日期">
@@ -199,6 +203,9 @@
               type="date"
               placeholder="选择日期">
             </el-date-picker>
+          </el-form-item>
+          <el-form-item label="主营业务">
+            <el-input type="textarea" v-model="updateForm.mainBusiness"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmitForm('updateForm')">提交</el-button>
@@ -334,6 +341,7 @@ export default {
         expectPrice: 0,
         expectDate: Date.parse(new Date()),
         updateFocusDrawer: false,
+        mainBusiness: '',
       },
       paginationForm: {
         pageNum: 1,
@@ -439,6 +447,7 @@ export default {
           secucode: this.updateForm.secucode,
           expectDate: this.updateForm.expectDate,
           expectPrice: this.updateForm.expectPrice,
+          mainBusiness: this.updateForm.mainBusiness,
         }
         updateFocus(req).then(response=>{
           if (response.code == 20000) {

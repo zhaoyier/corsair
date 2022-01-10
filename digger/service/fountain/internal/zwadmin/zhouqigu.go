@@ -64,6 +64,10 @@ func UpdateGPZhouQi(in *gin.Context) {
 	result.ExpectEnd = req.GetExpectEnd() / 1000
 	result.Disabled = req.GetDisabled()
 	result.UpdateDate = time.Now().Unix()
+	if req.GetMainBusiness() != "" {
+		result.MainBusiness = req.GetMainBusiness()
+	}
+
 	if result.CreateDate <= 0 {
 		result.CreateDate = time.Now().Unix()
 	}
@@ -142,6 +146,7 @@ func GPZhouQiList(in *gin.Context) {
 				Remarks:      make([]*trpc.GPZhouQiRemark, 0),
 				Disabled:     result.Disabled,
 				State:        getZhouQiState(result.State),
+				MainBusiness: result.MainBusiness,
 			}
 
 			for _, val := range result.Remarks {

@@ -86,6 +86,11 @@
           {{ scope.row.remark }}
         </template>
       </el-table-column>
+      <el-table-column label="主营业务" width="110" align="center">
+        <template slot-scope="scope">
+          <el-tag type="warning" effect="light">{{ scope.row.mainBusiness }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="更新日期" width="110" align="center">
         <template slot-scope="scope">
           {{ scope.row.updateDate }}
@@ -186,7 +191,10 @@
              :inactive-value=0>
            </el-switch>
         </el-form-item>
-          <el-form-item label="预期时间">
+        <el-form-item label="主营业务">
+          <el-input type="textarea" v-model="updateForm.mainBusiness"></el-input>
+        </el-form-item>
+        <el-form-item label="预期时间">
             <el-date-picker
                 @input="onSelectDate"
                 v-model="updateForm.expectDate"
@@ -329,6 +337,7 @@ export default {
         disabled: 0,
         remark: '',
         updateZhouQiDrawer: false,
+        mainBusiness:'',
       },
       remarkForm: {
         content: '',
@@ -438,6 +447,7 @@ export default {
           expectStart: this.updateForm.expectStart,
           expectEnd: this.updateForm.expectEnd,
           disabled: this.updateForm.disabled==1?true:false,
+          mainBusiness: this.updateForm.mainBusiness
         }
         updateGPZhouQi(req).then(response=>{
           if (response.code == 20000) {
