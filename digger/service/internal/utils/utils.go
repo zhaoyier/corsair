@@ -134,6 +134,16 @@ func GetSecucode(secucode string) string {
 	return ""
 }
 
+func GetSecucodeNum(secucode string) int64 {
+	codes := strings.Split(secucode, ".")
+	for _, code := range codes {
+		if val, err := strconv.ParseInt(code, 10, 64); err == nil {
+			return val
+		}
+	}
+	return 0
+}
+
 func GetPercent(a, b float64) float64 {
 	if b <= 0 {
 		return 0

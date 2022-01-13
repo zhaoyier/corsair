@@ -14,10 +14,10 @@ func getReferDecrease(secucode string) int32 {
 	result, err := orm.GPManualDecreaseMgr.FindOneBySecucodeDisabled(secucode, false)
 	if err != nil {
 		log.Errorf("get delay failed: %s|%q", secucode, err)
-		return dawdle.GPShortDecrease
+		return dawdle.GetConf().DecreaseTag
 	}
 	if result.DecreaseTag <= 0 {
-		return dawdle.GPShortDecrease
+		return dawdle.GetConf().DecreaseTag
 	}
 	return result.DecreaseTag
 }

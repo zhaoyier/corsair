@@ -6,7 +6,7 @@
         <el-input v-model="queryForm.secucode" placeholder="SZ.000001"></el-input>
       </el-form-item>
       <el-form-item label="跌幅">
-        <el-input v-model.number="queryForm.decrease" placeholder=20></el-input>
+        <el-input-number v-model="queryForm.decrease" :step="5"  :min="0" :max="100"  step-strictly></el-input-number>
       </el-form-item>
       <el-form-item label="状态">
         <el-select v-model.number=queryForm.state placeholder="准备">
@@ -55,6 +55,26 @@
       </template>
     </el-table-column>
     <el-table-column prop="gDDecrease" label="股东人数" width="120"> </el-table-column>
+    <el-table-column class-name="status-col" label="五日流入" width="80">
+      <template slot-scope="scope">
+        <el-tag type="warning" effect="dark">{{ scope.row.fundFive }}</el-tag>
+      </template>
+    </el-table-column>
+    <el-table-column class-name="status-col" label="二十流入" width="80">
+      <template slot-scope="scope">
+        <el-tag type="warning" effect="dark">{{ scope.row.fundTwenty }}</el-tag>
+      </template>
+    </el-table-column>
+    <el-table-column class-name="status-col" label="流通市值" width="80">
+      <template slot-scope="scope">
+        <el-tag type="warning" effect="dark">{{ scope.row.traded }}</el-tag>
+      </template>
+    </el-table-column>
+    <el-table-column class-name="status-col" label="流入百分比" width="80">
+      <template slot-scope="scope">
+        <el-tag type="warning" effect="dark">{{ scope.row.fundPercent }}</el-tag>
+      </template>
+    </el-table-column>
     <el-table-column prop="updateNum" label="更新次数" width="80"> </el-table-column>
     <el-table-column class-name="status-col" label="参考幅度" width="80">
       <template slot-scope="scope">

@@ -492,7 +492,7 @@ export default {
         createDate: this.remarkForm.createDate,
       }
       addGPZhouQiRemark(req).then(response=>{
-
+        
       })
     },
     onResetRemark() {

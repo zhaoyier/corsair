@@ -8,6 +8,7 @@ import (
 	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
 	log "github.com/Sirupsen/logrus"
+	ezdb "github.com/ezbuy/ezorm/db"
 )
 
 const (
@@ -32,6 +33,11 @@ const (
 	GPLongDecrease  int32   = 30
 	GPShortDecrease int32   = 38
 	ValueIndexTag   int32   = 80
+	DecreasePeriod  int32   = 60
+)
+
+var (
+	conf *orm.CNConfig
 )
 
 type WeightRule struct { //权重规则
@@ -427,4 +433,21 @@ func (wv *WeightData) GetWeight() int32 {
 	})
 
 	return wv.Weight
+}
+
+func InitConf() {
+	result, err := orm.CNConfigMgr.FindOne(ezdb.M{})
+	if err != nil {
+		log.Errorf("get config failed: %+v", err)
+		conf = &orm.CNConfig{
+			DecreaseTag:    GPShortDecrease,
+			DecreasePeriod: DecreasePeriod,
+		}
+	} else {
+		conf = result
+	}
+}
+
+func GetConf() *orm.CNConfig {
+	return conf
 }

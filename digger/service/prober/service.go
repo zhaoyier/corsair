@@ -27,7 +27,8 @@ func Start() {
 	// dawdle.GenRecommendTmp("SZ.300741")
 	// dawdle.GenLongLineTmp("SH.603136")
 	// dawdle.GenShortLineTmp("SZ.300741")
-	dawdle.GenZhouQiOnce()
+	// dawdle.GenZhouQiOnce()
+	eastmoney.GetFundFlowOnce()
 
 	for range tk.C {
 		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeCodeList) {
@@ -35,6 +36,9 @@ func Start() {
 		}
 		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeShareholder) {
 			eastmoney.GetShareholderTicker()
+		}
+		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeFundFlow) {
+			eastmoney.GetFundFlowTicker()
 		}
 		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeLongLine) {
 			dawdle.GenLongLineTicker()
@@ -72,4 +76,6 @@ func init() {
 		MongoDB: "mongodb://digger:digger_ppwd@81.69.250.236:12302/digger",
 		DBName:  "digger",
 	})
+
+	dawdle.InitConf()
 }

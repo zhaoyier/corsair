@@ -499,6 +499,10 @@ message RecommendItem {
     string updateDate=16;
     double presentPrice = 17;
     string focused = 18;      //是否关注
+    int32 fundFive = 20;      //五日
+    int32 fundTwenty = 21;    //二十日
+    int64 traded = 22;        //流通市值
+    int32 fundPercent = 23;   //二十日/流通百分比绝对值
 }
 
 message RecommendData {

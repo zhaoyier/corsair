@@ -71,7 +71,7 @@ func getShortLineData(secucode string) error {
 
 	result.DecreaseTag = getDecreaseValue(code)
 	result.MDecrease, _ = getShortLineDecrease(result, -30)
-	result.TDecrease, _ = getShortLineDecrease(result, -60)
+	result.TDecrease, _ = getShortLineDecrease(result, int(-1*GetConf().DecreasePeriod))
 	result.UpdateDate = time.Now().Unix()
 	decreaseTag := result.DecreaseTag - 10
 	// log.Infof("==>>TODO 235: %+v|%+v", result, decreaseTag)
@@ -135,19 +135,19 @@ func getDecreaseValue(secucode string) int32 {
 	}
 	results, err := orm.GPDailyMgr.Find(query, 2, 0, "-CreateDate")
 	if err != nil {
-		return GPShortDecrease
+		return GetConf().DecreaseTag
 	}
 
-	result, sdecrease := results[0], GPShortDecrease
+	result, sdecrease := results[0], GetConf().DecreaseTag
 
 	if result.Traded > int64(math.Pow10(10)*5) { //>= 500
-		sdecrease = GPShortDecrease - 5
+		sdecrease = GetConf().DecreaseTag - 5
 	} else if result.Traded > int64(math.Pow10(10)) { // >= 100
-		sdecrease = GPShortDecrease
+		sdecrease = GetConf().DecreaseTag
 	} else if result.Traded > int64(math.Pow10(9)) { // >= 10
-		sdecrease = GPShortDecrease + 2
+		sdecrease = GetConf().DecreaseTag + 2
 	} else {
-		sdecrease = GPShortDecrease + 3
+		sdecrease = GetConf().DecreaseTag + 3
 	}
 
 	return sdecrease
