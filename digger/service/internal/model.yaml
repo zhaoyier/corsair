@@ -224,7 +224,6 @@ GPFocus:
     - PresentPrice: float64   #当前价格
     - ExpectPrice: float64    #预期买入价格
     - ExpectDate: int64       #期望日期
-    - Remarks: list<GPRemark> #备注
     - MainBusiness: string    #主营业务
     - CreateDate: datetime  
     - UpdateDate: datetime
@@ -245,7 +244,6 @@ GPZhouQi:
     - ExpectStart: datetime
     - ExpectEnd: datetime
     - BuyingCount: int32
-    - Remarks: list<GPRemark> 
     - MainBusiness: string     #主营业务
     - CreateDate: datetime  
     - UpdateDate: datetime
@@ -255,9 +253,13 @@ GPZhouQi:
 # 备注
 GPRemark:
   db: mongo
+  dbname: digger
   fields:
-    - Content: string
-    - UpdateDate: datetime
+    - Name: string
+    - Secucode: string
+    - Remark: string
+    - Disabled: bool
+    - CreateDate: datetime
   
 # 股东人数聚合    
 GDAggregation:

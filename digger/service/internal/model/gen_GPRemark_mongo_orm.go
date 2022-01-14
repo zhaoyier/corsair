@@ -231,9 +231,9 @@ func (m *_GPRemarkMgr) RemoveByID(id string) (err error) {
 
 func (m *_GPRemarkMgr) GetCol() (session *mgo.Session, col *mgo.Collection) {
 	if mgoInstances == nil {
-		return db.GetCol("", "digger.GPRemark")
+		return db.GetCol("digger", "digger.GPRemark")
 	}
-	return getCol("", "digger.GPRemark")
+	return getCol("digger", "digger.GPRemark")
 }
 
 //Search

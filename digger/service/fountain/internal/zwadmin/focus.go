@@ -52,11 +52,6 @@ func ConfirmFocus(in *gin.Context) {
 		result.MainBusiness = req.GetMainBusiness()
 	}
 
-	result.Remarks = append(result.Remarks, orm.GPRemark{
-		Content:    req.GetRemark(),
-		UpdateDate: now,
-	})
-
 	if _, err := result.Save(); err != nil {
 		log.Errorf("save focus failed: %q", err)
 		in.JSON(http.StatusForbidden, resp)
@@ -129,16 +124,22 @@ func GetFocusList(in *gin.Context) {
 			State:         getFocusState(result.State),
 			ExpectDate:    result.ExpectDate,
 			MainBusiness:  result.MainBusiness,
+			Remarks:       getGPRemarks(result.Secucode, 10, 0),
+		}
+
+		if len(item.Remarks) > 0 {
+			item.Remark = item.Remarks[0].Remark
 		}
 
 		item.DiffPrice = getDiffPrice(item.PresentPrice, item.ExpectPrice)
-		for _, remark := range result.Remarks {
-			item.Remarks = append(item.Remarks, &trpc.GPRemark{
-				Content:    remark.Content,
-				UpdateDate: remark.UpdateDate,
-			})
-			item.Remark = remark.Content
-		}
+		// TODO 独立出来
+		// for _, remark := range result.Remarks {
+		// 	item.Remarks = append(item.Remarks, &trpc.GPRemark{
+		// 		Content:    remark.Content,
+		// 		UpdateDate: remark.UpdateDate,
+		// 	})
+		// 	item.Remark = remark.Content
+		// }
 
 		resp.Data.Items = append(resp.Data.Items, item)
 	}

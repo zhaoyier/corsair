@@ -8,15 +8,21 @@ var _ time.Time
 
 type GPRemark struct {
 	ID         bson.ObjectId `json:"id" bson:"_id,omitempty"`
-	Content    string        `bson:"Content" json:"Content"`
-	UpdateDate int64         `bson:"UpdateDate" json:"UpdateDate"`
+	Name       string        `bson:"Name" json:"Name"`
+	Secucode   string        `bson:"Secucode" json:"Secucode"`
+	Remark     string        `bson:"Remark" json:"Remark"`
+	Disabled   bool          `bson:"Disabled" json:"Disabled"`
+	CreateDate int64         `bson:"CreateDate" json:"CreateDate"`
 	isNew      bool
 }
 
 const (
 	GPRemarkMgoFieldID         = "_id"
-	GPRemarkMgoFieldContent    = "Content"
-	GPRemarkMgoFieldUpdateDate = "UpdateDate"
+	GPRemarkMgoFieldName       = "Name"
+	GPRemarkMgoFieldSecucode   = "Secucode"
+	GPRemarkMgoFieldRemark     = "Remark"
+	GPRemarkMgoFieldDisabled   = "Disabled"
+	GPRemarkMgoFieldCreateDate = "CreateDate"
 )
 const (
 	GPRemarkMgoSortFieldIDAsc  = "_id"

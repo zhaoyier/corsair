@@ -55,24 +55,19 @@
       </template>
     </el-table-column>
     <el-table-column prop="gDDecrease" label="股东人数" width="120"> </el-table-column>
-    <el-table-column class-name="status-col" label="五日流入" width="80">
+    <el-table-column class-name="status-col" label="五日流入/百万" width="120">
       <template slot-scope="scope">
-        <el-tag type="warning" effect="dark">{{ scope.row.fundFive }}</el-tag>
+        <el-tag effect="plain">{{ scope.row.fundFive }}</el-tag>
       </template>
     </el-table-column>
-    <el-table-column class-name="status-col" label="二十流入" width="80">
+    <el-table-column class-name="status-col" label="二十流入/百万" width="120">
       <template slot-scope="scope">
-        <el-tag type="warning" effect="dark">{{ scope.row.fundTwenty }}</el-tag>
+        <el-tag type="warning" effect="plain">{{ scope.row.fundTwenty }}</el-tag>
       </template>
     </el-table-column>
-    <el-table-column class-name="status-col" label="流通市值" width="80">
+    <el-table-column class-name="status-col" label="流通市值/百万" width="120">
       <template slot-scope="scope">
-        <el-tag type="warning" effect="dark">{{ scope.row.traded }}</el-tag>
-      </template>
-    </el-table-column>
-    <el-table-column class-name="status-col" label="流入百分比" width="80">
-      <template slot-scope="scope">
-        <el-tag type="warning" effect="dark">{{ scope.row.fundPercent }}</el-tag>
+        <el-tag type="danger" effect="plain">{{ scope.row.traded }}</el-tag>
       </template>
     </el-table-column>
     <el-table-column prop="updateNum" label="更新次数" width="80"> </el-table-column>

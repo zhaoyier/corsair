@@ -18,7 +18,6 @@ type GPZhouQi struct {
 	ExpectStart  int64         `bson:"ExpectStart" json:"ExpectStart"`
 	ExpectEnd    int64         `bson:"ExpectEnd" json:"ExpectEnd"`
 	BuyingCount  int32         `bson:"BuyingCount" json:"BuyingCount"`
-	Remarks      []GPRemark    `bson:"Remarks" json:"Remarks"`
 	MainBusiness string        `bson:"MainBusiness" json:"MainBusiness"`
 	CreateDate   int64         `bson:"CreateDate" json:"CreateDate"`
 	UpdateDate   int64         `bson:"UpdateDate" json:"UpdateDate"`
@@ -37,7 +36,6 @@ const (
 	GPZhouQiMgoFieldExpectStart  = "ExpectStart"
 	GPZhouQiMgoFieldExpectEnd    = "ExpectEnd"
 	GPZhouQiMgoFieldBuyingCount  = "BuyingCount"
-	GPZhouQiMgoFieldRemarks      = "Remarks"
 	GPZhouQiMgoFieldMainBusiness = "MainBusiness"
 	GPZhouQiMgoFieldCreateDate   = "CreateDate"
 	GPZhouQiMgoFieldUpdateDate   = "UpdateDate"

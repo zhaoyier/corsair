@@ -143,18 +143,15 @@ func GPZhouQiList(in *gin.Context) {
 				ExpectStart:  result.ExpectStart,
 				ExpectEnd:    result.ExpectEnd,
 				UpdateDate:   time.Unix(result.UpdateDate, 0).Format("2006-01-02"),
-				Remarks:      make([]*trpc.GPZhouQiRemark, 0),
+				Remarks:      getGPRemarks(result.Secucode, 10, 0),
 				Disabled:     result.Disabled,
 				State:        getZhouQiState(result.State),
 				MainBusiness: result.MainBusiness,
 			}
 
-			for _, val := range result.Remarks {
-				item.Remark = val.Content
-				item.Remarks = append(item.Remarks, &trpc.GPZhouQiRemark{
-					Remark:     val.Content,
-					CreateDate: time.Unix(val.UpdateDate, 0).Format("2006-01-02"),
-				})
+			remarks := getGPRemarks(result.Secucode, 10, 0)
+			if len(remarks) > 0 {
+				item.Remark = item.Remarks[0].Remark
 			}
 
 			resp.Data.Items = append(resp.Data.Items, item)
@@ -186,10 +183,10 @@ func AddGPZhouQiRemark(in *gin.Context) {
 		return
 	}
 
-	result.Remarks = append(result.Remarks, orm.GPRemark{
-		Content:    req.GetContent(),
-		UpdateDate: time.Now().Unix(),
-	})
+	// result.Remarks = append(result.Remarks, orm.GPRemark{
+	// 	Content:    req.GetContent(),
+	// 	UpdateDate: time.Now().Unix(),
+	// })
 	result.UpdateDate = time.Now().Unix()
 	if _, err := result.Save(); err != nil {
 		log.Errorf("save zhou qi failed: %s|%q", req.GetSecucode(), err)

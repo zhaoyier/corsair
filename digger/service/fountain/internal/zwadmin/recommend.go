@@ -109,10 +109,10 @@ func GetRecommend(in *gin.Context) {
 	for idx, result := range results {
 		idx, result := idx, result
 		go func(wg *sync.WaitGroup) {
-			resp.Data.Items = append(resp.Data.Items, &trpc.RecommendItem{
+			item := &trpc.RecommendItem{
 				Id:            int32(idx + 1),
 				Secucode:      result.Secucode,
-				Name:          result.Name, //getName(result.Secucode),
+				Name:          result.Name,
 				RMIndex:       result.RMIndex,
 				PDecrease:     result.PDecrease,
 				MaxPrice:      result.MaxPrice,
@@ -125,7 +125,12 @@ func GetRecommend(in *gin.Context) {
 				PresentPrice:  result.PresentPrice,
 				ReferDecrease: getReferDecrease(result.Secucode),
 				Focused:       getFocusBySecucode(result.Secucode),
-			})
+			}
+
+			item.Traded = getTraded(item.Secucode) * 100
+			item.FundFive, item.FundTwenty = getFundFlow(item.Secucode)
+			item.FundPercent = int32(utils.GetPercent(float64(item.FundTwenty), float64(item.Traded*100)))
+			resp.Data.Items = append(resp.Data.Items, item)
 
 			wg.Done()
 		}(&wg)
@@ -252,4 +257,13 @@ func getRMPriceRation(price string, present float64) int32 {
 		return 100
 	}
 	return int32(((present - rmPrice) / rmPrice) * 100)
+}
+
+func getFundFlow(secucode string) (int32, int32) {
+	result, err := orm.GPFundFlowMgr.FindOneBySecucode(secucode)
+	if err != nil {
+		return 0, 0
+	}
+	// 百万级别
+	return result.Five / 1000000, result.Twenty / 1000000
 }

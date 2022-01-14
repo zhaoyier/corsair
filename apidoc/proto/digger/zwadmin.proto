@@ -27,6 +27,34 @@ service ZWAdmin {
     rpc AddGPZhouQiRemark(AddGPZhouQiRemarkReq) returns(AddGPZhouQiRemarkResp);
     rpc GDAggregationReset(GDAggregationResetReq) returns(GDAggregationResetResp);
     rpc GDAggregationList(GDAggregationListReq) returns(GDAggregationListResp);
+    rpc AddGPRemark(AddGPRemarkReq) returns(AddGPRemarkResp);
+    rpc GetGPRemark(GetGPRemarkReq) returns(GetGPRemarkResp);
+}
+
+message AddGPRemarkReq {
+    string name = 1;
+    string secucode= 2;
+    string remark = 3;
+}
+
+message AddGPRemarkResp {
+    int32 code = 1;
+}
+
+message GetGPRemarkReq {
+    string secucode= 2; 
+    int32 limit = 10;
+    int32 offset = 11;
+}
+
+message GPRemarkData {
+    repeated GPRemarkItem items = 1;
+    int32 total = 2;
+}
+
+message GetGPRemarkResp {
+    int32 code = 1;
+    GPRemarkData data = 2;
 }
 
 message GDAggregationListReq {
@@ -124,7 +152,7 @@ message GPZhouQiItem {
     int64 expectEnd= 8;
     string updateDate = 9;
     string remark = 10;     //备注
-    repeated GPZhouQiRemark remarks = 15;
+    repeated GPRemarkItem remarks = 15;
     string state = 16;   //状态
     bool disabled = 20;
     string mainBusiness = 21;   //主营业务
@@ -362,9 +390,11 @@ message FocusListReq {
     int32 offset = 11;
 }
 
-message GPRemark {
-    string content = 1;
-    int64 updateDate = 2;
+message GPRemarkItem {
+    string name = 1;
+    string secucode = 2; 
+    string remark = 3;
+    int64 createDate = 4;
 }
 
 message GPFocusItem {
@@ -383,7 +413,7 @@ message GPFocusItem {
     string state = 20;      //状态
     int64 expectDate = 21;  //期望日期
     string remark = 22;
-    repeated GPRemark remarks = 23; //备注
+    repeated GPRemarkItem remarks = 23; //备注
     string mainBusiness = 24;   //主营业务
 }
 
