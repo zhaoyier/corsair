@@ -25,7 +25,7 @@ func getReferDecrease(secucode string) int32 {
 func getRMPrice(data []float64) string {
 	list := make([]string, 0, len(data))
 	for idx, val := range data {
-		list = append(list, fmt.Sprintf("%.1f(%d)", val, idx+1))
+		list = append(list, fmt.Sprintf("%.1f(%d)", val, idx+2))
 	}
 	return strings.Join(list, "->")
 }

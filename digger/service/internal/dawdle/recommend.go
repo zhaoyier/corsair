@@ -47,7 +47,6 @@ func genRecommendData() error {
 	var data *orm.GPShortLine
 	iter := col.Find(ezdb.M{"Disabled": false}).Batch(100).Prefetch(0.25).Iter()
 	for iter.Next(&data) {
-		log.Infof("==>>TODO 101:%+v", data.Name)
 		genShortRecommendedData(data, true)
 	}
 
@@ -58,12 +57,10 @@ func genShortRecommendedData(data *orm.GPShortLine, updateNum bool) error {
 	result := getGPRecommend(data.Secucode)
 	data.DecreaseTag = getDecreaseTag(data.Secucode, data.DecreaseTag)
 	decrease := math.Max(float64(data.MDecrease), float64(data.TDecrease))
-	if decrease >= float64(data.DecreaseTag)+5 {
+	if decrease >= float64(data.DecreaseTag) {
 		result.State = int32(trpc.RMState_RMStateFirst)
-	} else if decrease >= float64(data.DecreaseTag) {
-		result.State = int32(trpc.RMState_RMStateStarted)
 	} else if decrease >= float64(data.DecreaseTag)-5 {
-		result.State = int32(trpc.RMState_RMStatePrepared)
+		result.State = int32(trpc.RMState_RMStateSecond)
 	} else {
 		result.State = int32(trpc.RMState_RMStateUnknown)
 	}
@@ -123,10 +120,8 @@ func calRecommendPrice(data *orm.GPRecommend) []float64 {
 	data.RMPrice = []float64{}
 
 	tag := utils.Decimal(1 - utils.GetPercentum(data.DecreaseTag))
-	// log.Infof("==>>TODO 311: %+v|%+v", price, tag)
-	max, per, min := utils.Decimal(tag+0.03), utils.Decimal(tag-0.01), utils.Decimal(tag-0.05)
-	// log.Infof("==>>TODO 312: %+v|%+v|%+v", max, per, min)
-	data.RMPrice = append(data.RMPrice, price*max, price*per, price*min)
+	per, min := utils.Decimal(tag-0.01), utils.Decimal(tag-0.06)
+	data.RMPrice = append(data.RMPrice, price*per, price*min)
 	sort.Slice(data.RMPrice, func(i, j int) bool {
 		return data.RMPrice[i] > data.RMPrice[j]
 	})
