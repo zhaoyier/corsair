@@ -9,7 +9,7 @@
         <el-input-number v-model="queryForm.decrease" :step="5"  :min="0" :max="100"  step-strictly></el-input-number>
       </el-form-item>
       <el-form-item label="状态">
-        <el-select v-model.number=queryForm.state placeholder="准备">
+        <el-select v-model.number=queryForm.state placeholder="准备" clearable>
           <el-option label="待定" value=0></el-option>
           <el-option label="准备" value=1></el-option>
           <el-option label="开始" value=2></el-option>

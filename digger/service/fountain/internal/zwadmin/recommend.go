@@ -260,10 +260,11 @@ func getRMPriceRation(price string, present float64) int32 {
 }
 
 func getFundFlow(secucode string) (int32, int32) {
-	result, err := orm.GPFundFlowMgr.FindOneBySecucode(secucode)
-	if err != nil {
-		return 0, 0
-	}
-	// 百万级别
-	return result.Five / 1000000, result.Twenty / 1000000
+	// result, err := orm.GPFundFlowMgr.FindOneBySecucode(secucode)
+	// if err != nil {
+	// 	return 0, 0
+	// }
+	// // 百万级别
+	// return result.Five / 1000000, result.Twenty / 1000000
+	return 0, 0
 }

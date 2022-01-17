@@ -7,24 +7,28 @@ import "time"
 var _ time.Time
 
 type GPFundFlow struct {
-	ID         bson.ObjectId `json:"id" bson:"_id,omitempty"`
-	Name       string        `bson:"Name" json:"Name"`
-	Secucode   string        `bson:"Secucode" json:"Secucode"`
-	Five       int32         `bson:"Five" json:"Five"`
-	Ten        int32         `bson:"Ten" json:"Ten"`
-	Twenty     int32         `bson:"Twenty" json:"Twenty"`
-	UpdateDate int64         `bson:"UpdateDate" json:"UpdateDate"`
-	isNew      bool
+	ID            bson.ObjectId `json:"id" bson:"_id,omitempty"`
+	Name          string        `bson:"Name" json:"Name"`
+	Secucode      string        `bson:"Secucode" json:"Secucode"`
+	FundDate      int64         `bson:"FundDate" json:"FundDate"`
+	Inflow        int32         `bson:"Inflow" json:"Inflow"`
+	InflowRatio   int32         `bson:"InflowRatio" json:"InflowRatio"`
+	PresentPrice  int32         `bson:"PresentPrice" json:"PresentPrice"`
+	IncreaseRatio int32         `bson:"IncreaseRatio" json:"IncreaseRatio"`
+	CreateDate    int64         `bson:"CreateDate" json:"CreateDate"`
+	isNew         bool
 }
 
 const (
-	GPFundFlowMgoFieldID         = "_id"
-	GPFundFlowMgoFieldName       = "Name"
-	GPFundFlowMgoFieldSecucode   = "Secucode"
-	GPFundFlowMgoFieldFive       = "Five"
-	GPFundFlowMgoFieldTen        = "Ten"
-	GPFundFlowMgoFieldTwenty     = "Twenty"
-	GPFundFlowMgoFieldUpdateDate = "UpdateDate"
+	GPFundFlowMgoFieldID            = "_id"
+	GPFundFlowMgoFieldName          = "Name"
+	GPFundFlowMgoFieldSecucode      = "Secucode"
+	GPFundFlowMgoFieldFundDate      = "FundDate"
+	GPFundFlowMgoFieldInflow        = "Inflow"
+	GPFundFlowMgoFieldInflowRatio   = "InflowRatio"
+	GPFundFlowMgoFieldPresentPrice  = "PresentPrice"
+	GPFundFlowMgoFieldIncreaseRatio = "IncreaseRatio"
+	GPFundFlowMgoFieldCreateDate    = "CreateDate"
 )
 const (
 	GPFundFlowMgoSortFieldIDAsc  = "_id"

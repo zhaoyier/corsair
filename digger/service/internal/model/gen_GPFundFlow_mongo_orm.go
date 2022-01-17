@@ -28,12 +28,44 @@ func initGPFundFlowIndex() {
 	defer session.Close()
 
 	if err := collection.EnsureIndex(mgo.Index{
-		Key:        []string{"Secucode"},
+		Key:        []string{"Secucode", "FundDate"},
 		Unique:     true,
 		Background: true,
 		Sparse:     true,
 	}); err != nil {
+		panic("ensureIndex digger.GPFundFlow SecucodeFundDate error:" + err.Error())
+	}
+
+	if err := collection.EnsureIndex(mgo.Index{
+		Key:        []string{"Name"},
+		Background: true,
+		Sparse:     true,
+	}); err != nil {
+		panic("ensureIndex digger.GPFundFlow Name error:" + err.Error())
+	}
+
+	if err := collection.EnsureIndex(mgo.Index{
+		Key:        []string{"Secucode"},
+		Background: true,
+		Sparse:     true,
+	}); err != nil {
 		panic("ensureIndex digger.GPFundFlow Secucode error:" + err.Error())
+	}
+
+	if err := collection.EnsureIndex(mgo.Index{
+		Key:        []string{"FundDate"},
+		Background: true,
+		Sparse:     true,
+	}); err != nil {
+		panic("ensureIndex digger.GPFundFlow FundDate error:" + err.Error())
+	}
+
+	if err := collection.EnsureIndex(mgo.Index{
+		Key:        []string{"InflowRatio"},
+		Background: true,
+		Sparse:     true,
+	}); err != nil {
+		panic("ensureIndex digger.GPFundFlow InflowRatio error:" + err.Error())
 	}
 
 }
@@ -164,9 +196,10 @@ func (o *_GPFundFlowMgr) NQuery(query interface{}, limit, offset int, sortFields
 
 	return session, q
 }
-func (o *_GPFundFlowMgr) FindOneBySecucode(Secucode string) (result *GPFundFlow, err error) {
+func (o *_GPFundFlowMgr) FindOneBySecucodeFundDate(Secucode string, FundDate int64) (result *GPFundFlow, err error) {
 	query := db.M{
 		"Secucode": Secucode,
+		"FundDate": FundDate,
 	}
 	session, q := GPFundFlowMgr.NQuery(query, 1, 0, nil)
 	defer session.Close()
@@ -174,24 +207,62 @@ func (o *_GPFundFlowMgr) FindOneBySecucode(Secucode string) (result *GPFundFlow,
 	return
 }
 
-func (o *_GPFundFlowMgr) MustFindOneBySecucode(Secucode string) (result *GPFundFlow) {
-	result, _ = o.FindOneBySecucode(Secucode)
+func (o *_GPFundFlowMgr) MustFindOneBySecucodeFundDate(Secucode string, FundDate int64) (result *GPFundFlow) {
+	result, _ = o.FindOneBySecucodeFundDate(Secucode, FundDate)
 	if result == nil {
 		result = GPFundFlowMgr.NewGPFundFlow()
 		result.Secucode = Secucode
+		result.FundDate = FundDate
 		result.Save()
 	}
 	return
 }
 
-func (o *_GPFundFlowMgr) RemoveBySecucode(Secucode string) (err error) {
+func (o *_GPFundFlowMgr) RemoveBySecucodeFundDate(Secucode string, FundDate int64) (err error) {
 	session, col := GPFundFlowMgr.GetCol()
 	defer session.Close()
 
 	query := db.M{
 		"Secucode": Secucode,
+		"FundDate": FundDate,
 	}
 	return col.Remove(query)
+}
+func (o *_GPFundFlowMgr) FindByName(Name string, limit int, offset int, sortFields ...string) (result []*GPFundFlow, err error) {
+	query := db.M{
+		"Name": Name,
+	}
+	session, q := GPFundFlowMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
+}
+func (o *_GPFundFlowMgr) FindBySecucode(Secucode string, limit int, offset int, sortFields ...string) (result []*GPFundFlow, err error) {
+	query := db.M{
+		"Secucode": Secucode,
+	}
+	session, q := GPFundFlowMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
+}
+func (o *_GPFundFlowMgr) FindByFundDate(FundDate int64, limit int, offset int, sortFields ...string) (result []*GPFundFlow, err error) {
+	query := db.M{
+		"FundDate": FundDate,
+	}
+	session, q := GPFundFlowMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
+}
+func (o *_GPFundFlowMgr) FindByInflowRatio(InflowRatio int32, limit int, offset int, sortFields ...string) (result []*GPFundFlow, err error) {
+	query := db.M{
+		"InflowRatio": InflowRatio,
+	}
+	session, q := GPFundFlowMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
 }
 
 func (o *_GPFundFlowMgr) Find(query interface{}, limit int, offset int, sortFields ...string) (result []*GPFundFlow, err error) {

@@ -93,6 +93,12 @@ export const constantRoutes = [
         meta: { title: '股东增减', icon: 'tree' }
       },
       {
+        path: 'stock/fundflow',
+        name: '资金流入',
+        component: () => import('@/views/stock/fundflow/index'),
+        meta: { title: '资金流入', icon: 'tree' }
+      },
+      {
         path: 'stock/focuslist',
         name: '关注列表',
         component: () => import('@/views/stock/focuslist/index'),

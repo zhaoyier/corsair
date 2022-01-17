@@ -281,15 +281,29 @@ GDAggregation:
   uniques: [[Secucode]]
   indexes: [[Secucode],[TotalRatioAccum],[PriceRatio],[HoldRatioTotal],[FreeholdRatioTotal]]
 
-# 股东人数聚合    
+#     
 GPFundFlow:
   db: mongo
   dbname: digger
   fields:
     - Name: string
     - Secucode: string
-    - Five: int32              #截止时间
-    - Ten: int32                #累计值
-    - Twenty: int32            #价格差率
-    - UpdateDate: datetime
+    - FundDate: int64
+    - Inflow: int32            #净流入金额
+    - InflowRatio: int32       #金流入百分比
+    - PresentPrice: int32      #当前价
+    - IncreaseRatio: int32     #涨跌幅度
+    - CreateDate: datetime     #创建日期
+  uniques: [[Secucode,FundDate]]
+  indexes: [[Name],[Secucode],[FundDate],[InflowRatio]]
+
+# 主营业务
+GPMainBusiness:
+  db: mongo
+  dbname: digger
+  fields:
+    - Name: string
+    - Secucode: string
+    - Content: string        #截止时间
+    - CreateDate: datetime
   uniques: [[Secucode]]

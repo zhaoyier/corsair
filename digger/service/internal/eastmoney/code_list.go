@@ -62,7 +62,7 @@ func updateCodeList(req *StockList, col *mgo.Collection) error {
 		exchange := "SH"
 		prefix := val.Secucode[0:3]
 		switch prefix {
-		case "600", "601", "603", "688":
+		case "600", "601", "603", "605", "688":
 			exchange = "SH"
 		case "835", "836":
 			exchange = "BJ"

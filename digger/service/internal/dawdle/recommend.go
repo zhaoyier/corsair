@@ -59,10 +59,14 @@ func genShortRecommendedData(data *orm.GPShortLine, updateNum bool) error {
 	decrease := math.Max(float64(data.MDecrease), float64(data.TDecrease))
 	if decrease >= float64(data.DecreaseTag) {
 		result.State = int32(trpc.RMState_RMStateFirst)
-	} else if decrease >= float64(data.DecreaseTag)-5 {
+	} else if decrease >= float64(data.DecreaseTag)+5 {
 		result.State = int32(trpc.RMState_RMStateSecond)
 	} else {
 		result.State = int32(trpc.RMState_RMStateUnknown)
+	}
+
+	if data.Secucode == "SZ.000819" {
+		log.Infof("==>>TODO 551: %+v|%+v|%+v", data.DecreaseTag, decrease, result.State)
 	}
 
 	result.Name = data.Name

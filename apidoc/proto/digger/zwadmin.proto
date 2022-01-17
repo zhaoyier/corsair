@@ -29,6 +29,41 @@ service ZWAdmin {
     rpc GDAggregationList(GDAggregationListReq) returns(GDAggregationListResp);
     rpc AddGPRemark(AddGPRemarkReq) returns(AddGPRemarkResp);
     rpc GetGPRemark(GetGPRemarkReq) returns(GetGPRemarkResp);
+    rpc GetFundFlowList(GetFundFlowListReq) returns(GetFundFlowListResp);
+}
+
+message GetFundFlowListReq {
+    string name = 1;
+    string secucode= 2;
+    int64 fundStart = 3;
+    int64 fundEnd = 4;
+    int32 inflow = 5;
+    int32 inflowRatio = 6;
+    int32 limit = 10;
+    int32 offset = 11;
+}
+
+message GPFundFlowItem {
+    string name = 1;
+    string secucode= 2;
+    int64 fundDate = 3;
+    int32 inflow= 4;
+    int32 inflowRatio= 5;
+    int32 presentPrice = 6;
+    int32 increaseRatio = 7;
+    int64 createDate = 8;
+    string focused = 10;    //关注
+    int64 traded = 14;      //流通市值
+}
+
+message GPFundFlowData {
+    int32 total = 1;
+    repeated GPFundFlowItem items = 2;
+}
+
+message GetFundFlowListResp{
+    int32 code = 1;
+    GPFundFlowData data = 2;
 }
 
 message AddGPRemarkReq {

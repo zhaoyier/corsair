@@ -29,6 +29,15 @@ func initGPZhouQiIndex() {
 
 	if err := collection.EnsureIndex(mgo.Index{
 		Key:        []string{"Secucode"},
+		Unique:     true,
+		Background: true,
+		Sparse:     true,
+	}); err != nil {
+		panic("ensureIndex digger.GPZhouQi Secucode error:" + err.Error())
+	}
+
+	if err := collection.EnsureIndex(mgo.Index{
+		Key:        []string{"Secucode"},
 		Background: true,
 		Sparse:     true,
 	}); err != nil {
@@ -41,15 +50,6 @@ func initGPZhouQiIndex() {
 		Sparse:     true,
 	}); err != nil {
 		panic("ensureIndex digger.GPZhouQi Name error:" + err.Error())
-	}
-
-	if err := collection.EnsureIndex(mgo.Index{
-		Key:        []string{"Secucode"},
-		Unique:     true,
-		Background: true,
-		Sparse:     true,
-	}); err != nil {
-		panic("ensureIndex digger.GPZhouQi Secucode error:" + err.Error())
 	}
 
 }
@@ -180,24 +180,6 @@ func (o *_GPZhouQiMgr) NQuery(query interface{}, limit, offset int, sortFields [
 
 	return session, q
 }
-func (o *_GPZhouQiMgr) FindBySecucode(Secucode string, limit int, offset int, sortFields ...string) (result []*GPZhouQi, err error) {
-	query := db.M{
-		"Secucode": Secucode,
-	}
-	session, q := GPZhouQiMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
-}
-func (o *_GPZhouQiMgr) FindByName(Name string, limit int, offset int, sortFields ...string) (result []*GPZhouQi, err error) {
-	query := db.M{
-		"Name": Name,
-	}
-	session, q := GPZhouQiMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
-}
 func (o *_GPZhouQiMgr) FindOneBySecucode(Secucode string) (result *GPZhouQi, err error) {
 	query := db.M{
 		"Secucode": Secucode,
@@ -226,6 +208,24 @@ func (o *_GPZhouQiMgr) RemoveBySecucode(Secucode string) (err error) {
 		"Secucode": Secucode,
 	}
 	return col.Remove(query)
+}
+func (o *_GPZhouQiMgr) FindBySecucode(Secucode string, limit int, offset int, sortFields ...string) (result []*GPZhouQi, err error) {
+	query := db.M{
+		"Secucode": Secucode,
+	}
+	session, q := GPZhouQiMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
+}
+func (o *_GPZhouQiMgr) FindByName(Name string, limit int, offset int, sortFields ...string) (result []*GPZhouQi, err error) {
+	query := db.M{
+		"Name": Name,
+	}
+	session, q := GPZhouQiMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
 }
 
 func (o *_GPZhouQiMgr) Find(query interface{}, limit int, offset int, sortFields ...string) (result []*GPZhouQi, err error) {

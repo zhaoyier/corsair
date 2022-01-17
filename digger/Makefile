@@ -1,3 +1,6 @@
+all:
+	clean, regen, pub
+
 pub:
 	rm -rf service/internal/rpc/*
 	go generate && go build
@@ -6,6 +9,9 @@ pub:
 	cp -rf ../zwadmin/dist/* /data/www/backend
 	supervisorctl restart all
 	supervisorctl status
+
+clean:
+	git checkout service/*
 
 regen:
 	rm -rf service/internal/rpc/*.pb.go

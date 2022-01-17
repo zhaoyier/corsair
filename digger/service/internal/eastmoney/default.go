@@ -409,6 +409,44 @@ type CodeData struct {
 	Diff  []*CodeBase `json:"diff"`
 }
 
+// type EMFundFlow struct {
+// 	Rc   int           `json:"rc"`
+// 	Rt   int           `json:"rt"`
+// 	Svr  int           `json:"svr"`
+// 	Lt   int           `json:"lt"`
+// 	Full int           `json:"full"`
+// 	Data *FundFlowData `json:"data"`
+// }
+// type FundFlowItem struct {
+// 	F1   int     `json:"f1"`
+// 	F2   float64 `json:"f2"`
+// 	F12  string  `json:"f12"`
+// 	F13  int     `json:"f13"`
+// 	F14  string  `json:"f14"`
+// 	F109 float64 `json:"f109"`
+// 	F124 int     `json:"f124"`
+// 	F165 float64 `json:"f165"`
+// 	F166 float64 `json:"f166"`
+// 	F167 float64 `json:"f167"`
+// 	F168 float64 `json:"f168"`
+// 	F169 float64 `json:"f169"`
+// 	F170 float64 `json:"f170"`
+// 	F171 float64 `json:"f171"`
+// 	F172 float64 `json:"f172"`
+// 	F173 float64 `json:"f173"`
+// 	F257 string  `json:"f257"`
+// 	F258 string  `json:"f258"`
+// 	F259 string  `json:"f259"`
+// 	F164 float64 `json:"f164"` //5日主力净流入
+// 	F174 float64 `json:"f174"` //10日资金流入
+// 	F184 float64 `json:"f184"`
+// 	F252 float64 `json:"f252"` //20日主力净流入
+// }
+// type FundFlowData struct {
+// 	Total int             `json:"total"`
+// 	Diff  []*FundFlowItem `json:"diff"`
+// }
+
 type EMFundFlow struct {
 	Rc   int           `json:"rc"`
 	Rt   int           `json:"rt"`
@@ -417,32 +455,9 @@ type EMFundFlow struct {
 	Full int           `json:"full"`
 	Data *FundFlowData `json:"data"`
 }
-type FundFlowItem struct {
-	F1   int     `json:"f1"`
-	F2   float64 `json:"f2"`
-	F12  string  `json:"f12"`
-	F13  int     `json:"f13"`
-	F14  string  `json:"f14"`
-	F109 float64 `json:"f109"`
-	F124 int     `json:"f124"`
-	F165 float64 `json:"f165"`
-	F166 float64 `json:"f166"`
-	F167 float64 `json:"f167"`
-	F168 float64 `json:"f168"`
-	F169 float64 `json:"f169"`
-	F170 float64 `json:"f170"`
-	F171 float64 `json:"f171"`
-	F172 float64 `json:"f172"`
-	F173 float64 `json:"f173"`
-	F257 string  `json:"f257"`
-	F258 string  `json:"f258"`
-	F259 string  `json:"f259"`
-	F164 float64 `json:"f164"` //5日主力净流入
-	F174 float64 `json:"f174"` //10日资金流入
-	F184 float64 `json:"f184"`
-	F252 float64 `json:"f252"` //20日主力净流入
-}
 type FundFlowData struct {
-	Total int             `json:"total"`
-	Diff  []*FundFlowItem `json:"diff"`
+	Code   string   `json:"code"`
+	Market int      `json:"market"`
+	Name   string   `json:"name"`
+	Klines []string `json:"klines"`
 }

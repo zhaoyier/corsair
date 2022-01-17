@@ -164,6 +164,14 @@ func String2Float64(data string) float64 {
 	return result
 }
 
+func String2I32(data string) int32 {
+	result, err := strconv.ParseFloat(data, 64)
+	if err != nil {
+		return 0
+	}
+	return int32(result)
+}
+
 // uint 代表小数位数，格式位 0.000001 如果是几位就指定为几位
 func TruncateFloat(f float64) float64 {
 	str := fmt.Sprintf("%.2f", f)

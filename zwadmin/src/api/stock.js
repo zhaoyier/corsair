@@ -169,3 +169,12 @@ export function gdaggregationList(data) {
     data
   })
 }
+
+// 资金流入
+export function getFundFlowList(data) {
+  return request({
+    url: '/api/stock/GetFundFlowList',
+    method: 'post',
+    data
+  })
+}
