@@ -1,6 +1,8 @@
 <template>
   <div>
   <div class="app-container">
+    <el-row type="flex">
+        <el-col :span="18">
     <el-form :inline="true" :model="queryForm" class="demo-form-inline">
       <el-form-item label="代码">
         <el-input v-model="queryForm.secucode" placeholder="SZ.000001"></el-input>
@@ -23,9 +25,17 @@
         <el-button type="primary" @click="onQuerySubmit">查询</el-button>
       </el-form-item>
     </el-form>
+    </el-col>
+        <el-col :offset="1" :span="5" align="middle">
+        <div>
+            <el-button type="primary" @click="onLineChart">重建数据</el-button>
+        </div>
+        </el-col>
+    </el-row>
   </div>
   <div class="app-container">
-    <el-table :data="tableData" stripe style="width: 100%" max-height="800">
+    <el-table :data="tableData" stripe style="width: 100%" max-height="800" @selection-change="onSelectionChange">
+    <el-table-column type="selection" width="55"></el-table-column>
     <el-table-column fixed="left" class-name="status-col" label="名称" width="120">
       <template slot-scope="scope">
         <el-tag type="danger" effect="dark">{{ scope.row.name }}</el-tag>
@@ -108,7 +118,7 @@
         :page-size=pageInfo.pageSize
         :page-sizes="[10, 30, 50, 100]"
         :total=pageInfo.total
-        layout="total, sizes, prev, pager, next, jumper"
+        layout="total, sizes, prev, pager, next"
         @current-change="handleCurrentChange"
         @size-change="handleSizeChange"
       />
@@ -149,11 +159,17 @@
       </el-tabs>
     </el-dialog>
   </div>
+  <div>
+      <el-drawer title="修改关注信息" :visible.sync="fundForm.fundFlowDrawer" :direction="fundForm.direction" :with-header="false" size="75%">
+        <div id="fundLineChart" style="width: 1200px;height: 400px;"></div>
+      </el-drawer>
+    </div>
   </div>
 </template>
 
 <script>
-import { getRecommendList,updateRecommend,confirmFocus } from '@/api/stock'
+import echarts from 'echarts'
+import { getRecommendList,updateRecommend,confirmFocus,getFundDetailList } from '@/api/stock'
 
 export default {
   filters: {
@@ -192,14 +208,33 @@ export default {
         lineChartSrc: '',
         secucode: '',
       },
+      fundForm:{
+        chart: null,
+        direction: 'btt',
+        fundFlowDrawer: false,
+        opinionData: [],
+        legendData: [],
+        secucodes: [],
+      },
       formLabelWidth: '120px',
       tableData: [],
       pageInfo: {
         pageNum: 1,
-        pageSize: 20,
+        pageSize: 50,
         total: 0,
       }
     }
+  },
+  mounted() {
+    // this.initChart()
+  },
+  // 每次销毁前清空
+  beforeDestroy() {
+    if (!this.chart) {
+      return
+    }
+    this.fundForm.chart.dispose()
+    this.fundForm.chart = null
   },
   created() {
     this.fetchData()
@@ -215,12 +250,10 @@ export default {
         secucode: this.queryForm.secucode,
       }
       getRecommendList(req).then(response => {
-        console.log("===>>TODO 111: ", response)
         this.tableData = response.data.items
         this.pageInfo.total = response.data.total
         this.listLoading = false
       })
-      console.log("===>>TODO 211: ", this.tableData)
     },
     modifyRow(index, rows) {
       var data = rows[index]
@@ -238,16 +271,13 @@ export default {
       }
 
       confirmFocus(req).then(response=>{
-        console.log("==>>TODO fucus:", response)
         this.fetchData()
       })
     },
     klineChart(index, rows) {//日线图
-      console.log("==>>TODO 3141: ", rows[index])
       var data = rows[index]
       var secucode = data.secucode.split('.').join("").toLowerCase()
       this.lineChartForm.secucode = secucode
-      console.log("==>>TODO 3142: ", secucode)
       this.lineChartForm.lineChartVisible = !this.lineChartForm.lineChartVisible
       this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/daily/n/'+secucode+'.gif'
     },
@@ -255,10 +285,7 @@ export default {
       this.modifyDialogVisible = !this.modifyDialogVisible
     },
     confirmDialog(formName) {
-      console.log("==>>TODO 3031: ", this.modifyForm)
-      console.log("==>>TODO 3032: ", this.modifyForm.decrease)
       var form = this.modifyForm
-      console.log("==>>TODO 3035: ", this.$refs[formName], form)
 
       var req = {
         name : this.modifyForm.name,
@@ -267,7 +294,6 @@ export default {
       }
 
       updateRecommend(req).then(response=>{
-        console.log("==>>TODO 3036: ", "ok")
         this.modifyDialogVisible = !this.modifyDialogVisible
         this.fetchData()
       })
@@ -284,10 +310,8 @@ export default {
     },
     handleSizeChange(val) {
       this.pageInfo.pageSize = val
-      console.log("===>>TODO 214: ", val)
     },
     selectTabClick(tab) {
-      console.log("===>>TODO 254: ", tab)
       var secucode = this.lineChartForm.secucode
       if (tab.name === "date") {
         this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/daily/n/'+secucode+'.gif'
@@ -297,8 +321,63 @@ export default {
         this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/min/n/'+secucode+'.gif'
       }
       this.lineChartForm.activeName = "date"
-    }
+    },
+    onSelectionChange(values) {
+      if (!values) {
+        return 
+      }
+      for (var idx in values) {
+        var val = values[idx]
+        this.fundForm.secucodes.push(val.secucode)
+      }
+    },
+    onLineChart() {
+      this.fundForm.fundFlowDrawer = true
+      var req = {
+        secucodes: this.fundForm.secucodes,
+      }
+      getFundDetailList(req).then(response=>{
+        this.fundForm.opinionData = response.data.items
+        this.fundForm.legendData = response.data.legendData
+        this.fundForm.secucodes = []
 
+        this.drawLine("fundLineChart")
+      })
+    },
+    drawLine(id) {
+      this.charts = echarts.init(document.getElementById(id))
+      this.charts.setOption({
+          title: {
+            text: ''
+          },
+          tooltip: {
+            trigger: 'axis'
+          },
+          legend: {
+            data: this.fundForm.legendData
+          },
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          toolbox: {
+            feature: {
+              saveAsImage: {}
+            }
+          },
+          xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20"]
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: this.fundForm.opinionData
+      })
+    },
   }
 }
 </script>

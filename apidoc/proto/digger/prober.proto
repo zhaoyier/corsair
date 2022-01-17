@@ -60,7 +60,7 @@ enum FunctionType {
     FunctionTypeRecommend = 5;
     FunctionTypeFundFlow = 6;   //资金流入
     FunctionTypeFocus = 10;  //关注
-    FunctionTypeZhouQi = 11;  //周期股
+    FunctionTypeZhouQi = 11;  //
 }
 
 message PresentPrice {

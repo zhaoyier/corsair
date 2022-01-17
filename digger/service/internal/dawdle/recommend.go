@@ -57,6 +57,7 @@ func genShortRecommendedData(data *orm.GPShortLine, updateNum bool) error {
 	result := getGPRecommend(data.Secucode)
 	data.DecreaseTag = getDecreaseTag(data.Secucode, data.DecreaseTag)
 	decrease := math.Max(float64(data.MDecrease), float64(data.TDecrease))
+	log.Infof("==>>322: %+v|%+v|%+v", data.Secucode, data.DecreaseTag, decrease)
 	if decrease >= float64(data.DecreaseTag) {
 		result.State = int32(trpc.RMState_RMStateFirst)
 	} else if decrease >= float64(data.DecreaseTag)+5 {
@@ -65,9 +66,9 @@ func genShortRecommendedData(data *orm.GPShortLine, updateNum bool) error {
 		result.State = int32(trpc.RMState_RMStateUnknown)
 	}
 
-	if data.Secucode == "SZ.000819" {
-		log.Infof("==>>TODO 551: %+v|%+v|%+v", data.DecreaseTag, decrease, result.State)
-	}
+	// if data.Secucode == "SZ.002374" {
+	log.Infof("==>>TODO 551: %+v|%+v", data.Secucode, result.State)
+	// }
 
 	result.Name = data.Name
 	result.RMType = int32(trpc.RMType_RmTypeShort)

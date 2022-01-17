@@ -30,6 +30,28 @@ service ZWAdmin {
     rpc AddGPRemark(AddGPRemarkReq) returns(AddGPRemarkResp);
     rpc GetGPRemark(GetGPRemarkReq) returns(GetGPRemarkResp);
     rpc GetFundFlowList(GetFundFlowListReq) returns(GetFundFlowListResp);
+    rpc GetFundDetailList(GetFundDetailListReq) returns(GetFundDetailListResp);
+}
+
+message GetFundDetailListReq {
+    repeated string secucodes= 1;
+}
+
+message FundDetailItem {
+    string name = 1;
+    string type = 2;
+    string stack = 3;
+    repeated int32 data = 4;
+} 
+
+message FundDetailData {
+    repeated string legendData = 1;
+    repeated FundDetailItem items = 2;
+}
+
+message GetFundDetailListResp {
+    int32 code = 1;
+    FundDetailData data = 2;
 }
 
 message GetFundFlowListReq {

@@ -25,6 +25,25 @@ func GetFundFlowOnce() {
 	})
 }
 
+//
+func GetFundFlowTemp(secucode string) {
+	codeStr := utils.GetSecucode(secucode)
+	if codeStr == "" {
+		return
+	}
+	resp := new(EMFundFlow)
+	if err := request.GetEastmoneyFundFlow(codeStr, resp); err != nil {
+		return
+	}
+
+	log.Infof("==>>TODO 802: %+v|%+v", secucode, resp.Rc)
+
+	if resp.Rc != 0 {
+		return
+	}
+	parsingFFKlines(secucode, resp)
+}
+
 func GetFundFlow() {
 	sess, col := orm.CNSecucodeMgr.GetCol()
 	defer sess.Close()
@@ -37,8 +56,8 @@ func GetFundFlow() {
 	iter := col.Find(query).Batch(100).Prefetch(0.25).Iter()
 
 	for iter.Next(&data) {
-		secucode := utils.GetSecucodeNum(data.Secucode)
-		if secucode <= 0 {
+		secucode := utils.GetSecucode(data.Secucode)
+		if secucode == "" {
 			continue
 		}
 
@@ -48,7 +67,7 @@ func GetFundFlow() {
 			continue
 		}
 
-		// log.Infof("==>>TODO 812: %+v", resp)
+		// log.Infof("==>>TODO 802: %+v|%+v", secucode, resp.Rc)
 
 		if resp.Rc != 0 {
 			// log.Infof("==>>TODO 812: %+v", secucode)
@@ -61,26 +80,29 @@ func GetFundFlow() {
 
 func parsingFFKlines(secucode string, req *EMFundFlow) error {
 	weekday := time.Now().Local().Weekday()
-	if weekday == time.Saturday || weekday > time.Sunday {
+
+	if weekday == time.Saturday || weekday == time.Sunday {
+		// log.Infof("==>>TODO 810: %+v|%+v", secucode, weekday)
 		return nil
 	}
 
 	dateStr := time.Now().Local().Format("2006-01-02")
 	if req.Data == nil || req.Data.Klines == nil || len(req.Data.Klines) <= 0 {
+		// log.Infof("==>>TODO 811: %+v|%+v", secucode, req.Data)
 		return nil
 	}
 
 	// dateStr := "2022-01-14"
-	log.Infof("==>>TODO 812: %+v", dateStr)
+	// log.Infof("==>>TODO 812: %+v", dateStr)
 	rows := req.Data.Klines
 	for _, row := range rows {
 		if strings.Contains(row, dateStr) {
-			log.Infof("==>>TODO 813: %+v", row)
+			// log.Infof("==>>TODO 813: %+v", row)
 			cells := strings.Split(row, ",")
 			if len(cells) < 15 {
 				continue
 			}
-			log.Infof("==>>TODO 814: %+v", cells)
+			// log.Infof("==>>TODO 814: %+v", cells)
 			data := orm.GPFundFlowMgr.NewGPFundFlow()
 			data.Secucode = secucode
 			data.CreateDate = time.Now().Unix()

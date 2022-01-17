@@ -2,6 +2,8 @@ package zwadmin
 
 import (
 	"net/http"
+	"sort"
+	"sync"
 
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
 	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
@@ -81,8 +83,53 @@ func GetFundFlowList(in *gin.Context) {
 	in.JSON(http.StatusOK, resp)
 }
 
+func GetFundDetailList(in *gin.Context) {
+	var req trpc.GetFundDetailListReq
+	resp := &trpc.GetFundDetailListResp{
+		Code: 21000,
+		Data: &trpc.FundDetailData{
+			Items: make([]*trpc.FundDetailItem, 0),
+		},
+	}
+	if err := in.BindJSON(&req); err != nil {
+		in.JSON(http.StatusBadRequest, resp)
+		return
+	}
+
+	wg := sync.WaitGroup{}
+	wg.Add(len(req.GetSecucodes()))
+
+	for _, secucode := range req.GetSecucodes() {
+		secucode := secucode
+		go func(wg *sync.WaitGroup) {
+			name := getName(secucode)
+			results := getSecucodeFund(secucode)
+			item := &trpc.FundDetailItem{
+				Name:  name,
+				Type:  "line",
+				Stack: "Total",
+			}
+			sort.Slice(results, func(i, j int) bool {
+				return results[i].FundDate < results[j].FundDate
+			})
+
+			for _, result := range results {
+				item.Data = append(item.Data, result.InflowRatio)
+			}
+			resp.Data.Items = append(resp.Data.Items, item)
+			resp.Data.LegendData = append(resp.Data.LegendData, name)
+			wg.Done()
+		}(&wg)
+	}
+
+	wg.Wait()
+
+	resp.Code = 20000
+	in.JSON(http.StatusOK, resp)
+}
+
 func getSecucodeFund(secucode string) []*trpc.GPFundFlowItem {
-	query := ezdb.M{}
+	query := ezdb.M{"Secucode": secucode}
 	items := make([]*trpc.GPFundFlowItem, 0, 8)
 
 	results, err := orm.GPFundFlowMgr.Find(query, 20, 0, "-FundDate")

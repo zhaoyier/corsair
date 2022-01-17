@@ -1,0 +1,207 @@
+2022-01-17 16:21:15,921 INFO o.a.j.u.JMeterUtils: Setting Locale to zh_CN
+2022-01-17 16:21:15,988 INFO o.a.j.JMeter: Loading user properties from: /usr/local/jmeter/bin/user.properties
+2022-01-17 16:21:15,989 INFO o.a.j.JMeter: Loading system properties from: /usr/local/jmeter/bin/system.properties
+2022-01-17 16:21:16,002 INFO o.a.j.JMeter: Copyright (c) 1998-2021 The Apache Software Foundation
+2022-01-17 16:21:16,002 INFO o.a.j.JMeter: Version 5.4.2
+2022-01-17 16:21:16,002 INFO o.a.j.JMeter: java.version=17
+2022-01-17 16:21:16,003 INFO o.a.j.JMeter: java.vm.name=Java HotSpot(TM) 64-Bit Server VM
+2022-01-17 16:21:16,003 INFO o.a.j.JMeter: os.name=Mac OS X
+2022-01-17 16:21:16,003 INFO o.a.j.JMeter: os.arch=x86_64
+2022-01-17 16:21:16,003 INFO o.a.j.JMeter: os.version=11.2.2
+2022-01-17 16:21:16,003 INFO o.a.j.JMeter: file.encoding=UTF-8
+2022-01-17 16:21:16,003 INFO o.a.j.JMeter: java.awt.headless=null
+2022-01-17 16:21:16,004 INFO o.a.j.JMeter: Max memory     =1073741824
+2022-01-17 16:21:16,004 INFO o.a.j.JMeter: Available Processors =4
+2022-01-17 16:21:16,018 INFO o.a.j.JMeter: Default Locale=English (EN)
+2022-01-17 16:21:16,019 INFO o.a.j.JMeter: JMeter  Locale=Chinese (China)
+2022-01-17 16:21:16,019 INFO o.a.j.JMeter: JMeterHome=/usr/local/jmeter
+2022-01-17 16:21:16,019 INFO o.a.j.JMeter: user.dir  =/Users/zhaojianwei/Projects/ezbuy/goflow/src/git.ezbuy.me/ezbuy/corsair/digger
+2022-01-17 16:21:16,019 INFO o.a.j.JMeter: PWD       =/Users/zhaojianwei/Projects/ezbuy/goflow/src/git.ezbuy.me/ezbuy/corsair/digger
+2022-01-17 16:21:16,021 INFO o.a.j.JMeter: IP: 192.168.108.88 Name: zhaojianweideMacBook-Pro.local FullName: 192.168.108.88
+2022-01-17 16:21:17,236 INFO o.a.j.JMeter: Setting LAF to: com.github.weisj.darklaf.DarkLaf:com.github.weisj.darklaf.theme.DarculaTheme
+2022-01-17 16:21:20,327 INFO o.a.j.JMeter: Loaded icon properties from org/apache/jmeter/images/icon.properties
+2022-01-17 16:21:59,412 INFO o.a.j.s.FileServer: Default base='/Users/zhaojianwei/Projects/ezbuy/goflow/src/git.ezbuy.me/ezbuy/corsair/digger'
+2022-01-17 16:21:59,417 INFO o.a.j.g.a.Load: Loading file: /Users/zhaojianwei/Documents/jmeter/卖家平台.jmx
+2022-01-17 16:21:59,418 INFO o.a.j.s.FileServer: Set new base='/Users/zhaojianwei/Documents/jmeter'
+2022-01-17 16:21:59,650 INFO o.a.j.s.SaveService: Testplan (JMX) version: 2.2. Testlog (JTL) version: 2.2
+2022-01-17 16:21:59,694 INFO o.a.j.s.SaveService: Using SaveService properties version 5.0
+2022-01-17 16:21:59,696 INFO o.a.j.s.SaveService: Using SaveService properties file encoding UTF-8
+2022-01-17 16:21:59,698 INFO o.a.j.s.SaveService: Loading file: /Users/zhaojianwei/Documents/jmeter/卖家平台.jmx
+2022-01-17 16:21:59,789 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/html is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2022-01-17 16:21:59,789 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xhtml+xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2022-01-17 16:21:59,789 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2022-01-17 16:21:59,789 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2022-01-17 16:21:59,789 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/vnd.wap.wml is org.apache.jmeter.protocol.http.parser.RegexpHTMLParser
+2022-01-17 16:21:59,790 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/css is org.apache.jmeter.protocol.http.parser.CssParser
+2022-01-17 16:21:59,851 INFO o.a.j.s.SampleResult: Note: Sample TimeStamps are START times
+2022-01-17 16:21:59,853 INFO o.a.j.s.SampleResult: sampleresult.default.encoding is set to ISO-8859-1
+2022-01-17 16:21:59,854 INFO o.a.j.s.SampleResult: sampleresult.useNanoTime=true
+2022-01-17 16:21:59,854 INFO o.a.j.s.SampleResult: sampleresult.nanoThreadSleep=5000
+2022-01-17 16:22:00,145 INFO o.a.j.v.ViewResultsFullVisualizer: Add JavaFX to your Java installation if you want to use renderer: org.apache.jmeter.visualizers.RenderInBrowser
+2022-01-17 16:22:01,019 INFO o.a.j.s.FileServer: Set new base='/Users/zhaojianwei/Documents/jmeter'
+2022-01-17 16:22:01,095 ERROR o.a.j.JMeter: Uncaught exception in thread Thread[AWT-EventQueue-0,6,main]
+java.lang.IllegalAccessError: class com.github.weisj.darklaf.ui.filechooser.DarkFilePaneUIBridge$DetailsTableModel (in unnamed module @0x105fece7) cannot access class sun.awt.shell.ShellFolder (in module java.desktop) because module java.desktop does not export sun.awt.shell to unnamed module @0x105fece7
+	at com.github.weisj.darklaf.ui.filechooser.DarkFilePaneUIBridge$DetailsTableModel.updateColumnInfo(DarkFilePaneUIBridge.java:1128) ~[darklaf-core-2.5.4.jar:2.5.4]
+	at com.github.weisj.darklaf.ui.filechooser.DarkFilePaneUIBridge$DetailsTableModel.<init>(DarkFilePaneUIBridge.java:1115) ~[darklaf-core-2.5.4.jar:2.5.4]
+	at com.github.weisj.darklaf.ui.filechooser.DarkFilePaneUIBridge.getDetailsTableModel(DarkFilePaneUIBridge.java:576) ~[darklaf-core-2.5.4.jar:2.5.4]
+	at com.github.weisj.darklaf.ui.filechooser.DarkFilePaneUIBridge$SortableListModel.<init>(DarkFilePaneUIBridge.java:1079) ~[darklaf-core-2.5.4.jar:2.5.4]
+	at com.github.weisj.darklaf.ui.filechooser.DarkFilePane.createList(DarkFilePane.java:137) ~[darklaf-core-2.5.4.jar:2.5.4]
+	at com.github.weisj.darklaf.ui.filechooser.DarkFileChooserUIBridge.createList(DarkFileChooserUIBridge.java:585) ~[darklaf-core-2.5.4.jar:2.5.4]
+	at com.github.weisj.darklaf.ui.filechooser.DarkFileChooserUIBridge$MetalFileChooserUIAccessor.createList(DarkFileChooserUIBridge.java:750) ~[darklaf-core-2.5.4.jar:2.5.4]
+	at com.github.weisj.darklaf.ui.filechooser.DarkFilePaneUIBridge.setViewType(DarkFilePaneUIBridge.java:376) ~[darklaf-core-2.5.4.jar:2.5.4]
+	at com.github.weisj.darklaf.ui.filechooser.DarkFilePaneUIBridge.propertyChange(DarkFilePaneUIBridge.java:890) ~[darklaf-core-2.5.4.jar:2.5.4]
+	at java.beans.PropertyChangeSupport.fire(PropertyChangeSupport.java:343) ~[?:?]
+	at java.beans.PropertyChangeSupport.firePropertyChange(PropertyChangeSupport.java:335) ~[?:?]
+	at java.beans.PropertyChangeSupport.firePropertyChange(PropertyChangeSupport.java:268) ~[?:?]
+	at java.awt.Component.firePropertyChange(Component.java:8722) ~[?:?]
+	at javax.swing.JComponent.setUI(JComponent.java:733) ~[?:?]
+	at javax.swing.JFileChooser.updateUI(JFileChooser.java:1839) ~[?:?]
+	at javax.swing.JFileChooser.setup(JFileChooser.java:396) ~[?:?]
+	at javax.swing.JFileChooser.<init>(JFileChooser.java:362) ~[?:?]
+	at javax.swing.JFileChooser.<init>(JFileChooser.java:309) ~[?:?]
+	at org.apache.jmeter.gui.util.FileDialoger.<clinit>(FileDialoger.java:42) ~[ApacheJMeter_core.jar:5.4.2]
+	at org.apache.jmeter.gui.action.Load.loadProjectFile(Load.java:156) ~[ApacheJMeter_core.jar:5.4.2]
+	at org.apache.jmeter.gui.action.Load.loadProjectFile(Load.java:101) ~[ApacheJMeter_core.jar:5.4.2]
+	at org.apache.jmeter.gui.action.LoadDraggedFile.loadProject(LoadDraggedFile.java:37) ~[ApacheJMeter_core.jar:5.4.2]
+	at org.apache.jmeter.gui.MainFrame.openJmxFilesFromDragAndDrop(MainFrame.java:855) ~[ApacheJMeter_core.jar:5.4.2]
+	at org.apache.jmeter.gui.MainFrame.drop(MainFrame.java:830) ~[ApacheJMeter_core.jar:5.4.2]
+	at java.awt.dnd.DropTarget.drop(DropTarget.java:455) ~[?:?]
+	at sun.awt.dnd.SunDropTargetContextPeer.processDropMessage(SunDropTargetContextPeer.java:548) ~[?:?]
+	at sun.lwawt.macosx.CDropTargetContextPeer.processDropMessage(CDropTargetContextPeer.java:129) ~[?:?]
+	at sun.awt.dnd.SunDropTargetContextPeer$EventDispatcher.dispatchDropEvent(SunDropTargetContextPeer.java:864) ~[?:?]
+	at sun.awt.dnd.SunDropTargetContextPeer$EventDispatcher.dispatchEvent(SunDropTargetContextPeer.java:788) ~[?:?]
+	at sun.awt.dnd.SunDropTargetEvent.dispatch(SunDropTargetEvent.java:48) ~[?:?]
+	at java.awt.Component.dispatchEventImpl(Component.java:4866) ~[?:?]
+	at java.awt.Container.dispatchEventImpl(Container.java:2324) ~[?:?]
+	at java.awt.Window.dispatchEventImpl(Window.java:2780) ~[?:?]
+	at java.awt.Component.dispatchEvent(Component.java:4833) ~[?:?]
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:773) ~[?:?]
+	at java.awt.EventQueue$4.run(EventQueue.java:722) ~[?:?]
+	at java.awt.EventQueue$4.run(EventQueue.java:716) ~[?:?]
+	at java.security.AccessController.doPrivileged(AccessController.java:399) ~[?:?]
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:86) ~[?:?]
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:97) ~[?:?]
+	at java.awt.EventQueue$5.run(EventQueue.java:746) ~[?:?]
+	at java.awt.EventQueue$5.run(EventQueue.java:744) ~[?:?]
+	at java.security.AccessController.doPrivileged(AccessController.java:399) ~[?:?]
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:86) ~[?:?]
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:743) ~[?:?]
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:203) [?:?]
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:124) [?:?]
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:113) [?:?]
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:109) [?:?]
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101) [?:?]
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:90) [?:?]
+2022-01-17 16:29:00,556 INFO o.a.j.e.StandardJMeterEngine: Running the test!
+2022-01-17 16:29:00,562 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2022-01-17 16:29:00,563 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2022-01-17 16:29:00,568 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must contain the string: '.functions.'
+2022-01-17 16:29:00,569 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must not contain the string: '.gui.'
+2022-01-17 16:29:00,659 INFO o.a.j.t.TestPlan: added F:\apache-jmeter-3.2\mysql-connector-java-5.1.7-bin.jar to classpath
+2022-01-17 16:29:00,659 INFO o.a.j.g.u.JMeterMenuBar: setRunning(true, *local*)
+2022-01-17 16:29:00,736 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 1 : 向日葵类目
+2022-01-17 16:29:00,737 INFO o.a.j.e.StandardJMeterEngine: Starting 1 threads for group 向日葵类目.
+2022-01-17 16:29:00,737 INFO o.a.j.e.StandardJMeterEngine: Thread will continue on error
+2022-01-17 16:29:00,738 INFO o.a.j.t.ThreadGroup: Starting thread group... number=1 threads=1 ramp-up=1 delayedStart=false
+2022-01-17 16:29:00,745 INFO o.a.j.t.ThreadGroup: Started thread group number 1
+2022-01-17 16:29:00,745 INFO o.a.j.e.StandardJMeterEngine: All thread groups have been started
+2022-01-17 16:29:00,750 INFO o.a.j.t.JMeterThread: Thread started: 向日葵类目 1-1
+2022-01-17 16:29:00,790 INFO o.a.j.p.h.s.HTTPHCAbstractImpl: Local host = zhaojianweideMacBook-Pro.local
+2022-01-17 16:29:00,802 INFO o.a.j.p.h.s.HTTPHC4Impl: HTTP request retry count = 0
+2022-01-17 16:29:02,654 INFO o.a.j.t.JMeterThread: Thread is done: 向日葵类目 1-1
+2022-01-17 16:29:02,654 INFO o.a.j.t.JMeterThread: Thread finished: 向日葵类目 1-1
+2022-01-17 16:29:02,661 INFO o.a.j.e.StandardJMeterEngine: Notifying test listeners of end of test
+2022-01-17 16:29:02,661 INFO o.a.j.g.u.JMeterMenuBar: setRunning(false, *local*)
+2022-01-17 17:28:37,347 INFO o.a.j.e.StandardJMeterEngine: Running the test!
+2022-01-17 17:28:37,357 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2022-01-17 17:28:37,361 INFO o.a.j.t.TestPlan: added F:\apache-jmeter-3.2\mysql-connector-java-5.1.7-bin.jar to classpath
+2022-01-17 17:28:37,362 INFO o.a.j.g.u.JMeterMenuBar: setRunning(true, *local*)
+2022-01-17 17:28:37,528 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 1 : 向日葵类目
+2022-01-17 17:28:37,529 INFO o.a.j.e.StandardJMeterEngine: Starting 1 threads for group 向日葵类目.
+2022-01-17 17:28:37,530 INFO o.a.j.e.StandardJMeterEngine: Thread will continue on error
+2022-01-17 17:28:37,530 INFO o.a.j.t.ThreadGroup: Starting thread group... number=1 threads=1 ramp-up=1 delayedStart=false
+2022-01-17 17:28:37,532 INFO o.a.j.t.ThreadGroup: Started thread group number 1
+2022-01-17 17:28:37,532 INFO o.a.j.e.StandardJMeterEngine: All thread groups have been started
+2022-01-17 17:28:37,533 INFO o.a.j.t.JMeterThread: Thread started: 向日葵类目 1-1
+2022-01-17 17:28:39,337 INFO o.a.j.t.JMeterThread: Thread is done: 向日葵类目 1-1
+2022-01-17 17:28:39,337 INFO o.a.j.t.JMeterThread: Thread finished: 向日葵类目 1-1
+2022-01-17 17:28:39,338 INFO o.a.j.e.StandardJMeterEngine: Notifying test listeners of end of test
+2022-01-17 17:28:39,339 INFO o.a.j.g.u.JMeterMenuBar: setRunning(false, *local*)
+2022-01-17 18:03:23,457 INFO o.a.j.e.StandardJMeterEngine: Running the test!
+2022-01-17 18:03:23,469 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2022-01-17 18:03:23,483 INFO o.a.j.t.TestPlan: added F:\apache-jmeter-3.2\mysql-connector-java-5.1.7-bin.jar to classpath
+2022-01-17 18:03:23,483 INFO o.a.j.g.u.JMeterMenuBar: setRunning(true, *local*)
+2022-01-17 18:03:23,786 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 1 : 向日葵类目
+2022-01-17 18:03:23,787 INFO o.a.j.e.StandardJMeterEngine: Starting 1 threads for group 向日葵类目.
+2022-01-17 18:03:23,787 INFO o.a.j.e.StandardJMeterEngine: Thread will continue on error
+2022-01-17 18:03:23,787 INFO o.a.j.t.ThreadGroup: Starting thread group... number=1 threads=1 ramp-up=1 delayedStart=false
+2022-01-17 18:03:23,794 INFO o.a.j.t.ThreadGroup: Started thread group number 1
+2022-01-17 18:03:23,794 INFO o.a.j.e.StandardJMeterEngine: All thread groups have been started
+2022-01-17 18:03:23,798 INFO o.a.j.t.JMeterThread: Thread started: 向日葵类目 1-1
+2022-01-17 18:03:27,249 INFO o.a.j.t.JMeterThread: Thread is done: 向日葵类目 1-1
+2022-01-17 18:03:27,250 INFO o.a.j.t.JMeterThread: Thread finished: 向日葵类目 1-1
+2022-01-17 18:03:27,250 INFO o.a.j.e.StandardJMeterEngine: Notifying test listeners of end of test
+2022-01-17 18:03:27,251 INFO o.a.j.g.u.JMeterMenuBar: setRunning(false, *local*)
+2022-01-17 18:05:51,471 INFO o.a.j.e.StandardJMeterEngine: Running the test!
+2022-01-17 18:05:51,473 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2022-01-17 18:05:51,475 INFO o.a.j.t.TestPlan: added F:\apache-jmeter-3.2\mysql-connector-java-5.1.7-bin.jar to classpath
+2022-01-17 18:05:51,475 INFO o.a.j.g.u.JMeterMenuBar: setRunning(true, *local*)
+2022-01-17 18:05:51,536 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 1 : 向日葵类目
+2022-01-17 18:05:51,537 INFO o.a.j.e.StandardJMeterEngine: Starting 1 threads for group 向日葵类目.
+2022-01-17 18:05:51,538 INFO o.a.j.e.StandardJMeterEngine: Thread will continue on error
+2022-01-17 18:05:51,539 INFO o.a.j.t.ThreadGroup: Starting thread group... number=1 threads=1 ramp-up=1 delayedStart=false
+2022-01-17 18:05:51,546 INFO o.a.j.t.ThreadGroup: Started thread group number 1
+2022-01-17 18:05:51,547 INFO o.a.j.e.StandardJMeterEngine: All thread groups have been started
+2022-01-17 18:05:51,549 INFO o.a.j.t.JMeterThread: Thread started: 向日葵类目 1-1
+2022-01-17 18:05:53,672 INFO o.a.j.t.JMeterThread: Thread is done: 向日葵类目 1-1
+2022-01-17 18:05:53,673 INFO o.a.j.t.JMeterThread: Thread finished: 向日葵类目 1-1
+2022-01-17 18:05:53,674 INFO o.a.j.e.StandardJMeterEngine: Notifying test listeners of end of test
+2022-01-17 18:05:53,674 INFO o.a.j.g.u.JMeterMenuBar: setRunning(false, *local*)
+2022-01-17 18:09:03,533 INFO o.a.j.e.StandardJMeterEngine: Running the test!
+2022-01-17 18:09:03,536 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2022-01-17 18:09:03,539 INFO o.a.j.t.TestPlan: added F:\apache-jmeter-3.2\mysql-connector-java-5.1.7-bin.jar to classpath
+2022-01-17 18:09:03,539 INFO o.a.j.g.u.JMeterMenuBar: setRunning(true, *local*)
+2022-01-17 18:09:03,596 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 1 : 向日葵类目
+2022-01-17 18:09:03,597 INFO o.a.j.e.StandardJMeterEngine: Starting 1 threads for group 向日葵类目.
+2022-01-17 18:09:03,598 INFO o.a.j.e.StandardJMeterEngine: Thread will continue on error
+2022-01-17 18:09:03,599 INFO o.a.j.t.ThreadGroup: Starting thread group... number=1 threads=1 ramp-up=1 delayedStart=false
+2022-01-17 18:09:03,600 INFO o.a.j.t.ThreadGroup: Started thread group number 1
+2022-01-17 18:09:03,601 INFO o.a.j.e.StandardJMeterEngine: All thread groups have been started
+2022-01-17 18:09:03,601 INFO o.a.j.t.JMeterThread: Thread started: 向日葵类目 1-1
+2022-01-17 18:09:08,204 INFO o.a.j.t.JMeterThread: Thread is done: 向日葵类目 1-1
+2022-01-17 18:09:08,204 INFO o.a.j.t.JMeterThread: Thread finished: 向日葵类目 1-1
+2022-01-17 18:09:08,204 INFO o.a.j.e.StandardJMeterEngine: Notifying test listeners of end of test
+2022-01-17 18:09:08,205 INFO o.a.j.g.u.JMeterMenuBar: setRunning(false, *local*)
+2022-01-17 18:09:44,861 INFO o.a.j.e.StandardJMeterEngine: Running the test!
+2022-01-17 18:09:44,862 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2022-01-17 18:09:44,866 INFO o.a.j.t.TestPlan: added F:\apache-jmeter-3.2\mysql-connector-java-5.1.7-bin.jar to classpath
+2022-01-17 18:09:44,867 INFO o.a.j.g.u.JMeterMenuBar: setRunning(true, *local*)
+2022-01-17 18:09:44,924 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 1 : 向日葵类目
+2022-01-17 18:09:44,924 INFO o.a.j.e.StandardJMeterEngine: Starting 2 threads for group 向日葵类目.
+2022-01-17 18:09:44,925 INFO o.a.j.e.StandardJMeterEngine: Thread will continue on error
+2022-01-17 18:09:44,925 INFO o.a.j.t.ThreadGroup: Starting thread group... number=1 threads=2 ramp-up=1 delayedStart=false
+2022-01-17 18:09:44,929 INFO o.a.j.t.ThreadGroup: Started thread group number 1
+2022-01-17 18:09:44,929 INFO o.a.j.e.StandardJMeterEngine: All thread groups have been started
+2022-01-17 18:09:44,929 INFO o.a.j.t.JMeterThread: Thread started: 向日葵类目 1-1
+2022-01-17 18:09:45,428 INFO o.a.j.t.JMeterThread: Thread started: 向日葵类目 1-2
+2022-01-17 18:09:58,539 INFO o.a.j.t.JMeterThread: Thread is done: 向日葵类目 1-1
+2022-01-17 18:09:58,540 INFO o.a.j.t.JMeterThread: Thread finished: 向日葵类目 1-1
+2022-01-17 18:09:59,036 INFO o.a.j.t.JMeterThread: Thread is done: 向日葵类目 1-2
+2022-01-17 18:09:59,037 INFO o.a.j.t.JMeterThread: Thread finished: 向日葵类目 1-2
+2022-01-17 18:09:59,037 INFO o.a.j.e.StandardJMeterEngine: Notifying test listeners of end of test
+2022-01-17 18:09:59,038 INFO o.a.j.g.u.JMeterMenuBar: setRunning(false, *local*)
+2022-01-17 18:10:48,194 INFO o.a.j.e.StandardJMeterEngine: Running the test!
+2022-01-17 18:10:48,198 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2022-01-17 18:10:48,200 INFO o.a.j.t.TestPlan: added F:\apache-jmeter-3.2\mysql-connector-java-5.1.7-bin.jar to classpath
+2022-01-17 18:10:48,200 INFO o.a.j.g.u.JMeterMenuBar: setRunning(true, *local*)
+2022-01-17 18:10:48,272 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 1 : 向日葵类目
+2022-01-17 18:10:48,272 INFO o.a.j.e.StandardJMeterEngine: Starting 1 threads for group 向日葵类目.
+2022-01-17 18:10:48,272 INFO o.a.j.e.StandardJMeterEngine: Thread will continue on error
+2022-01-17 18:10:48,273 INFO o.a.j.t.ThreadGroup: Starting thread group... number=1 threads=1 ramp-up=1 delayedStart=false
+2022-01-17 18:10:48,274 INFO o.a.j.t.ThreadGroup: Started thread group number 1
+2022-01-17 18:10:48,274 INFO o.a.j.e.StandardJMeterEngine: All thread groups have been started
+2022-01-17 18:10:48,274 INFO o.a.j.t.JMeterThread: Thread started: 向日葵类目 1-1
+2022-01-17 18:10:49,325 INFO o.a.j.t.JMeterThread: Thread is done: 向日葵类目 1-1
+2022-01-17 18:10:49,325 INFO o.a.j.t.JMeterThread: Thread finished: 向日葵类目 1-1
+2022-01-17 18:10:49,326 INFO o.a.j.e.StandardJMeterEngine: Notifying test listeners of end of test
+2022-01-17 18:10:49,327 INFO o.a.j.g.u.JMeterMenuBar: setRunning(false, *local*)

@@ -178,3 +178,11 @@ export function getFundFlowList(data) {
     data
   })
 }
+// GetFundDetailList
+export function getFundDetailList(data) {
+  return request({
+    url: '/api/stock/GetFundDetailList',
+    method: 'post',
+    data
+  })
+}

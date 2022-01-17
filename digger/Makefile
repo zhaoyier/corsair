@@ -1,5 +1,4 @@
-all:
-	clean, regen, pub
+all: clean regen pub
 
 pub:
 	rm -rf service/internal/rpc/*

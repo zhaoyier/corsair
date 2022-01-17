@@ -24,11 +24,12 @@ func Start() {
 	// go dawdle.GenShortLineOnce()
 	// go dawdle.GenRecommendOnce()
 
-	// dawdle.GenRecommendTmp("SZ.000819")
+	// dawdle.GenRecommendTmp("SZ.002374")
 	// dawdle.GenLongLineTmp("SH.603136")
 	// dawdle.GenShortLineTmp("SZ.300741")
 	// dawdle.GenZhouQiOnce()
-	eastmoney.GetFundFlowOnce()
+	// eastmoney.GetFundFlowOnce()
+	// eastmoney.GetFundFlowTemp("SZ.002176")
 
 	for range tk.C {
 		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeCodeList) {
@@ -58,8 +59,7 @@ func Start() {
 			dawdle.GenZhouQiTicker()
 		}
 
-		// dawdle.UpdatePresentPrice()
-
+		dawdle.UpdatePresentPrice()
 	}
 
 	go func(tk *time.Ticker) {

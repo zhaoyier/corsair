@@ -6,14 +6,15 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/utils"
 	log "github.com/Sirupsen/logrus"
 )
 
-func GetEastmoneyFundFlow(secucode int64, resp interface{}) error {
+func GetEastmoneyFundFlow(secucode string, resp interface{}) error {
 	var retryTime int32
 retry:
 	err := eastmoneyFoudFlow(secucode, resp)
-	log.Infof("==>>TODO 871: %+v", err)
+	// log.Infof("==>>TODO 871: %+v", err)
 	if err != nil {
 		log.Errorf("east get code failed: %s|%q", secucode, err)
 		if retryTime >= maxRetry {
@@ -27,15 +28,14 @@ retry:
 
 }
 
-func eastmoneyFoudFlow(secucode int64, resp interface{}) error {
+func eastmoneyFoudFlow(secucode string, resp interface{}) error {
 	var prefix int32 = 1
-	if secucode < 600000 {
+	if utils.GetSecucodeNum(secucode) < 600000 {
 		prefix = 0
 	}
 
-	// url := "https://push2his.eastmoney.com/api/qt/stock/fflow/daykline/get?lmt=0&klt=101&fields1=f1%252Cf2%252Cf3%252Cf7&fields2=f51%252Cf52%252Cf53%252Cf54%252Cf55%252Cf56%252Cf57%252Cf58%252Cf59%252Cf60%252Cf61%252Cf62%252Cf63%252Cf64%252Cf65&secid=0.300204&_=1642245260116"
-	url := fmt.Sprintf("https://push2his.eastmoney.com/api/qt/stock/fflow/daykline/get?lmt=0&klt=101&fields1=f1,f2,f3,f7&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61,f62,f63,f64,f65&secid=%d.%d", prefix, secucode)
-
+	url := fmt.Sprintf("https://push2his.eastmoney.com/api/qt/stock/fflow/daykline/get?lmt=0&klt=101&fields1=f1,f2,f3,f7&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61,f62,f63,f64,f65&secid=%d.%s", prefix, secucode)
+	// log.Infof("==>>881:%+v", url)
 	method := "GET"
 
 	client := &http.Client{}
