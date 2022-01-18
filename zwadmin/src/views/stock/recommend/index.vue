@@ -5,6 +5,9 @@
         <el-col :span="18">
     <el-form :inline="true" :model="queryForm" class="demo-form-inline">
       <el-form-item label="代码">
+        <el-input v-model="queryForm.name" placeholder="贵州茅台"></el-input>
+      </el-form-item>
+      <el-form-item label="代码">
         <el-input v-model="queryForm.secucode" placeholder="SZ.000001"></el-input>
       </el-form-item>
       <el-form-item label="跌幅">
@@ -28,7 +31,7 @@
     </el-col>
         <el-col :offset="1" :span="5" align="middle">
         <div>
-            <el-button type="primary" @click="onLineChart">重建数据</el-button>
+            <el-button type="primary" @click="onLineChart">资金流向</el-button>
         </div>
         </el-col>
     </el-row>
@@ -191,6 +194,7 @@ export default {
       listLoading: true,
       modifyDialogVisible: false,
       queryForm: {
+        name: '',
         secucode: '',
         region: 1,
         decrease: 0,
@@ -220,7 +224,7 @@ export default {
       tableData: [],
       pageInfo: {
         pageNum: 1,
-        pageSize: 50,
+        pageSize: 10,
         total: 0,
       }
     }
@@ -243,6 +247,7 @@ export default {
     fetchData() {
       this.listLoading = true
        var req = {
+        name: this.queryForm.name,
         limit: this.pageInfo.pageSize,
         offset: (this.pageInfo.pageNum-1)*this.pageInfo.pageSize,
         pDecrease:this.queryForm.decrease,

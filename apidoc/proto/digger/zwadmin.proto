@@ -563,9 +563,10 @@ message UpdateRecommendResp {
 message GetRecommendReq {
     int32 pDecrease = 1;
     int32 state = 2;    //状态
-    string secucode = 3;
-    RecommendSortType sortType = 4;
-    int32 rmIndex = 5;
+    string name = 3;
+    string secucode = 4;
+    RecommendSortType sortType = 5;
+    int32 rmIndex = 6;
     int32 limit = 10;
     int32 offset = 11;
 }

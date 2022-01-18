@@ -11,6 +11,7 @@ pub:
 
 clean:
 	git checkout service/*
+	git pull origin feature/dev
 
 regen:
 	rm -rf service/internal/rpc/*.pb.go

@@ -91,6 +91,9 @@ func GetRecommend(in *gin.Context) {
 	if req.GetRmIndex() > 0 {
 		query["RMIndex"] = ezdb.M{"$gte": req.GetRmIndex()}
 	}
+	if req.GetName() != "" {
+		query["Secucode"] = getSecucode(req.GetName())
+	}
 
 	if req.GetLimit() <= 0 {
 		req.Limit = 20

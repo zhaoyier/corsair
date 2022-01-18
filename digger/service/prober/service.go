@@ -29,7 +29,7 @@ func Start() {
 	// dawdle.GenShortLineTmp("SZ.300741")
 	// dawdle.GenZhouQiOnce()
 	// eastmoney.GetFundFlowOnce()
-	// eastmoney.GetFundFlowTemp("SZ.002176")
+	// eastmoney.GetFundFlowTemp("SZ.301100")
 
 	for range tk.C {
 		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeCodeList) {

@@ -36,6 +36,10 @@ func GetFundFlowList(in *gin.Context) {
 		query["FundDate"] = getCreateDate()
 	}
 
+	if req.GetName() != "" {
+		query["Secucode"] = getSecucode(req.GetName())
+	}
+
 	if req.GetFundStart() > 0 && req.GetFundEnd() > 0 {
 		sortField = "-FundDate"
 		query["FundDate"] = ezdb.M{"$gte": req.GetFundStart(), "$lte": req.GetFundEnd()}
