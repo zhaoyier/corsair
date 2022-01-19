@@ -378,9 +378,12 @@ export default {
     },
     handleCurrentChange(val) {
       this.paginationForm.pageNum = val
+      this.fetchData()
     },
     handleSizeChange(val) {
+      this.paginationForm.pageNum = 0
       this.paginationForm.pageSize = val
+      this.fetchData()
     },
     onQuerySubmit(val) {
       this.fetchData()
@@ -419,7 +422,6 @@ export default {
       if (this.updateForm.expectEnd == 0) {
         this.updateForm.expectEnd = Date.parse(new Date())
       }
-      console.log("==>>TODO 221: ", this.updateForm.expectStart)
       this.updateForm.expectDate =  [new Date(this.updateForm.expectStart), this.updateForm.expectEnd]
     },
     onRemarkZhouQi(index, rows) {
@@ -476,10 +478,7 @@ export default {
     onSelectRemarkTab(tab) {
       if (tab.name === 'list') {
         this.remarkForm.activeName = 'list'
-        // this.remarkForm.remarkList = [{"remark": "111", "createDate": 111}]
-        // this.remarkForm.remarkList = [{"remark": "111", "createDate": 111}]
       } else {
-        // this.remarkForm
         this.remarkForm.activeName = 'create'
       }
     },
