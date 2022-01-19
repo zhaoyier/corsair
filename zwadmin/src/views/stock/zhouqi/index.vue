@@ -488,7 +488,7 @@ export default {
       console.log("==>>551: ", this.remarkForm.content, this.remarkForm.createDate)
       var req = {
         secucode: this.remarkForm.secucode,
-        content: this.remarkForm.content,
+        remark: this.remarkForm.content,
         createDate: this.remarkForm.createDate,
       }
       addGPRemark(req).then(response=>{
