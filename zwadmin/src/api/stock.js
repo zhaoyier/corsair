@@ -135,9 +135,9 @@ export function updateGPZhouQi(data) {
 }
 
 // 更新周期备注
-export function addGPZhouQiRemark(data) {
+export function addGPRemark(data) {
   return request({
-    url: '/api/stock/AddGPZhouQiRemark',
+    url: '/api/stock/AddGPRemark',
     method: 'post',
     data
   })

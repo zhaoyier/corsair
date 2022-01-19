@@ -271,7 +271,7 @@
 </template>
 
 <script>
-import { gpzhouQiList, updateGPZhouQi, addGPZhouQiRemark } from '@/api/stock'
+import { gpzhouQiList, updateGPZhouQi, addGPRemark } from '@/api/stock'
 import { parseTime } from '@/utils/index'
 
 
@@ -491,7 +491,7 @@ export default {
         content: this.remarkForm.content,
         createDate: this.remarkForm.createDate,
       }
-      addGPZhouQiRemark(req).then(response=>{
+      addGPRemark(req).then(response=>{
         
       })
     },

@@ -24,7 +24,7 @@ service ZWAdmin {
     rpc AddGPZhouQi(AddGPZhouQiReq) returns(AddGPZhouQiResp);
     rpc UpdateGPZhouQi(UpdateGPZhouQiReq) returns(UpdateGPZhouQiResp);
     rpc GPZhouQiList(GPZhouQiListReq) returns(GPZhouQiListResp);
-    rpc AddGPZhouQiRemark(AddGPZhouQiRemarkReq) returns(AddGPZhouQiRemarkResp);
+    // rpc AddGPRemark(AddGPZhouQiRemarkReq) returns(AddGPZhouQiRemarkResp);
     rpc GDAggregationReset(GDAggregationResetReq) returns(GDAggregationResetResp);
     rpc GDAggregationList(GDAggregationListReq) returns(GDAggregationListResp);
     rpc AddGPRemark(AddGPRemarkReq) returns(AddGPRemarkResp);
@@ -168,15 +168,15 @@ enum GPZhouQiState {
     GPZhouQiStatePrice = 2; //价格接近
 }
 
-message AddGPZhouQiRemarkReq {
-    string secucode= 2;
-    string content = 3;
-    int64 createDate = 4;
-}
+// message AddGPZhouQiRemarkReq {
+//     string secucode= 2;
+//     string content = 3;
+//     int64 createDate = 4;
+// }
 
-message AddGPZhouQiRemarkResp{
-    int32 code = 1;
-}
+// message AddGPZhouQiRemarkResp{
+//     int32 code = 1;
+// }
 
 message UpdateGPZhouQiReq {
     string name = 1;
