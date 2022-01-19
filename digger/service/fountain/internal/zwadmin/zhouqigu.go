@@ -166,38 +166,6 @@ func GPZhouQiList(in *gin.Context) {
 
 }
 
-func AddGPZhouQiRemark(in *gin.Context) {
-	var req trpc.AddGPZhouQiRemarkReq
-	resp := &trpc.AddGPZhouQiRemarkResp{
-		Code: 21000,
-	}
-	if err := in.BindJSON(&req); err != nil {
-		in.JSON(http.StatusBadRequest, resp)
-		return
-	}
-
-	result, err := orm.GPZhouQiMgr.FindOneBySecucode(req.GetSecucode())
-	if err != nil {
-		log.Errorf("get zhouqi failed: %q", err)
-		in.JSON(http.StatusNotFound, resp)
-		return
-	}
-
-	// result.Remarks = append(result.Remarks, orm.GPRemark{
-	// 	Content:    req.GetContent(),
-	// 	UpdateDate: time.Now().Unix(),
-	// })
-	result.UpdateDate = time.Now().Unix()
-	if _, err := result.Save(); err != nil {
-		log.Errorf("save zhou qi failed: %s|%q", req.GetSecucode(), err)
-		in.JSON(http.StatusNotModified, resp)
-		return
-	}
-
-	resp.Code = 20000
-	in.JSON(http.StatusOK, resp)
-}
-
 func getZhouQiState(state int32) string {
 	switch trpc.GPZhouQiState(state) {
 	case trpc.GPZhouQiState_GPZhouQiStateDate:
