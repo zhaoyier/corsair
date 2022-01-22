@@ -59,6 +59,11 @@ func GetShareholder() {
 			return
 		}
 
+		if err := applyGDSdgd(shareholder.Sdgd); err != nil && mgo.IsDup(err) {
+			log.Errorf("apply sdgd failed: %s|%q", secucode.Secucode, err)
+			return
+		}
+
 		log.Infof("%s succeed", secucode.Secucode)
 	}
 }
@@ -128,6 +133,7 @@ func applyGDsdlt(data []Sdltgd) error {
 		}
 
 		result = orm.GDTopTenMgr.NewGDTopTen()
+		result.TopType = 2
 		result.Secucode = secucode
 		result.EndDate = tmp.Unix()
 		result.HolderRank = int32(gd.HOLDERRANK)
@@ -135,6 +141,44 @@ func applyGDsdlt(data []Sdltgd) error {
 		result.HolderType = gd.HOLDERTYPE
 		result.HoldNum = int32(gd.HOLDNUM)
 		result.HoldnumRation = utils.Decimal(gd.FREEHOLDNUMRATIO)
+		result.HoldNumChange = gd.HOLDNUMCHANGE
+		result.CreateDate = time.Now().Unix()
+
+		if _, err := result.Save(); err != nil {
+			log.Errorf("save gd renshu failed: %s|%q", gd.SECUCODE, err)
+			return err
+		}
+	}
+
+	return nil
+}
+
+func applyGDSdgd(data []Sdgd) error {
+	for _, gd := range data {
+		loc, _ := time.LoadLocation("Local")
+		codes := strings.Split(gd.SECUCODE, ".")
+		if len(codes) < 2 {
+			continue
+		}
+		secucode := codes[1] + "." + codes[0]
+		tmp, _ := time.ParseInLocation(timeLayout, gd.ENDDATE, loc)
+		result, err := orm.GDTopTenMgr.FindOneBySecucodeEndDateHolderName(secucode, tmp.Unix(), gd.HOLDERNAME)
+		if err != nil && err != mgo.ErrNotFound {
+			log.Errorf("find gd renshu failed: %s|%s", secucode, gd.ENDDATE)
+			return err
+		}
+		if result != nil {
+			return nil
+		}
+
+		result = orm.GDTopTenMgr.NewGDTopTen()
+		result.TopType = 1
+		result.Secucode = secucode
+		result.EndDate = tmp.Unix()
+		result.HolderRank = int32(gd.HOLDERRANK)
+		result.HolderName = gd.HOLDERNAME
+		result.HoldNum = int32(gd.HOLDNUM)
+		result.HoldnumRation = utils.Decimal(gd.HOLDNUMRATIO)
 		result.HoldNumChange = gd.HOLDNUMCHANGE
 		result.CreateDate = time.Now().Unix()
 

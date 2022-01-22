@@ -30,7 +30,7 @@ func GetGDSDLT(in *gin.Context) {
 	match := ezdb.M{}
 	limit := int(req.GetLimit())
 	offset := int(req.GetOffset())
-	group := ezdb.M{"_id": "$Secucode", "total": ezdb.M{"$sum": "$FreeHoldnumRation"}}
+	group := ezdb.M{"_id": "$Secucode", "total": ezdb.M{"$sum": "$HoldnumRation"}}
 
 	if req.GetKeyword() != "" {
 		match["HolderName"] = bson.RegEx{Pattern: req.GetKeyword(), Options: "i"}
