@@ -141,7 +141,7 @@ func GetGDSDLTDetail(in *gin.Context) {
 				HolderName:    result.HolderName,
 				HolderType:    result.HolderType,
 				HoldNum:       result.HoldNum,
-				HoldnumRation: result.HoldnumRation,
+				HoldnumRation: utils.TruncateFloat(result.HoldnumRation),
 				HoldNumChange: utils.String2I32(result.HoldNumChange),
 				CreateDate:    result.CreateDate,
 			})
