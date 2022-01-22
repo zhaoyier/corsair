@@ -118,7 +118,7 @@ func applyGDsdlt(data []Sdltgd) error {
 		}
 		secucode := codes[1] + "." + codes[0]
 		tmp, _ := time.ParseInLocation(timeLayout, gd.ENDDATE, loc)
-		result, err := orm.GDsdltMgr.FindOneBySecucodeEndDateHolderName(secucode, tmp.Unix(), gd.HOLDERNAME)
+		result, err := orm.GDTopTenMgr.FindOneBySecucodeEndDateHolderName(secucode, tmp.Unix(), gd.HOLDERNAME)
 		if err != nil && err != mgo.ErrNotFound {
 			log.Errorf("find gd renshu failed: %s|%s", secucode, gd.ENDDATE)
 			return err
@@ -127,14 +127,14 @@ func applyGDsdlt(data []Sdltgd) error {
 			return nil
 		}
 
-		result = orm.GDsdltMgr.NewGDsdlt()
+		result = orm.GDTopTenMgr.NewGDTopTen()
 		result.Secucode = secucode
 		result.EndDate = tmp.Unix()
 		result.HolderRank = int32(gd.HOLDERRANK)
 		result.HolderName = gd.HOLDERNAME
 		result.HolderType = gd.HOLDERTYPE
 		result.HoldNum = int32(gd.HOLDNUM)
-		result.FreeHoldnumRation = utils.Decimal(gd.FREEHOLDNUMRATIO)
+		result.HoldnumRation = utils.Decimal(gd.FREEHOLDNUMRATIO)
 		result.HoldNumChange = gd.HOLDNUMCHANGE
 		result.CreateDate = time.Now().Unix()
 

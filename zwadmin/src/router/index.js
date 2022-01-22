@@ -111,10 +111,10 @@ export const constantRoutes = [
         meta: { title: '周期列表', icon: 'tree' }
       },
       {
-        path: 'stock/tubiao',
-        name: '图表',
-        component: () => import('@/views/stock/tubiao/index'),
-        meta: { title: '图表', icon: 'tree' }
+        path: 'stock/sdgudong',
+        name: '十大股东',
+        component: () => import('@/views/stock/sdgudong/index'),
+        meta: { title: '十大股东', icon: 'tree' }
       },
     ]
   },

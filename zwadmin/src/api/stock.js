@@ -186,3 +186,22 @@ export function getFundDetailList(data) {
     data
   })
 }
+
+
+// 查询十大股东
+export function getGDSDLT(data) {
+  return request({
+    url: '/api/stock/GetGDSDLT',
+    method: 'post',
+    data
+  })
+}
+
+// 查询十大股东详情
+export function getGDSDLTDetail(data) {
+  return request({
+    url: '/api/stock/GetGDSDLTDetail',
+    method: 'post',
+    data
+  })
+}

@@ -30,6 +30,63 @@ service ZWAdmin {
     rpc GetGPRemark(GetGPRemarkReq) returns(GetGPRemarkResp);
     rpc GetFundFlowList(GetFundFlowListReq) returns(GetFundFlowListResp);
     rpc GetFundDetailList(GetFundDetailListReq) returns(GetFundDetailListResp);
+    rpc GetGDSDLT(GetGDSDLTReq) returns(GetGDSDLTResp);
+    rpc GetGDSDLTDetail(GetGDSDLTDetailReq) returns(GetGDSDLTDetailResp);
+}
+
+message GetGDSDLTDetailReq {
+    string name = 1;
+    string secucode = 2;
+    int32 limit = 3;
+    int32 offset = 4;
+}
+
+message GDSDLTDetailItem {
+    string name = 1;
+    string secucode = 2;
+    int64 endDate = 3;
+    int32 holderRank = 4;
+    string holderName = 5;
+    string holderType = 6;
+    int32 holdNum = 7;
+    double holdnumRation = 8;
+    int32 holdNumChange = 10;
+    int64 createDate = 12;
+}
+
+message GDSDLTDetailData {
+    int32 total = 1;
+    repeated GDSDLTDetailItem items = 2;
+}
+
+message GetGDSDLTDetailResp {
+    int32 code = 1;
+    GDSDLTDetailData data = 2;
+}
+
+message GetGDSDLTReq {
+    string keyword = 1;
+    int64 releaseStart = 2;
+    int64 releaseEnd = 3;
+    int32 limit = 10;
+    int32 offset = 11;
+}
+
+message GDSDLTItem {
+    string name = 1;
+    string secucode = 2;
+    double freeRation = 3;
+    string focused = 4;
+}
+
+message GDSDLTData {
+    int32 total = 1;
+    repeated GDSDLTItem items = 2;
+}
+
+message GetGDSDLTResp {
+    int32 code = 1;
+    GDSDLTData data = 2;
 }
 
 message GetFundDetailListReq {

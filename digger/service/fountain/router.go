@@ -54,7 +54,8 @@ func startRoute(router *gin.Engine) {
 		stockGroup.POST("/GetGPRemark", admin.GetGPRemark)
 		stockGroup.POST("/GetFundFlowList", admin.GetFundFlowList)
 		stockGroup.POST("/GetFundDetailList", admin.GetFundDetailList)
-		//
+		stockGroup.POST("/GetGDSDLT", admin.GetGDSDLT)
+		stockGroup.POST("/GetGDSDLTDetail", admin.GetGDSDLTDetail)
 
 	}
 }

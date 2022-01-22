@@ -69,7 +69,7 @@ SinaDaily:
   indexes: [[Secucode],[EndDate]]
 
 #十大流通股东
-GDsdlt:
+GDTopTen:
   db: mongo
   dbname: digger
   fields:
@@ -79,7 +79,8 @@ GDsdlt:
     - HolderName: string    #股东名称
     - HolderType: string    #股东性质
     - HoldNum: int32        #持股数
-    - FreeHoldnumRation: float64  #占总流通股本持股比例
+    - TopType: int32        #头部类型,1:前10大股东,2:流通股东
+    - HoldnumRation: float64  #占总流通股本持股比例
     - HoldNumChange: string   #增减
     - CreateDate: datetime
   uniques: [[Secucode,EndDate,HolderName]]

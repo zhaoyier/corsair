@@ -28,15 +28,6 @@ func initSinaDailyIndex() {
 	defer session.Close()
 
 	if err := collection.EnsureIndex(mgo.Index{
-		Key:        []string{"Secucode", "EndDate"},
-		Unique:     true,
-		Background: true,
-		Sparse:     true,
-	}); err != nil {
-		panic("ensureIndex digger.SinaDaily SecucodeEndDate error:" + err.Error())
-	}
-
-	if err := collection.EnsureIndex(mgo.Index{
 		Key:        []string{"Secucode"},
 		Background: true,
 		Sparse:     true,
@@ -50,6 +41,15 @@ func initSinaDailyIndex() {
 		Sparse:     true,
 	}); err != nil {
 		panic("ensureIndex digger.SinaDaily EndDate error:" + err.Error())
+	}
+
+	if err := collection.EnsureIndex(mgo.Index{
+		Key:        []string{"Secucode", "EndDate"},
+		Unique:     true,
+		Background: true,
+		Sparse:     true,
+	}); err != nil {
+		panic("ensureIndex digger.SinaDaily SecucodeEndDate error:" + err.Error())
 	}
 
 }
@@ -180,6 +180,24 @@ func (o *_SinaDailyMgr) NQuery(query interface{}, limit, offset int, sortFields 
 
 	return session, q
 }
+func (o *_SinaDailyMgr) FindBySecucode(Secucode string, limit int, offset int, sortFields ...string) (result []*SinaDaily, err error) {
+	query := db.M{
+		"Secucode": Secucode,
+	}
+	session, q := SinaDailyMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
+}
+func (o *_SinaDailyMgr) FindByEndDate(EndDate string, limit int, offset int, sortFields ...string) (result []*SinaDaily, err error) {
+	query := db.M{
+		"EndDate": EndDate,
+	}
+	session, q := SinaDailyMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
+}
 func (o *_SinaDailyMgr) FindOneBySecucodeEndDate(Secucode string, EndDate string) (result *SinaDaily, err error) {
 	query := db.M{
 		"Secucode": Secucode,
@@ -211,24 +229,6 @@ func (o *_SinaDailyMgr) RemoveBySecucodeEndDate(Secucode string, EndDate string)
 		"EndDate":  EndDate,
 	}
 	return col.Remove(query)
-}
-func (o *_SinaDailyMgr) FindBySecucode(Secucode string, limit int, offset int, sortFields ...string) (result []*SinaDaily, err error) {
-	query := db.M{
-		"Secucode": Secucode,
-	}
-	session, q := SinaDailyMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
-}
-func (o *_SinaDailyMgr) FindByEndDate(EndDate string, limit int, offset int, sortFields ...string) (result []*SinaDaily, err error) {
-	query := db.M{
-		"EndDate": EndDate,
-	}
-	session, q := SinaDailyMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
 }
 
 func (o *_SinaDailyMgr) Find(query interface{}, limit int, offset int, sortFields ...string) (result []*SinaDaily, err error) {
