@@ -50,7 +50,7 @@ message GDSDLTDetailItem {
     string holderType = 6;
     int32 holdNum = 7;
     double holdnumRation = 8;
-    int32 holdNumChange = 10;
+    string holdNumChange = 10;
     int64 createDate = 12;
 }
 
