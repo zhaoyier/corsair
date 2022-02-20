@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { updateCNConfig } from '@/api/stock'
+import { updateCNConfig,getCNConfig } from '@/api/stock'
   export default {
     data() {
       return {
@@ -62,7 +62,16 @@ import { updateCNConfig } from '@/api/stock'
         }
       };
     },
+    created() {
+      this.fetchData()
+    },
     methods: {
+      fetchData() {
+        getCNConfig({}).then(response=>{
+          this.settingForm.decreaseTag = response.data.decreaseTag
+          this.settingForm.decreasePeriod = response.data.decreasePeriod
+        })
+      },
       submitForm(formName) {
         console.log("==>>TODO 110: ", this.settingForm)
         this.$refs[formName].validate((valid) => {

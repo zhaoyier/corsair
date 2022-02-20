@@ -127,6 +127,7 @@ func GetGDSDLTDetail(in *gin.Context) {
 		in.JSON(http.StatusNotFound, resp)
 		return
 	}
+
 	wg := sync.WaitGroup{}
 	wg.Add(len(results))
 

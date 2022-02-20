@@ -12,6 +12,30 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func GetCNConfig(in *gin.Context) {
+	var req trpc.GetCNConfigReq
+	resp := &trpc.GetCNConfigResp{
+		Code: 21000,
+		Data: &trpc.CNConfigData{},
+	}
+	if err := in.BindJSON(&req); err != nil {
+		in.JSON(http.StatusBadRequest, resp)
+		return
+	}
+
+	result, _ := orm.CNConfigMgr.FindOne(ezdb.M{})
+	if result == nil {
+		result = orm.CNConfigMgr.NewCNConfig()
+	}
+
+	resp.Data.DecreaseTag = result.DecreaseTag
+	resp.Data.DecreasePeriod = result.DecreasePeriod
+	resp.Data.PriceInterval = result.PriceInterval
+
+	resp.Code = 20000
+	in.JSON(http.StatusOK, resp)
+}
+
 func UpdateCNConfig(in *gin.Context) {
 	var req trpc.UpdateCNConfigReq
 	resp := &trpc.UpdateCNConfigResp{

@@ -1,5 +1,14 @@
 import request from '@/utils/request'
 
+// 查询配置参数
+export function getCNConfig(data) {
+  return request({
+    url: '/api/backend/GetCNConfig',
+    method: 'post',
+    data
+  })
+}
+
 // 配置参数
 export function updateCNConfig(data) {
   return request({

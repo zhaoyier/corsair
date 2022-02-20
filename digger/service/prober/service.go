@@ -19,7 +19,7 @@ func Start() {
 	tk := time.NewTicker(time.Minute * 10)
 
 	// go eastmoney.GetCodeListOnce()
-	go eastmoney.GetShareholderOnce()
+	// go eastmoney.GetShareholderOnce()
 	// go dawdle.GenLongLineOnce()
 	// go dawdle.GenShortLineOnce()
 	// go dawdle.GenRecommendOnce()

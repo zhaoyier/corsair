@@ -7,6 +7,7 @@ service ZWAdmin {
     rpc UserLogin(UserLoginReq) returns(UserLoginResp);
     rpc UserInfo(UserInfoReq) returns(UserInfoResp);
     rpc UserLogout(UserLogoutReq) returns(UserLogoutResp);
+    rpc GetCNConfig(GetCNConfigReq) returns(GetCNConfigResp);
     rpc UpdateCNConfig(UpdateCNConfigReq) returns(UpdateCNConfigResp);
     rpc GetRecommend(GetRecommendReq) returns(GetRecommendResp);
     rpc UpdateRecommend(UpdateRecommendReq) returns(UpdateRecommendResp);
@@ -32,6 +33,21 @@ service ZWAdmin {
     rpc GetFundDetailList(GetFundDetailListReq) returns(GetFundDetailListResp);
     rpc GetGDSDLT(GetGDSDLTReq) returns(GetGDSDLTResp);
     rpc GetGDSDLTDetail(GetGDSDLTDetailReq) returns(GetGDSDLTDetailResp);
+}
+
+message GetCNConfigReq {
+
+}
+
+message CNConfigData {
+    int32 decreaseTag = 1;
+    int32 decreasePeriod = 2;
+    int32 priceInterval = 3;
+}
+
+message GetCNConfigResp {
+    int32 code = 1;
+    CNConfigData data = 2;
 }
 
 message GetGDSDLTDetailReq {

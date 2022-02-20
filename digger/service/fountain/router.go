@@ -29,6 +29,7 @@ func startRoute(router *gin.Engine) {
 		adminGroup.POST("/login", admin.Login)
 		adminGroup.POST("/logout", admin.Logout)
 		adminGroup.GET("/info", admin.UserInfo)
+		adminGroup.POST("/GetCNConfig", admin.GetCNConfig)
 		adminGroup.POST("/updateCNConfig", admin.UpdateCNConfig)
 	}
 	stockGroup := router.Group("/api/stock")
