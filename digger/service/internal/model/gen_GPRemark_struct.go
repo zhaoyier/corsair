@@ -10,6 +10,7 @@ type GPRemark struct {
 	ID         bson.ObjectId `json:"id" bson:"_id,omitempty"`
 	Name       string        `bson:"Name" json:"Name"`
 	Secucode   string        `bson:"Secucode" json:"Secucode"`
+	Type       int32         `bson:"Type" json:"Type"`
 	Remark     string        `bson:"Remark" json:"Remark"`
 	Disabled   bool          `bson:"Disabled" json:"Disabled"`
 	CreateDate int64         `bson:"CreateDate" json:"CreateDate"`
@@ -20,6 +21,7 @@ const (
 	GPRemarkMgoFieldID         = "_id"
 	GPRemarkMgoFieldName       = "Name"
 	GPRemarkMgoFieldSecucode   = "Secucode"
+	GPRemarkMgoFieldType       = "Type"
 	GPRemarkMgoFieldRemark     = "Remark"
 	GPRemarkMgoFieldDisabled   = "Disabled"
 	GPRemarkMgoFieldCreateDate = "CreateDate"

@@ -30,6 +30,7 @@ func Start() {
 	// dawdle.GenZhouQiOnce()
 	// eastmoney.GetFundFlowOnce()
 	// eastmoney.GetFundFlowTemp("SZ.301100")
+	// dawdle.GenWaterfallOnce()
 
 	for range tk.C {
 		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeCodeList) {
@@ -57,6 +58,10 @@ func Start() {
 		// 周期
 		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeZhouQi) {
 			dawdle.GenZhouQiTicker()
+		}
+		// 瀑布线
+		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeWaterfall) {
+			dawdle.GenWaterfallTicker()
 		}
 
 		dawdle.UpdatePresentPrice()

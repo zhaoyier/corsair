@@ -61,6 +61,7 @@ enum FunctionType {
     FunctionTypeFundFlow = 6;   //资金流入
     FunctionTypeFocus = 10;  //关注
     FunctionTypeZhouQi = 11;  //
+    FunctionTypeWaterfall = 12;  //
 }
 
 message PresentPrice {

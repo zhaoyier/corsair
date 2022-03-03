@@ -125,6 +125,24 @@ GPShortLine:
     uniques: [[Secucode,CreateDate]]
     indexes: [[Secucode],[Disabled],[CreateDate]]
 
+# 形容那种因为某个事件出现情绪化的
+GPWaterfallLine:
+  db: mongo
+  dbname: digger
+  fields:
+    - Name: string            #名称
+    - Secucode: string
+    - MaxPDay: int64          #时间
+    - MaxPrice: float64       #
+    - MinPrice: float64       #
+    - PresentPrice: float64
+    - Disabled: bool
+    - Decrease: int32 #
+    - CreateDate: datetime
+    - UpdateDate: datetime
+  uniques: [[Secucode]]
+  indexes: [[Name], [Secucode],[Disabled],[CreateDate]]
+
 GPDaily:
     db: mongo
     dbname: digger
@@ -258,6 +276,7 @@ GPRemark:
   fields:
     - Name: string
     - Secucode: string
+    - Type: int32     #1、瀑布
     - Remark: string
     - Disabled: bool
     - CreateDate: datetime
