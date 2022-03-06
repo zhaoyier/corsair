@@ -89,7 +89,6 @@ func GDRenshuList(in *gin.Context) {
 		query["Secucode"] = req.GetSecucode()
 	}
 	if req.GetName() != "" {
-		// sortFields = append(sortFields, "-EndDate")
 		query["Secucode"] = getSecucode(req.GetName())
 	}
 

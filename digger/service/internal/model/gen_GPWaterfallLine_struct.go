@@ -14,6 +14,7 @@ type GPWaterfallLine struct {
 	MaxPrice     float64       `bson:"MaxPrice" json:"MaxPrice"`
 	MinPrice     float64       `bson:"MinPrice" json:"MinPrice"`
 	PresentPrice float64       `bson:"PresentPrice" json:"PresentPrice"`
+	State        int32         `bson:"State" json:"State"`
 	Disabled     bool          `bson:"Disabled" json:"Disabled"`
 	Decrease     int32         `bson:"Decrease" json:"Decrease"`
 	CreateDate   int64         `bson:"CreateDate" json:"CreateDate"`
@@ -29,6 +30,7 @@ const (
 	GPWaterfallLineMgoFieldMaxPrice     = "MaxPrice"
 	GPWaterfallLineMgoFieldMinPrice     = "MinPrice"
 	GPWaterfallLineMgoFieldPresentPrice = "PresentPrice"
+	GPWaterfallLineMgoFieldState        = "State"
 	GPWaterfallLineMgoFieldDisabled     = "Disabled"
 	GPWaterfallLineMgoFieldDecrease     = "Decrease"
 	GPWaterfallLineMgoFieldCreateDate   = "CreateDate"

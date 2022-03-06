@@ -214,3 +214,12 @@ export function getGDSDLTDetail(data) {
     data
   })
 }
+
+// 查询大变的数据
+export function getWaterfallList(data) {
+  return request({
+    url: '/api/stock/GetWaterfallList',
+    method: 'post',
+    data
+  })
+}

@@ -2,6 +2,7 @@ package dawdle
 
 import (
 	"fmt"
+	"math"
 	"strings"
 	"sync"
 	"time"
@@ -28,6 +29,12 @@ func GenWaterfallOnce() {
 	zhouqiOnce.Do(func() {
 		genWaterfallData()
 	})
+}
+
+func GenWaterfallTmp(secucode string) {
+	if err := genWaterfallItem(secucode); err != nil {
+		log.Infof("gen short line failed: %s|%q", secucode, err)
+	}
 }
 
 func genWaterfallData() {
@@ -75,7 +82,7 @@ func genWaterfallItem(secucode string) error {
 			data.Name = result.Name
 		}
 
-		fmt.Printf("==>>TODO 115: %+v|%+v|%+v\n", result.MaxPrice, data.MaxPrice, result.MaxPrice > data.MaxPrice)
+		// fmt.Printf("==>>TODO 115: %+v|%+v|%+v\n", result.MaxPrice, data.MaxPrice, result.MaxPrice > data.MaxPrice)
 
 		if result.MaxPrice > data.MaxPrice {
 			data.MaxPrice = result.MaxPrice
@@ -94,7 +101,21 @@ func genWaterfallItem(secucode string) error {
 		return nil
 	}
 
-	data.Decrease = utils.DecreasePercent(data.MaxPrice, data.PresentPrice)
+	if data.MaxPrice <= 0 || data.MinPrice <= 0 || data.PresentPrice <= 0 {
+		return nil
+	}
+
+	fmt.Printf("==>>TODO 115: %+v|%+v|%+v\n", data.MinPrice, data.MaxPrice, data.PresentPrice)
+	fmt.Printf("==>>TODO 1151: %+v|%+v|%+v\n", data.MaxPrice, data.PresentPrice, data.MaxPrice > data.PresentPrice)
+	if data.MaxPrice > data.PresentPrice {
+		rate := utils.Decimal((data.PresentPrice - data.MaxPrice) / data.MaxPrice)
+		data.Decrease = int32(math.Ceil(rate * 100))
+	} else {
+		rate := utils.Decimal((data.PresentPrice - data.MinPrice) / data.MinPrice)
+		fmt.Printf("==>>TODO 116: %+v|%+v|%+v\n", rate, nil, nil)
+		data.Decrease = int32(math.Ceil(rate * 100))
+		fmt.Printf("==>>TODO 117: %+v|%+v|%+v\n", data.Decrease, nil, nil)
+	}
 
 	if _, err := data.Save(); err != nil {
 		return err

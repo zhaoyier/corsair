@@ -28,15 +28,6 @@ func initGPWaterfallLineIndex() {
 	defer session.Close()
 
 	if err := collection.EnsureIndex(mgo.Index{
-		Key:        []string{"Secucode"},
-		Unique:     true,
-		Background: true,
-		Sparse:     true,
-	}); err != nil {
-		panic("ensureIndex digger.GPWaterfallLine Secucode error:" + err.Error())
-	}
-
-	if err := collection.EnsureIndex(mgo.Index{
 		Key:        []string{"Name"},
 		Background: true,
 		Sparse:     true,
@@ -66,6 +57,15 @@ func initGPWaterfallLineIndex() {
 		Sparse:     true,
 	}); err != nil {
 		panic("ensureIndex digger.GPWaterfallLine CreateDate error:" + err.Error())
+	}
+
+	if err := collection.EnsureIndex(mgo.Index{
+		Key:        []string{"Secucode"},
+		Unique:     true,
+		Background: true,
+		Sparse:     true,
+	}); err != nil {
+		panic("ensureIndex digger.GPWaterfallLine Secucode error:" + err.Error())
 	}
 
 }
@@ -196,35 +196,6 @@ func (o *_GPWaterfallLineMgr) NQuery(query interface{}, limit, offset int, sortF
 
 	return session, q
 }
-func (o *_GPWaterfallLineMgr) FindOneBySecucode(Secucode string) (result *GPWaterfallLine, err error) {
-	query := db.M{
-		"Secucode": Secucode,
-	}
-	session, q := GPWaterfallLineMgr.NQuery(query, 1, 0, nil)
-	defer session.Close()
-	err = q.One(&result)
-	return
-}
-
-func (o *_GPWaterfallLineMgr) MustFindOneBySecucode(Secucode string) (result *GPWaterfallLine) {
-	result, _ = o.FindOneBySecucode(Secucode)
-	if result == nil {
-		result = GPWaterfallLineMgr.NewGPWaterfallLine()
-		result.Secucode = Secucode
-		result.Save()
-	}
-	return
-}
-
-func (o *_GPWaterfallLineMgr) RemoveBySecucode(Secucode string) (err error) {
-	session, col := GPWaterfallLineMgr.GetCol()
-	defer session.Close()
-
-	query := db.M{
-		"Secucode": Secucode,
-	}
-	return col.Remove(query)
-}
 func (o *_GPWaterfallLineMgr) FindByName(Name string, limit int, offset int, sortFields ...string) (result []*GPWaterfallLine, err error) {
 	query := db.M{
 		"Name": Name,
@@ -260,6 +231,35 @@ func (o *_GPWaterfallLineMgr) FindByCreateDate(CreateDate int64, limit int, offs
 	defer session.Close()
 	err = q.All(&result)
 	return
+}
+func (o *_GPWaterfallLineMgr) FindOneBySecucode(Secucode string) (result *GPWaterfallLine, err error) {
+	query := db.M{
+		"Secucode": Secucode,
+	}
+	session, q := GPWaterfallLineMgr.NQuery(query, 1, 0, nil)
+	defer session.Close()
+	err = q.One(&result)
+	return
+}
+
+func (o *_GPWaterfallLineMgr) MustFindOneBySecucode(Secucode string) (result *GPWaterfallLine) {
+	result, _ = o.FindOneBySecucode(Secucode)
+	if result == nil {
+		result = GPWaterfallLineMgr.NewGPWaterfallLine()
+		result.Secucode = Secucode
+		result.Save()
+	}
+	return
+}
+
+func (o *_GPWaterfallLineMgr) RemoveBySecucode(Secucode string) (err error) {
+	session, col := GPWaterfallLineMgr.GetCol()
+	defer session.Close()
+
+	query := db.M{
+		"Secucode": Secucode,
+	}
+	return col.Remove(query)
 }
 
 func (o *_GPWaterfallLineMgr) Find(query interface{}, limit int, offset int, sortFields ...string) (result []*GPWaterfallLine, err error) {

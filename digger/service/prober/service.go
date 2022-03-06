@@ -31,6 +31,7 @@ func Start() {
 	// eastmoney.GetFundFlowOnce()
 	// eastmoney.GetFundFlowTemp("SZ.301100")
 	// dawdle.GenWaterfallOnce()
+	dawdle.GenWaterfallTmp("SZ.002162")
 
 	for range tk.C {
 		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeCodeList) {

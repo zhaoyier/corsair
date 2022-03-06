@@ -33,6 +33,52 @@ service ZWAdmin {
     rpc GetFundDetailList(GetFundDetailListReq) returns(GetFundDetailListResp);
     rpc GetGDSDLT(GetGDSDLTReq) returns(GetGDSDLTResp);
     rpc GetGDSDLTDetail(GetGDSDLTDetailReq) returns(GetGDSDLTDetailResp);
+    rpc GetWaterfallList(GetWaterfallReq) returns(GetWaterfallResp);
+    rpc UpdateWaterfallState(UpdateWaterfallStateReq) returns(UpdateWaterfallStateResp);
+
+}
+
+message UpdateWaterfallStateReq {
+    string name = 1;
+    string secucode = 2;
+}
+
+message UpdateWaterfallStateResp {
+    int32 code = 1;
+}
+
+message GetWaterfallReq {
+    string name = 1;
+    string secucode = 2;
+    int32 decrease = 3;
+    int32 state = 4;        //1推荐,2关注，3忽略
+    int32 limit = 5;
+    int32 offset = 6;
+}
+
+message WaterfallItem {
+    string name = 1;
+    string secucode = 2;
+    int32 decrease = 3;
+    int64 maxPDay = 4;         //最高距离现在
+    double maxPrice = 5;        //最高价
+    double minPrice = 6;        //最低价
+    double presentPrice = 7;    //当前价格
+    int32 state = 10;            //状态 1推荐,2关注，3忽略
+    int64 traded = 11;           //流通市值
+    string inflowRatioStr = 12;      //流入占比
+    int64 createDate = 20;
+    int64 updateDate = 21;
+}
+
+message WaterfallData{
+    int32 total = 1;
+    repeated WaterfallItem items = 2;
+}
+
+message GetWaterfallResp {
+    int32 code = 1;
+    WaterfallData data = 2;
 }
 
 message GetCNConfigReq {

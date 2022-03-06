@@ -136,8 +136,9 @@ GPWaterfallLine:
     - MaxPrice: float64       #
     - MinPrice: float64       #
     - PresentPrice: float64
+    - State: int32  #状态 1推荐,2关注，3忽略
     - Disabled: bool
-    - Decrease: int32 #
+    - Decrease: int32 #幅度
     - CreateDate: datetime
     - UpdateDate: datetime
   uniques: [[Secucode]]

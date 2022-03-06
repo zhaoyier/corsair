@@ -63,6 +63,12 @@ export const constantRoutes = [
     meta: { title: '基本数据', icon: 'el-icon-s-help' },
     children: [
       {
+        path: 'stock/waterfall',
+        name: '大瀑布',
+        component: () => import('@/views/stock/waterfall/index'),
+        meta: { title: '大瀑布', icon: 'tree' }
+      },
+      {
         path: 'stock/recommend',
         name: '推荐列表',
         component: () => import('@/views/stock/recommend/index'),
