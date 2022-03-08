@@ -51,6 +51,10 @@
                 <el-tag type="danger" effect="dark">{{ scope.row.minPrice }}</el-tag>
             </template>
             </el-table-column>
+            <el-table-column class-name="status-col" label="收盘价" width="120">
+            <template slot-scope="scope">
+                <el-tag type="" effect="dark">{{ scope.row.closing }}</el-tag>
+            </template>
             <el-table-column class-name="status-col" label="当前价" width="120">
             <template slot-scope="scope">
                 <el-tag type="" effect="dark">{{ scope.row.presentPrice }}</el-tag>

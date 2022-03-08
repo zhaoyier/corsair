@@ -63,7 +63,8 @@ message WaterfallItem {
     int64 maxPDay = 4;         //最高距离现在
     double maxPrice = 5;        //最高价
     double minPrice = 6;        //最低价
-    double presentPrice = 7;    //当前价格
+    double closing = 7;         //收盘
+    double presentPrice = 8;    //当前价格
     int32 state = 10;            //状态 1推荐,2关注，3忽略
     int64 traded = 11;           //流通市值
     string inflowRatioStr = 12;      //流入占比

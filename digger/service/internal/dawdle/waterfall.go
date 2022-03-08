@@ -58,8 +58,6 @@ func genWaterfallItem(secucode string) error {
 		"CreateDate": ezdb.M{"$gte": tm},
 	}
 
-	// fmt.Printf("==>>TODO 110: %+v\n", code)
-
 	results, err := orm.GPDailyMgr.FindAll(query, "-CreateDate")
 	fmt.Printf("==>>TODO 111: %+v|%+v\n", err, len(results))
 	if err != nil {

@@ -80,6 +80,7 @@ func GetWaterfallList(in *gin.Context) {
 				MaxPDay:        result.MaxPDay,
 				MaxPrice:       result.MaxPrice,
 				MinPrice:       result.MinPrice,
+				Closing:        result.PresentPrice,
 				PresentPrice:   request.GetSinaDayPrice(result.Secucode),
 				State:          result.State,
 				Traded:         getTraded(result.Secucode) * 100,

@@ -28,15 +28,6 @@ func initGDTopTenIndex() {
 	defer session.Close()
 
 	if err := collection.EnsureIndex(mgo.Index{
-		Key:        []string{"Secucode", "EndDate", "HolderName"},
-		Unique:     true,
-		Background: true,
-		Sparse:     true,
-	}); err != nil {
-		panic("ensureIndex digger.GDTopTen SecucodeEndDateHolderName error:" + err.Error())
-	}
-
-	if err := collection.EnsureIndex(mgo.Index{
 		Key:        []string{"Secucode", "EndDate"},
 		Background: true,
 		Sparse:     true,
@@ -50,6 +41,15 @@ func initGDTopTenIndex() {
 		Sparse:     true,
 	}); err != nil {
 		panic("ensureIndex digger.GDTopTen CreateDate error:" + err.Error())
+	}
+
+	if err := collection.EnsureIndex(mgo.Index{
+		Key:        []string{"Secucode", "EndDate", "HolderName"},
+		Unique:     true,
+		Background: true,
+		Sparse:     true,
+	}); err != nil {
+		panic("ensureIndex digger.GDTopTen SecucodeEndDateHolderName error:" + err.Error())
 	}
 
 }
@@ -180,6 +180,25 @@ func (o *_GDTopTenMgr) NQuery(query interface{}, limit, offset int, sortFields [
 
 	return session, q
 }
+func (o *_GDTopTenMgr) FindBySecucodeEndDate(Secucode string, EndDate int64, limit int, offset int, sortFields ...string) (result []*GDTopTen, err error) {
+	query := db.M{
+		"Secucode": Secucode,
+		"EndDate":  EndDate,
+	}
+	session, q := GDTopTenMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
+}
+func (o *_GDTopTenMgr) FindByCreateDate(CreateDate int64, limit int, offset int, sortFields ...string) (result []*GDTopTen, err error) {
+	query := db.M{
+		"CreateDate": CreateDate,
+	}
+	session, q := GDTopTenMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
+}
 func (o *_GDTopTenMgr) FindOneBySecucodeEndDateHolderName(Secucode string, EndDate int64, HolderName string) (result *GDTopTen, err error) {
 	query := db.M{
 		"Secucode":   Secucode,
@@ -214,25 +233,6 @@ func (o *_GDTopTenMgr) RemoveBySecucodeEndDateHolderName(Secucode string, EndDat
 		"HolderName": HolderName,
 	}
 	return col.Remove(query)
-}
-func (o *_GDTopTenMgr) FindBySecucodeEndDate(Secucode string, EndDate int64, limit int, offset int, sortFields ...string) (result []*GDTopTen, err error) {
-	query := db.M{
-		"Secucode": Secucode,
-		"EndDate":  EndDate,
-	}
-	session, q := GDTopTenMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
-}
-func (o *_GDTopTenMgr) FindByCreateDate(CreateDate int64, limit int, offset int, sortFields ...string) (result []*GDTopTen, err error) {
-	query := db.M{
-		"CreateDate": CreateDate,
-	}
-	session, q := GDTopTenMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
 }
 
 func (o *_GDTopTenMgr) Find(query interface{}, limit int, offset int, sortFields ...string) (result []*GDTopTen, err error) {
