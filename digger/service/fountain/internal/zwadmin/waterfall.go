@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	orm "git.ezbuy.me/ezbuy/corsair/digger/service/internal/model"
+	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/request"
 	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
 	log "github.com/Sirupsen/logrus"
 	ezdb "github.com/ezbuy/ezorm/db"
@@ -79,7 +80,7 @@ func GetWaterfallList(in *gin.Context) {
 				MaxPDay:        result.MaxPDay,
 				MaxPrice:       result.MaxPrice,
 				MinPrice:       result.MinPrice,
-				PresentPrice:   getPresentPrice(result.Secucode), //result.PresentPrice,
+				PresentPrice:   request.GetSinaDayPrice(result.Secucode),
 				State:          result.State,
 				Traded:         getTraded(result.Secucode) * 100,
 				InflowRatioStr: getSecucodeInflowRatioStr(result.Secucode, 3),
