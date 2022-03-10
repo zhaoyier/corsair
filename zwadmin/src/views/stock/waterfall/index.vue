@@ -10,7 +10,7 @@
                 <el-input v-model="queryForm.secucode" placeholder="SZ.000001"></el-input>
             </el-form-item>
             <el-form-item label="跌幅">
-                <el-input-number v-model="queryForm.decrease" :step="5"  :min="-100" :max="100"  step-strictly></el-input-number>
+                <el-input-number v-model="queryForm.decrease" :step="2"  :min="-100" :max="100"  step-strictly></el-input-number>
             </el-form-item>
             <el-form-item label="状态">
                 <el-select v-model.number=queryForm.state placeholder="准备" clearable>
@@ -63,7 +63,11 @@
             </el-table-column>
             <el-table-column prop="traded" label="流通市值" width="120"> </el-table-column>
             <el-table-column prop="inflowRatioStr" label="流入占比" width="120"> </el-table-column>
-            <el-table-column prop="createDate" label="创建时间" width="120"> </el-table-column>
+            <el-table-column label="创建时间" width="110" align="center">
+              <template slot-scope="scope">
+                <el-tag type="success" effect="light">{{ scope.row.createDate|dateFilter }}</el-tag>
+              </template>
+            </el-table-column>
             <el-table-column fixed="right" label="操作" width="220">
             <template slot-scope="scope">
                 <el-button
@@ -87,7 +91,7 @@
         <el-pagination
         :current-page=pageInfo.pageNum
         :page-size=pageInfo.pageSize
-        :page-sizes="[10, 30, 50, 100]"
+        :page-sizes="[30, 50, 100]"
         :total=pageInfo.total
         layout="total, sizes, prev, pager, next"
         @current-change="handleCurrentChange"
@@ -114,7 +118,8 @@
 
 <script>
 import echarts from 'echarts'
-import { getRecommendList,updateRecommend,confirmFocus,getFundDetailList,getWaterfallList } from '@/api/stock'
+import { getWaterfallList } from '@/api/stock'
+import { parseTime } from '@/utils/index'
 
 export default {
   filters: {
@@ -125,6 +130,9 @@ export default {
         3: 'info',
       }
       return statusMap[status]
+    },
+    dateFilter(time) {
+        return parseTime(time)
     }
   },
   data() {
@@ -153,7 +161,7 @@ export default {
       tableData: [],
       pageInfo: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 30,
         total: 0,
       }
     }

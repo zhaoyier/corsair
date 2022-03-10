@@ -84,7 +84,7 @@ func GetWaterfallList(in *gin.Context) {
 				PresentPrice:   request.GetSinaDayPrice(result.Secucode),
 				State:          result.State,
 				Traded:         getTraded(result.Secucode) * 100,
-				InflowRatioStr: getSecucodeInflowRatioStr(result.Secucode, 3),
+				InflowRatioStr: getSecucodeInflowRatioStr(result.Secucode, 5),
 				CreateDate:     result.CreateDate,
 				UpdateDate:     result.UpdateDate,
 			})
