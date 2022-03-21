@@ -10,7 +10,7 @@
                 <el-input v-model="queryForm.secucode" placeholder="SZ.000001"></el-input>
             </el-form-item>
             <el-form-item label="跌幅">
-                <el-input-number v-model="queryForm.decrease" :step="2"  :min="-100" :max="100"  step-strictly></el-input-number>
+                <el-input-number v-model="queryForm.decrease" :step="2"  :min="-100" :max="100" step-strictly></el-input-number>
             </el-form-item>
             <el-form-item label="状态">
                 <el-select v-model.number=queryForm.state placeholder="准备" clearable>
@@ -35,12 +35,14 @@
             </template>
             </el-table-column>
             <el-table-column prop="secucode" label="代码" width="120"></el-table-column>
+            <el-table-column prop="decrease" label="最近跌幅" width="120"></el-table-column>
+            <el-table-column prop="inflowRatioStr" label="流入占比" width="120"> </el-table-column>
             <el-table-column class-name="status-col" label="状态" width="110" align="center">
             <template slot-scope="scope">
                 <el-tag :type="scope.row.state | statusFilter" effect="dark">{{ scope.row.state }}</el-tag>
             </template>
             </el-table-column>
-            <el-table-column prop="decrease" label="最近跌幅" width="120"></el-table-column>
+            
             <el-table-column class-name="status-col" label="最高价格" width="160">
             <template slot-scope="scope">
                 <el-tag type="success" effect="dark">{{ scope.row.maxPrice }}</el-tag>
@@ -62,7 +64,7 @@
             </template>
             </el-table-column>
             <el-table-column prop="traded" label="流通市值" width="120"> </el-table-column>
-            <el-table-column prop="inflowRatioStr" label="流入占比" width="120"> </el-table-column>
+            
             <el-table-column label="创建时间" width="110" align="center">
               <template slot-scope="scope">
                 <el-tag type="success" effect="light">{{ scope.row.createDate|dateFilter }}</el-tag>
@@ -101,13 +103,13 @@
     <div>
         <el-dialog title="K线查询" :visible.sync="lineChartForm.lineChartVisible">
         <el-tabs v-model="lineChartForm.activeName" @tab-click="selectTabClick">
+            <el-tab-pane label="分时线" name="minute">
+            <el-image :src="lineChartForm.lineChartSrc"></el-image>
+            </el-tab-pane>
             <el-tab-pane label="日线" name="date">
             <el-image :src="lineChartForm.lineChartSrc"></el-image>
             </el-tab-pane>
             <el-tab-pane label="周线" name="contour">
-            <el-image :src="lineChartForm.lineChartSrc"></el-image>
-            </el-tab-pane>
-            <el-tab-pane label="分时线" name="minute">
             <el-image :src="lineChartForm.lineChartSrc"></el-image>
             </el-tab-pane>
         </el-tabs>

@@ -54,7 +54,6 @@ export const constantRoutes = [
       meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
   },
-
   {
     path: '/example',
     component: Layout,
@@ -128,16 +127,23 @@ export const constantRoutes = [
   {
     path: '/form',
     component: Layout,
+    name: '博客管理',
+    meta: { title: '博客管理', icon: 'el-icon-s-help' },
     children: [
       {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
+        path: 'blog/arrangement',
+        name: '发布文章',
+        component: () => import('@/views/blog/arrangement/index'),
+        meta: { title: '发布文章', icon: 'form' }
+      },
+      {
+        path: 'blog/richtext',
+        name: '发布文章',
+        component: () => import('@/views/blog/richtext/index'),
+        meta: { title: '富文本编辑器', icon: 'form' }
       }
     ]
   },
-
   {
     path: '/nested',
     component: Layout,
