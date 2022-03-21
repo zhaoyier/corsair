@@ -154,7 +154,7 @@ export default {
         priceDecrease: 0,
       },
       lineChartForm:{
-        activeName: 'date',
+        activeName: 'minute',
         lineChartVisible: false,
         lineChartSrc: '',
         secucode: '',
@@ -206,7 +206,7 @@ export default {
       var secucode = data.secucode.split('.').join("").toLowerCase()
       this.lineChartForm.secucode = secucode
       this.lineChartForm.lineChartVisible = !this.lineChartForm.lineChartVisible
-      this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/daily/n/'+secucode+'.gif'
+      this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/min/n/'+secucode+'.gif'
     },
     cancelDialog(index, rows) {
       this.modifyDialogVisible = !this.modifyDialogVisible
@@ -247,7 +247,7 @@ export default {
       } else { //分时线
         this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/min/n/'+secucode+'.gif'
       }
-      this.lineChartForm.activeName = "date"
+      this.lineChartForm.activeName = "minute"
     },
     // onSelectionChange(values) {
     //   if (!values) {
