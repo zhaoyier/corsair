@@ -2,6 +2,7 @@ package eastmoney
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/job"
@@ -71,6 +72,14 @@ func updateCodeList(req *StockList, col *mgo.Collection) error {
 		}
 
 		if exchange == "BJ" {
+			continue
+		}
+
+		if strings.Contains(val.Name, "退市") {
+			continue
+		}
+
+		if strings.Contains(val.Name, "*ST") {
 			continue
 		}
 
