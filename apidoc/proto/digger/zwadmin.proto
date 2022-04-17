@@ -70,6 +70,7 @@ message WaterfallItem {
     string inflowRatioStr = 12;      //流入占比
     int64 createDate = 20;
     int64 updateDate = 21;
+    string focused = 22;      //是否关注
 }
 
 message WaterfallData{

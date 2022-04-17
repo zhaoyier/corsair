@@ -37,11 +37,11 @@
             <el-table-column prop="secucode" label="代码" width="120"></el-table-column>
             <el-table-column prop="decrease" label="最近跌幅" width="120"></el-table-column>
             <el-table-column prop="inflowRatioStr" label="流入占比" width="120"> </el-table-column>
-            <el-table-column class-name="status-col" label="状态" width="110" align="center">
+            <!-- <el-table-column class-name="status-col" label="状态" width="110" align="center">
             <template slot-scope="scope">
                 <el-tag :type="scope.row.state | statusFilter" effect="dark">{{ scope.row.state }}</el-tag>
             </template>
-            </el-table-column>
+            </el-table-column> -->
             
             <el-table-column class-name="status-col" label="最高价格" width="160">
             <template slot-scope="scope">
@@ -70,7 +70,7 @@
                 <el-tag type="success" effect="light">{{ scope.row.createDate|dateFilter }}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column fixed="right" label="操作" width="220">
+            <el-table-column fixed="right" label="操作" width="180">
             <template slot-scope="scope">
                 <el-button
                 @click.native.prevent="modifyRow(scope.$index, tableData)"
@@ -80,10 +80,17 @@
                 </el-button>
                 <el-divider direction="vertical"></el-divider>
                 <el-button
-                @click.native.prevent="klineChart(scope.$index, tableData)"
-                type="text"
-                size="small">
-                K线图
+                  @click.native.prevent="klineChart(scope.$index, tableData)"
+                  type="text"
+                  size="small">
+                  K线图
+                </el-button>
+                <el-divider direction="vertical"></el-divider>
+                <el-button
+                  @click.native.prevent="onConfirmFocus(scope.$index, tableData)"
+                  type="text"
+                  size="small">
+                  {{ scope.row.focused }}
                 </el-button>
             </template>
             </el-table-column>
@@ -101,7 +108,7 @@
         />
     </div>
     <div>
-        <el-dialog title="K线查询" :visible.sync="lineChartForm.lineChartVisible">
+        <el-dialog title="K线查询" :visible.sync="lineChartForm.lineChartVisible" :before-close="onLineChartClose">
         <el-tabs v-model="lineChartForm.activeName" @tab-click="selectTabClick">
             <el-tab-pane label="分时线" name="minute">
             <el-image :src="lineChartForm.lineChartSrc"></el-image>
@@ -119,8 +126,7 @@
 </template>
 
 <script>
-import echarts from 'echarts'
-import { getWaterfallList } from '@/api/stock'
+import { getWaterfallList,confirmFocus } from '@/api/stock'
 import { parseTime } from '@/utils/index'
 
 export default {
@@ -169,22 +175,15 @@ export default {
     }
   },
   mounted() {
-    // this.initChart()
   },
   // 每次销毁前清空
   beforeDestroy() {
-    // if (!this.chart) {
-    //   return
-    // }
-    // this.fundForm.chart.dispose()
-    // this.fundForm.chart = null
   },
   created() {
     this.fetchData()
   },
   methods: {
     fetchData() {
-      console.log("==>>TODO 121:")
       this.listLoading = true
        var req = {
         name: this.queryForm.name,
@@ -211,22 +210,18 @@ export default {
     cancelDialog(index, rows) {
       this.modifyDialogVisible = !this.modifyDialogVisible
     },
-    // confirmDialog(formName) {
-    //   var form = this.modifyForm
+    onConfirmFocus(index, rows) {
+      var data = rows[index]
+      var req = {
+        name : data.name,
+        secucode: data.secucode,
+        expectPrice: data.presentPrice,
+      }
 
-    //   var req = {
-    //     name : this.modifyForm.name,
-    //     secucode: this.modifyForm.secucode, 
-    //     priceDecrease: this.modifyForm.decrease
-    //   }
-
-    //   updateRecommend(req).then(response=>{
-    //     this.modifyDialogVisible = !this.modifyDialogVisible
-    //     this.fetchData()
-    //   })
-      
-    //   this.modifyForm.decrease = 0
-    // },
+      confirmFocus(req).then(response=>{
+        this.fetchData()
+      })
+    },
     onQuerySubmit() {
       console.log('submit!', this.queryForm.state, this.queryForm.decrease);
       this.fetchData()
@@ -247,64 +242,12 @@ export default {
       } else { //分时线
         this.lineChartForm.lineChartSrc = 'http://image.sinajs.cn/newchart/min/n/'+secucode+'.gif'
       }
-      this.lineChartForm.activeName = "minute"
+      // this.lineChartForm.activeName = "minute"
     },
-    // onSelectionChange(values) {
-    //   if (!values) {
-    //     return 
-    //   }
-    //   for (var idx in values) {
-    //     var val = values[idx]
-    //     this.fundForm.secucodes.push(val.secucode)
-    //   }
-    // },
-    // onLineChart() {
-    //   this.fundForm.fundFlowDrawer = true
-    //   var req = {
-    //     secucodes: this.fundForm.secucodes,
-    //   }
-    //   getFundDetailList(req).then(response=>{
-    //     this.fundForm.opinionData = response.data.items
-    //     this.fundForm.legendData = response.data.legendData
-    //     this.fundForm.secucodes = []
-
-    //     this.drawLine("fundLineChart")
-    //   })
-    // },
-    // drawLine(id) {
-    //   this.charts = echarts.init(document.getElementById(id))
-    //   this.charts.setOption({
-    //       title: {
-    //         text: ''
-    //       },
-    //       tooltip: {
-    //         trigger: 'axis'
-    //       },
-    //       legend: {
-    //         data: this.fundForm.legendData
-    //       },
-    //       grid: {
-    //         left: '3%',
-    //         right: '4%',
-    //         bottom: '3%',
-    //         containLabel: true
-    //       },
-    //       toolbox: {
-    //         feature: {
-    //           saveAsImage: {}
-    //         }
-    //       },
-    //       xAxis: {
-    //         type: 'category',
-    //         boundaryGap: false,
-    //         data: ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20"]
-    //       },
-    //       yAxis: {
-    //         type: 'value'
-    //       },
-    //       series: this.fundForm.opinionData
-    //   })
-    // },
+    onLineChartClose(done) {
+      done()
+      this.lineChartForm.activeName = "minute"
+    }
   }
 }
 </script>

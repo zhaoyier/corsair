@@ -164,16 +164,18 @@ func getSecucodeInflowRatioStr(secucode string, num int) string {
 	items := make([]string, 0, 3)
 	query := ezdb.M{"Secucode": secucode}
 	// items := make([]*trpc.GPFundFlowItem, 0, 8)
-
+	// fmt.Printf("==>>TODO 211: %+v\n", secucode)
 	results, err := orm.GPFundFlowMgr.Find(query, num, 0, "-FundDate")
+	// fmt.Printf("==>>TODO 212: %+v|%+v\n", results, err)
 	if err != nil {
 		log.Errorf("get fund flow failed: %q", err)
 		return ""
 	}
 
 	for _, result := range results {
+		// fmt.Printf("==>>TODO 215: %+v\n", result.InflowRatio)
 		items = append(items, fmt.Sprintf("%d", result.InflowRatio))
 
 	}
-	return strings.Join(items, ",")
+	return strings.Join(items, "/")
 }

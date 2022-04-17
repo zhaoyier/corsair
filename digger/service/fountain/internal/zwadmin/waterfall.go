@@ -1,7 +1,6 @@
 package zwadmin
 
 import (
-	"fmt"
 	"net/http"
 	"sort"
 	"sync"
@@ -59,7 +58,7 @@ func GetWaterfallList(in *gin.Context) {
 		sortFields = append(sortFields, "-Decrease")
 	}
 
-	fmt.Printf("==>>TODO 221: %+v|%+v\n", query, sortFields)
+	// fmt.Printf("==>>TODO 221: %+v|%+v\n", query, sortFields)
 	results, err := orm.GPWaterfallLineMgr.Find(query, int(req.Limit), int(req.Offset), sortFields...)
 	if err != nil {
 		log.Errorf("query recommend failed: %q", err)
@@ -81,12 +80,13 @@ func GetWaterfallList(in *gin.Context) {
 				MaxPrice:       result.MaxPrice,
 				MinPrice:       result.MinPrice,
 				Closing:        result.PresentPrice,
-				PresentPrice:   request.GetSinaDayPrice(result.Secucode),
+				PresentPrice:   request.GetTXDayPrice(result.Secucode),
 				State:          result.State,
 				Traded:         getTraded(result.Secucode) * 100,
-				InflowRatioStr: getSecucodeInflowRatioStr(result.Secucode, 5),
+				InflowRatioStr: getSecucodeInflowRatioStr(result.Secucode, 8),
 				CreateDate:     result.CreateDate,
 				UpdateDate:     result.UpdateDate,
+				Focused:        getFocusBySecucode(result.Secucode),
 			})
 			wg.Done()
 		}(&wg)

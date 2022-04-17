@@ -1,7 +1,6 @@
 package dawdle
 
 import (
-	"fmt"
 	"math"
 	"strings"
 	"sync"
@@ -59,7 +58,7 @@ func genWaterfallItem(secucode string) error {
 	}
 
 	results, err := orm.GPDailyMgr.FindAll(query, "-CreateDate")
-	fmt.Printf("==>>TODO 111: %+v|%+v\n", err, len(results))
+	// fmt.Printf("==>>TODO 111: %+v|%+v\n", err, len(results))
 	if err != nil {
 		log.Errorf("query daily failed: %s|%q", secucode, err)
 		return err
@@ -108,16 +107,16 @@ func genWaterfallItem(secucode string) error {
 		return nil
 	}
 
-	fmt.Printf("==>>TODO 115: %+v|%+v|%+v\n", data.MinPrice, data.MaxPrice, data.PresentPrice)
-	fmt.Printf("==>>TODO 1151: %+v|%+v|%+v\n", data.MaxPrice, data.PresentPrice, data.MaxPrice > data.PresentPrice)
+	// fmt.Printf("==>>TODO 115: %+v|%+v|%+v\n", data.MinPrice, data.MaxPrice, data.PresentPrice)
+	// fmt.Printf("==>>TODO 1151: %+v|%+v|%+v\n", data.MaxPrice, data.PresentPrice, data.MaxPrice > data.PresentPrice)
 	if data.MaxPrice > data.PresentPrice {
 		rate := utils.Decimal((data.PresentPrice - data.MaxPrice) / data.MaxPrice)
 		data.Decrease = int32(math.Ceil(rate * 100))
 	} else {
 		rate := utils.Decimal((data.PresentPrice - data.MinPrice) / data.MinPrice)
-		fmt.Printf("==>>TODO 116: %+v|%+v|%+v\n", rate, nil, nil)
+		// fmt.Printf("==>>TODO 116: %+v|%+v|%+v\n", rate, nil, nil)
 		data.Decrease = int32(math.Ceil(rate * 100))
-		fmt.Printf("==>>TODO 117: %+v|%+v|%+v\n", data.Decrease, nil, nil)
+		// fmt.Printf("==>>TODO 117: %+v|%+v|%+v\n", data.Decrease, nil, nil)
 	}
 
 	if _, err := data.Save(); err != nil {

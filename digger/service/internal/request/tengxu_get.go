@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
-	"sync"
 	"time"
 
 	trpc "git.ezbuy.me/ezbuy/corsair/digger/service/internal/rpc"
@@ -13,12 +12,8 @@ import (
 	log "github.com/Sirupsen/logrus"
 )
 
-var (
-	presentPriceMap sync.Map
-)
-
-func GetSinaDayDetail(code string) ([]string, error) {
-	url := fmt.Sprintf("http://hq.sinajs.cn/list=%s", strings.ToLower(code))
+func GetTXDayDetail(code string) ([]string, error) {
+	url := fmt.Sprintf("http://qt.gtimg.cn/q=%s", strings.ToLower(code))
 	method := "GET"
 
 	client := &http.Client{}
@@ -46,14 +41,13 @@ func GetSinaDayDetail(code string) ([]string, error) {
 	}
 
 	data = data[start:end]
-	return strings.Split(data, ","), nil
+	return strings.Split(data, "~"), nil
 }
 
-func GetSinaDayPrice(secucode string) float64 {
+func GetTXDayPrice(secucode string) float64 {
 	codes := strings.Split(secucode, ".")
 	secucode = strings.Join(codes, "")
 	secucode = strings.ToLower(secucode)
-	// fmt.Printf("==>>310:%+v\n", secucode)
 	ts := time.Now().Unix()
 	result, ok := presentPriceMap.Load(secucode)
 	if ok {
@@ -65,7 +59,7 @@ func GetSinaDayPrice(secucode string) float64 {
 		}
 	}
 
-	results, err := GetSinaDayDetail(secucode)
+	results, err := GetTXDayDetail(secucode)
 	if err != nil {
 		log.Errorf("get present price failed: %s|%q", secucode, err)
 		return 0

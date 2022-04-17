@@ -28,6 +28,15 @@ func initGDTopTenIndex() {
 	defer session.Close()
 
 	if err := collection.EnsureIndex(mgo.Index{
+		Key:        []string{"Secucode", "EndDate", "HolderName"},
+		Unique:     true,
+		Background: true,
+		Sparse:     true,
+	}); err != nil {
+		panic("ensureIndex digger.GDTopTen SecucodeEndDateHolderName error:" + err.Error())
+	}
+
+	if err := collection.EnsureIndex(mgo.Index{
 		Key:        []string{"Secucode", "EndDate"},
 		Background: true,
 		Sparse:     true,
@@ -41,15 +50,6 @@ func initGDTopTenIndex() {
 		Sparse:     true,
 	}); err != nil {
 		panic("ensureIndex digger.GDTopTen CreateDate error:" + err.Error())
-	}
-
-	if err := collection.EnsureIndex(mgo.Index{
-		Key:        []string{"Secucode", "EndDate", "HolderName"},
-		Unique:     true,
-		Background: true,
-		Sparse:     true,
-	}); err != nil {
-		panic("ensureIndex digger.GDTopTen SecucodeEndDateHolderName error:" + err.Error())
 	}
 
 }
@@ -140,6 +140,7 @@ func (o *_GDTopTenMgr) FindOne(query interface{}, sortFields ...string) (result 
 	return
 }
 
+// _GDTopTenSort 将排序字段应用到查询对象中，如果找不到有效的排序字段，则默认使用 `-_id` 作为排序字段
 func _GDTopTenSort(q *mgo.Query, sortFields []string) {
 	sortFields = XSortFieldsFilter(sortFields)
 	if len(sortFields) > 0 {
@@ -150,6 +151,10 @@ func _GDTopTenSort(q *mgo.Query, sortFields []string) {
 	q.Sort("-_id")
 }
 
+// Query 按照查询条件、分页、排序等构建 MongoDB 查询对象，默认情况按照插入倒序返回全量数据
+//   - 如果 limit 小于等于 0，则忽略该参数
+//   - 如果 offset 小于等于 0，则忽略该参数
+//   - 如果 sortFields 为空或全为非法值，则使用 `-_id` 作为排序条件（注意：如果表数据量很大，请显式传递该字段，否则会发生慢查询）
 func (o *_GDTopTenMgr) Query(query interface{}, limit, offset int, sortFields []string) (*mgo.Session, *mgo.Query) {
 	session, col := GDTopTenMgr.GetCol()
 	q := col.Find(query)
@@ -164,6 +169,13 @@ func (o *_GDTopTenMgr) Query(query interface{}, limit, offset int, sortFields []
 	return session, q
 }
 
+// NQuery 按照查询条件、分页、排序等构建 MongoDB 查询对象，如果不指定排序字段，则 MongoDB
+// 会按照引擎中的存储顺序返回（Natural-Order）， 不保证返回数据保持插入顺序或插入倒序。
+// 建议仅在保证返回数据唯一的情况下使用
+// Ref: https://docs.mongodb.com/manual/reference/method/cursor.sort/#return-in-natural-order
+//   - 如果 limit 小于等于 0，则忽略该参数
+//   - 如果 offset 小于等于 0，则忽略该参数
+//   - 如果 sortFields 为空或全为非法值，则忽略该参数
 func (o *_GDTopTenMgr) NQuery(query interface{}, limit, offset int, sortFields []string) (*mgo.Session, *mgo.Query) {
 	session, col := GDTopTenMgr.GetCol()
 	q := col.Find(query)
@@ -179,25 +191,6 @@ func (o *_GDTopTenMgr) NQuery(query interface{}, limit, offset int, sortFields [
 	}
 
 	return session, q
-}
-func (o *_GDTopTenMgr) FindBySecucodeEndDate(Secucode string, EndDate int64, limit int, offset int, sortFields ...string) (result []*GDTopTen, err error) {
-	query := db.M{
-		"Secucode": Secucode,
-		"EndDate":  EndDate,
-	}
-	session, q := GDTopTenMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
-}
-func (o *_GDTopTenMgr) FindByCreateDate(CreateDate int64, limit int, offset int, sortFields ...string) (result []*GDTopTen, err error) {
-	query := db.M{
-		"CreateDate": CreateDate,
-	}
-	session, q := GDTopTenMgr.Query(query, limit, offset, sortFields)
-	defer session.Close()
-	err = q.All(&result)
-	return
 }
 func (o *_GDTopTenMgr) FindOneBySecucodeEndDateHolderName(Secucode string, EndDate int64, HolderName string) (result *GDTopTen, err error) {
 	query := db.M{
@@ -233,6 +226,25 @@ func (o *_GDTopTenMgr) RemoveBySecucodeEndDateHolderName(Secucode string, EndDat
 		"HolderName": HolderName,
 	}
 	return col.Remove(query)
+}
+func (o *_GDTopTenMgr) FindBySecucodeEndDate(Secucode string, EndDate int64, limit int, offset int, sortFields ...string) (result []*GDTopTen, err error) {
+	query := db.M{
+		"Secucode": Secucode,
+		"EndDate":  EndDate,
+	}
+	session, q := GDTopTenMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
+}
+func (o *_GDTopTenMgr) FindByCreateDate(CreateDate int64, limit int, offset int, sortFields ...string) (result []*GDTopTen, err error) {
+	query := db.M{
+		"CreateDate": CreateDate,
+	}
+	session, q := GDTopTenMgr.Query(query, limit, offset, sortFields)
+	defer session.Close()
+	err = q.All(&result)
+	return
 }
 
 func (o *_GDTopTenMgr) Find(query interface{}, limit int, offset int, sortFields ...string) (result []*GDTopTen, err error) {
