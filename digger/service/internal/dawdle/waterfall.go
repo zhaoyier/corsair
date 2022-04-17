@@ -69,8 +69,13 @@ func genWaterfallItem(secucode string) error {
 	if data.CreateDate <= 0 {
 		data.CreateDate = time.Now().Unix()
 	}
+	data.MaxPrice = 0
+	data.MinPrice = 0
+
+	// fmt.Printf("==>>TODO 220:%+v|%+v\n", 0, data)
 
 	for idx, result := range results {
+		// fmt.Printf("==>>TODO 221:%+v|%+v\n", idx, result)
 		if idx == 0 {
 			data.Name = result.Name
 			data.PresentPrice = result.Closing
@@ -80,13 +85,13 @@ func genWaterfallItem(secucode string) error {
 			data.Name = result.Name
 		}
 
-		// fmt.Printf("==>>TODO 115: %+v|%+v|%+v\n", result.MaxPrice, data.MaxPrice, result.MaxPrice > data.MaxPrice)
-
 		if result.MaxPrice > data.MaxPrice {
+			// fmt.Printf("==>>TODO 224:%+v\n", result)
 			data.MaxPrice = result.MaxPrice
 			data.MaxPDay = result.CreateDate
 		}
 		if data.MinPrice == 0 || (result.MinPrice != 0 && result.MinPrice < data.MinPrice) {
+			// fmt.Printf("==>>TODO 225:%+v\n", result)
 			data.MinPrice = result.MinPrice
 		}
 	}
