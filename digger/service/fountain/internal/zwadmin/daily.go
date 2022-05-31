@@ -26,7 +26,7 @@ func GetDailyList(in *gin.Context) {
 		return
 	}
 
-	query := ezdb.M{}
+	query := ezdb.M{"CreateDate": getCreateDate()}
 	sortFields := []string{}
 	if req.GetName() != "" {
 		query["Name"] = req.GetName()
