@@ -79,9 +79,9 @@ func updateCodeList(req *StockList, col *mgo.Collection) error {
 			continue
 		}
 
-		if strings.Contains(val.Name, "*ST") {
-			continue
-		}
+		// if strings.Contains(val.Name, "*ST") {
+		// 	continue
+		// }
 
 		if err := applyCNSecucode(val.Secucode, exchange, val.Name, col); err != nil {
 			log.Errorf("apply failed: %+v|%+v\n", val, err)

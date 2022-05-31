@@ -271,7 +271,10 @@ func getSecucode(name string) string {
 }
 
 func getPresentPrice(secucode string) float64 {
-	secucode = strings.Split(secucode, ".")[1]
+	secucodes := strings.Split(secucode, ".")
+	if len(secucodes) > 1 {
+		secucode = secucodes[1]
+	}
 	result, err := orm.GPDailyMgr.FindOne(ezdb.M{"Secucode": secucode}, "-CreateDate")
 	if err != nil {
 		return 0

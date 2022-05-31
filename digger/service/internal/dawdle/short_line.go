@@ -134,19 +134,23 @@ func getDecreaseValue(secucode string) int32 {
 		return GetConf().DecreaseTag
 	}
 
-	result, sdecrease := results[0], GetConf().DecreaseTag
+	if len(results) > 0 {
+		result, sdecrease := results[0], GetConf().DecreaseTag
 
-	if result.Traded > int64(math.Pow10(10)*5) { //>= 500
-		sdecrease = GetConf().DecreaseTag - 5
-	} else if result.Traded > int64(math.Pow10(10)) { // >= 100
-		sdecrease = GetConf().DecreaseTag
-	} else if result.Traded > int64(math.Pow10(9)) { // >= 10
-		sdecrease = GetConf().DecreaseTag + 2
-	} else {
-		sdecrease = GetConf().DecreaseTag + 3
+		if result.Traded > int64(math.Pow10(10)*5) { //>= 500
+			sdecrease = GetConf().DecreaseTag - 5
+		} else if result.Traded > int64(math.Pow10(10)) { // >= 100
+			sdecrease = GetConf().DecreaseTag
+		} else if result.Traded > int64(math.Pow10(9)) { // >= 10
+			sdecrease = GetConf().DecreaseTag + 2
+		} else {
+			sdecrease = GetConf().DecreaseTag + 3
+		}
+
+		return sdecrease
 	}
 
-	return sdecrease
+	return 0
 }
 
 func disabledShortLine(secucode string) error {

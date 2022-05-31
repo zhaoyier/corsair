@@ -2,7 +2,6 @@ package dawdle
 
 import (
 	"math"
-	"strings"
 	"sync"
 	"time"
 
@@ -58,7 +57,6 @@ func genWaterfallItem(secucode string) error {
 	}
 
 	results, err := orm.GPDailyMgr.FindAll(query, "-CreateDate")
-	// fmt.Printf("==>>TODO 111: %+v|%+v\n", err, len(results))
 	if err != nil {
 		log.Errorf("query daily failed: %s|%q", secucode, err)
 		return err
@@ -96,12 +94,12 @@ func genWaterfallItem(secucode string) error {
 	}
 	data.MaxPrice = utils.Decimal(data.MaxPrice)
 	data.UpdateDate = time.Now().Unix()
-	if strings.HasPrefix(strings.ToLower(data.Name), "st") {
-		return nil
-	}
-	if strings.HasPrefix(strings.ToLower(data.Name), "*st") {
-		return nil
-	}
+	// if strings.HasPrefix(strings.ToLower(data.Name), "st") {
+	// 	return nil
+	// }
+	// if strings.HasPrefix(strings.ToLower(data.Name), "*st") {
+	// 	return nil
+	// }
 
 	if data.MaxPrice <= 0 || data.MinPrice <= 0 || data.PresentPrice <= 0 {
 		return nil
