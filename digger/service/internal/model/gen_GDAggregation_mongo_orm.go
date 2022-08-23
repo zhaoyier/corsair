@@ -29,15 +29,6 @@ func initGDAggregationIndex() {
 
 	if err := collection.EnsureIndex(mgo.Index{
 		Key:        []string{"Secucode"},
-		Unique:     true,
-		Background: true,
-		Sparse:     true,
-	}); err != nil {
-		panic("ensureIndex digger.GDAggregation Secucode error:" + err.Error())
-	}
-
-	if err := collection.EnsureIndex(mgo.Index{
-		Key:        []string{"Secucode"},
 		Background: true,
 		Sparse:     true,
 	}); err != nil {
@@ -74,6 +65,15 @@ func initGDAggregationIndex() {
 		Sparse:     true,
 	}); err != nil {
 		panic("ensureIndex digger.GDAggregation FreeholdRatioTotal error:" + err.Error())
+	}
+
+	if err := collection.EnsureIndex(mgo.Index{
+		Key:        []string{"Secucode"},
+		Unique:     true,
+		Background: true,
+		Sparse:     true,
+	}); err != nil {
+		panic("ensureIndex digger.GDAggregation Secucode error:" + err.Error())
 	}
 
 }
@@ -216,35 +216,6 @@ func (o *_GDAggregationMgr) NQuery(query interface{}, limit, offset int, sortFie
 
 	return session, q
 }
-func (o *_GDAggregationMgr) FindOneBySecucode(Secucode string) (result *GDAggregation, err error) {
-	query := db.M{
-		"Secucode": Secucode,
-	}
-	session, q := GDAggregationMgr.NQuery(query, 1, 0, nil)
-	defer session.Close()
-	err = q.One(&result)
-	return
-}
-
-func (o *_GDAggregationMgr) MustFindOneBySecucode(Secucode string) (result *GDAggregation) {
-	result, _ = o.FindOneBySecucode(Secucode)
-	if result == nil {
-		result = GDAggregationMgr.NewGDAggregation()
-		result.Secucode = Secucode
-		result.Save()
-	}
-	return
-}
-
-func (o *_GDAggregationMgr) RemoveBySecucode(Secucode string) (err error) {
-	session, col := GDAggregationMgr.GetCol()
-	defer session.Close()
-
-	query := db.M{
-		"Secucode": Secucode,
-	}
-	return col.Remove(query)
-}
 func (o *_GDAggregationMgr) FindBySecucode(Secucode string, limit int, offset int, sortFields ...string) (result []*GDAggregation, err error) {
 	query := db.M{
 		"Secucode": Secucode,
@@ -289,6 +260,35 @@ func (o *_GDAggregationMgr) FindByFreeholdRatioTotal(FreeholdRatioTotal int32, l
 	defer session.Close()
 	err = q.All(&result)
 	return
+}
+func (o *_GDAggregationMgr) FindOneBySecucode(Secucode string) (result *GDAggregation, err error) {
+	query := db.M{
+		"Secucode": Secucode,
+	}
+	session, q := GDAggregationMgr.NQuery(query, 1, 0, nil)
+	defer session.Close()
+	err = q.One(&result)
+	return
+}
+
+func (o *_GDAggregationMgr) MustFindOneBySecucode(Secucode string) (result *GDAggregation) {
+	result, _ = o.FindOneBySecucode(Secucode)
+	if result == nil {
+		result = GDAggregationMgr.NewGDAggregation()
+		result.Secucode = Secucode
+		result.Save()
+	}
+	return
+}
+
+func (o *_GDAggregationMgr) RemoveBySecucode(Secucode string) (err error) {
+	session, col := GDAggregationMgr.GetCol()
+	defer session.Close()
+
+	query := db.M{
+		"Secucode": Secucode,
+	}
+	return col.Remove(query)
 }
 
 func (o *_GDAggregationMgr) Find(query interface{}, limit int, offset int, sortFields ...string) (result []*GDAggregation, err error) {

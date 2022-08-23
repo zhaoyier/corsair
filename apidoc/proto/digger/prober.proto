@@ -59,9 +59,10 @@ enum FunctionType {
     FunctionTypeShortLine = 4;
     FunctionTypeRecommend = 5;
     FunctionTypeFundFlow = 6;   //资金流入
-    FunctionTypeFocus = 10;  //关注
-    FunctionTypeZhouQi = 11;  //
+    FunctionTypeFocus = 10;     //关注
+    FunctionTypeZhouQi = 11;    //
     FunctionTypeWaterfall = 12;  //
+    FunctionTypeStatFundFlow = 13;  //统计流入
 }
 
 message PresentPrice {

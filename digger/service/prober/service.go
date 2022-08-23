@@ -16,7 +16,7 @@ import (
 )
 
 func Start() {
-	tk := time.NewTicker(time.Minute * 10)
+	tk := time.NewTicker(time.Minute * 1000) //TODOZ
 
 	// go eastmoney.GetCodeListOnce()
 	// go eastmoney.GetShareholderOnce()
@@ -32,6 +32,11 @@ func Start() {
 	// eastmoney.GetFundFlowTemp("SZ.301100")
 	// dawdle.GenWaterfallOnce()
 	// dawdle.GenWaterfallTmp("SZ.300991")
+
+	// dawdle.GenStatFundFlowTmp("SZ.300632")
+	// dawdle.GenStatFundFlowTmp("SZ.003001")
+	// dawdle.GenStatFundFlowTmp("SH.603212")
+	// dawdle.GenStatFundFlowOnce()
 
 	for range tk.C {
 		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeCodeList) {
@@ -63,6 +68,10 @@ func Start() {
 		// 瀑布线
 		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeWaterfall) {
 			dawdle.GenWaterfallTicker()
+		}
+		// 统计流入
+		if utils.CheckFuncValid(trpc.FunctionType_FunctionTypeStatFundFlow) {
+			dawdle.GenStatFundFlowTicker()
 		}
 
 		dawdle.UpdatePresentPrice()

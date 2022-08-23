@@ -328,3 +328,26 @@ GPMainBusiness:
     - Content: string        #截止时间
     - CreateDate: datetime
   uniques: [[Secucode]]
+
+GPStatFundFlow:
+    db: mongo
+    dbname: digger
+    fields:
+      - Name: string
+      - Secucode: string
+      - Twenty: int64           #
+      - TwentyRatio: int64      #
+      - Ten: int64              #
+      - TenRatio: int64         #
+      - Five: int64             #
+      - FiveRatio: int64        #
+      - Three: int64            #
+      - ThreeRatio: int64       #
+      - Traded: int64           #流通市值
+      - Inflow: string          #资金流入
+      - Rising: int32           #趋势  
+      - MonthRise: int32        #
+      - TermRise: int32         #半年
+      - UpdateDate: datetime    #
+    uniques: [[Secucode]]
+    indexes: [[Rising], [UpdateDate]]

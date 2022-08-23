@@ -124,6 +124,14 @@ func TS2Date(ts int64) string {
 	return time.Unix(ts, 0).Format("2006-01-02 15:04:05")
 }
 
+func TS2Day(ts int64) string {
+	if ts == 0 {
+		return "unknown"
+	}
+
+	return time.Unix(ts, 0).Format("2006-01-02")
+}
+
 func GetSecucode(secucode string) string {
 	codes := strings.Split(secucode, ".")
 	for _, code := range codes {
@@ -177,6 +185,4 @@ func TruncateFloat(f float64) float64 {
 	str := fmt.Sprintf("%.2f", f)
 	result, _ := strconv.ParseFloat(str, 64)
 	return result
-
-	// return math.Trunc(f/unit) * unit
 }
