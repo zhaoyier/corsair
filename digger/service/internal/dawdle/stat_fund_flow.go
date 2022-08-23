@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"git.ezbuy.me/ezbuy/corsair/digger/service/internal/job"
@@ -21,7 +22,7 @@ var (
 	_fourDay         int64 = 4 * 86400
 	_million         int64 = 1000000
 	StatFundFlowOnce sync.Once
-	_path            = "/Users/zhaojianwei/Documents/magic/" + strings.Replace(utils.TS2Day(time.Now().Unix()), "-", "_", -1) + ".xlsx"
+	_path            = "./" + strings.Replace(utils.TS2Day(time.Now().Unix()), "-", "_", -1) + ".xlsx"
 )
 
 func GenStatFundFlowTicker() {
@@ -47,17 +48,23 @@ func getStatFundFlowData() {
 	defer sess.Close()
 
 	file := generateFile()
-	var count int
+	var count int32
 	var secucode *orm.CNSecucode
+	workCh := make(chan struct{}, 50)
 	iter := col.Find(ezdb.M{"Disabled": false}).Batch(100).Prefetch(0.25).Iter()
 	for iter.Next(&secucode) {
-		count++
-		if err := getStatFundFlowItem(secucode.Secucode, file); err != nil {
-			log.Infof("gen short line failed: %s|%q", secucode.Secucode, err)
-		}
-		if count%100 == 0 {
+		secucode := secucode
+		workCh <- struct{}{}
+		go func(secucode *orm.CNSecucode) {
+			atomic.AddInt32(&count, 1)
+			if err := getStatFundFlowItem(secucode.Secucode, file); err != nil {
+				log.Infof("gen short line failed: %s|%q", secucode.Secucode, err)
+			}
+			<-workCh
+		}(secucode)
+
+		if val := atomic.LoadInt32(&count); val%100 == 0 {
 			log.Infof("==>>TODO 213: %+v", count)
-			// break
 		}
 	}
 	log.Infof("==>>TODO 215: %+v", count)
@@ -66,6 +73,10 @@ func getStatFundFlowData() {
 
 func getStatFundFlowItem(secucode string, file *xlsx.File) error {
 	now := time.Now().Unix()
+	// log.Infof("==>>TODO 222: %+v", secucode)
+	if !strings.Contains(secucode, ".") {
+		return nil
+	}
 	numcode := strings.Split(secucode, ".")[1]
 	dailies, err := orm.GPDailyMgr.Find(ezdb.M{"Secucode": numcode}, 180, offset, "-_id") //TODOZ
 	if err != nil {
@@ -108,17 +119,17 @@ func getStatFundFlowItem(secucode string, file *xlsx.File) error {
 	stat.UpdateDate = time.Now().Unix()
 	stat.Rising = genStatFundFlowRising(stat, dailies)
 	go generateLineRow(file, stat, dailies)
-
+	// log.Infof("==>>TODO 335: %+v", stat)
 	if !checkStatParam(stat) {
 		return nil
 	}
 
-	generateRow(file, stat)
+	generateStatRow(file, stat)
 
 	return nil
 }
 
-func generateRow(file *xlsx.File, stat *orm.GPStatFundFlow) {
+func generateStatRow(file *xlsx.File, stat *orm.GPStatFundFlow) {
 	if file == nil {
 		out := fmt.Sprintf("%s,%d,%s,", stat.Secucode, stat.Rising, stat.Inflow)
 		out += fmt.Sprintf("%d,%d,%d,%d,", stat.Twenty, stat.Ten, stat.Five, stat.Three)
@@ -126,6 +137,7 @@ func generateRow(file *xlsx.File, stat *orm.GPStatFundFlow) {
 		fmt.Println(out)
 	} else {
 		row := file.Sheets[0].AddRow()
+		row.AddCell().Value = stat.Name
 		row.AddCell().Value = stat.Secucode
 		row.AddCell().Value = fmt.Sprintf("%d", stat.Rising)
 		row.AddCell().Value = stat.Inflow
@@ -136,6 +148,10 @@ func generateRow(file *xlsx.File, stat *orm.GPStatFundFlow) {
 		row.AddCell().Value = fmt.Sprintf("%d", stat.MonthRise)
 		row.AddCell().Value = fmt.Sprintf("%d", stat.TermRise)
 		row.AddCell().Value = utils.TS2Day(stat.UpdateDate)
+	}
+
+	if _, err := stat.Save(); err != nil {
+		log.Errorf("stat fund flow failed: %s|%q", stat.Secucode, err)
 	}
 }
 
@@ -310,15 +326,17 @@ func getFundFlowRatio(flowes []*orm.GPFundFlow, num int) int64 {
 
 // 计算流入趋势
 func genStatFundFlowRising(stat *orm.GPStatFundFlow, dailies []*orm.GPDaily) int32 {
+	// log.Infof("==>>TODO 350: %+v", stat)
 	var rising int32
 	if stat.Three < 0 {
+		// log.Infof("==>>TODO 351: %+v", stat.Three)
 		return 0
 	}
 	// daily := dailies[1] //TODOZ dailies[0]
 	var totalRise, riseNum, limitUp int32
 	// dailies = dailies[1:] //TODOZ
 	for idx, daily := range dailies { //最近
-		if idx > 3 {
+		if idx >= 3 {
 			continue
 		}
 		if daily.Rise >= 9.8 {
@@ -329,17 +347,22 @@ func genStatFundFlowRising(stat *orm.GPStatFundFlow, dailies []*orm.GPDaily) int
 
 		// 高开低走
 		dailyRise := utils.TruncateFloat((daily.MaxPrice - daily.Closing) * 100 / daily.Closing)
-		if dailyRise >= 3 {
+		if dailyRise >= 4 {
+			// log.Infof("==>>TODO 352: %+v", dailyRise)
 			return 0
 		}
 	}
 
-	if ratio := getRecentlyRatio(dailies, 5); ratio <= 3 || ratio >= 25 {
+	if ratio := getRecentlyRatio(dailies, 5); ratio <= 3 {
+		// log.Infof("==>>TODO 355: %+v", ratio)
 		return 0
+	} else if ratio >= 25 {
+		rising -= 30
 	}
 
 	// 趋势不对
 	if riseNum <= 0 || (totalRise/riseNum) < 0 {
+		// log.Infof("==>>TODO 356: %+v|%+v", riseNum, totalRise)
 		return 0
 	}
 	if limitUp >= 1 {
@@ -386,6 +409,7 @@ func generateFile() *xlsx.File {
 	// style.Font.Bold = true
 	// style.Alignment.WrapText = true
 	trS1 := s1.AddRow()
+	trS1.AddCell().Value = "名称"
 	trS1.AddCell().Value = "代码"
 	trS1.AddCell().Value = "趋势"
 	trS1.AddCell().Value = "资金"

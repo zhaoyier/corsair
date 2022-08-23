@@ -129,7 +129,10 @@ func TS2Day(ts int64) string {
 		return "unknown"
 	}
 
-	return time.Unix(ts, 0).Format("2006-01-02")
+	result := time.Unix(ts, 0).Format("2006-01-02 15")
+	result = strings.ReplaceAll(result, "-", "_")
+	result = strings.ReplaceAll(result, " ", "_")
+	return result
 }
 
 func GetSecucode(secucode string) string {

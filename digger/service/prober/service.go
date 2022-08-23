@@ -16,7 +16,7 @@ import (
 )
 
 func Start() {
-	tk := time.NewTicker(time.Minute * 1000) //TODOZ
+	tk := time.NewTicker(time.Minute * 10) //TODOZ
 
 	// go eastmoney.GetCodeListOnce()
 	// go eastmoney.GetShareholderOnce()
@@ -35,7 +35,7 @@ func Start() {
 
 	// dawdle.GenStatFundFlowTmp("SZ.300632")
 	// dawdle.GenStatFundFlowTmp("SZ.003001")
-	// dawdle.GenStatFundFlowTmp("SH.603212")
+	dawdle.GenStatFundFlowTmp("SH.603612")
 	// dawdle.GenStatFundFlowOnce()
 
 	for range tk.C {
